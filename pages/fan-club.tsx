@@ -361,6 +361,9 @@ export default function FanClub() {
                 <p className="text-blueSecondary text-center text-2xl xl:text-3xl font-medium">
                   {artist?.artistName}
                 </p>
+                <p className="text-white text-center text-sm font-medium">
+                  {artist.phoneNumber ?? DEFAULT_ARTIST.phoneNumber}
+                </p>
               </div>
               <div className="flex flex-col justify-start items-center">
                 <p className="text-primary text-center text-base">
