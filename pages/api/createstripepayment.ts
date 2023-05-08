@@ -1,16 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import { STRIPE_SECRET_KEY } from "@/libs/constants";
-
-// Create stripe instance
-const stripe = require("stripe")(STRIPE_SECRET_KEY);
+import { Stripe } from "stripe";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
   if (req.method === "POST") {
-    const { amount, currency } = req.body;
+    const { amount, currency, stripeSecretKey } = req.body;
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: "2022-11-15" });
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100,
       currency: currency,

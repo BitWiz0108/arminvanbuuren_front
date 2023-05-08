@@ -61,7 +61,8 @@ const useProfile = () => {
     countryId: number | null,
     stateId: number | null,
     cityId: number | null,
-    zipcode: string
+    zipcode: string,
+    planId: number | null
   ) => {
     setIsLoading(true);
 
@@ -85,6 +86,8 @@ const useProfile = () => {
     if (cityId) formData.append("cityId", cityId.toString());
     else formData.append("cityId", "");
     formData.append("zipcode", zipcode.toString());
+    if (planId) formData.append("planId", planId.toString());
+    else formData.append("planId", "");
 
     const response = await fetch(`${API_BASE_URL}/${API_VERSION}/profile`, {
       method: "POST",

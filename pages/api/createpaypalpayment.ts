@@ -2,25 +2,23 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import paypal from "@paypal/checkout-server-sdk";
 import {
-  PAYPAL_CLIENT_ID,
-  PAYPAL_CLIENT_SECRET,
   PRODUCTION_MODE,
 } from "@/libs/constants";
-
-// Create a PayPal client with your sandbox or live credentials
-const paypalClient = new paypal.core.PayPalHttpClient(
-  PRODUCTION_MODE
-    ? new paypal.core.LiveEnvironment(PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET)
-    : new paypal.core.SandboxEnvironment(PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET)
-);
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
   if (req.method === "POST") {
-    const { amount, currency } = req.body;
+    const { amount, currency, paypalClientId, paypalClientSecret } = req.body;
     try {
+      // Create a PayPal client with your sandbox or live credentials
+      const paypalClient = new paypal.core.PayPalHttpClient(
+        PRODUCTION_MODE
+          ? new paypal.core.LiveEnvironment(paypalClientId, paypalClientSecret)
+          : new paypal.core.SandboxEnvironment(paypalClientId, paypalClientSecret)
+      );
+
       // Create a new PayPal order with the given amount and currency
       const request = new paypal.orders.OrdersCreateRequest();
       request.prefer("return=representation");

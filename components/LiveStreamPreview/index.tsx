@@ -12,7 +12,7 @@ const LiveStreamPreview = ({ track }: Props) => {
       autoPlay
       playsInline
       className="relative w-full h-full object-cover z-0"
-      src={track.previewVideoCompressed}
+      src={track.previewVideo}
     ></video>
   );
 };

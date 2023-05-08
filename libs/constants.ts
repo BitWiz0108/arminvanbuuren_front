@@ -3,12 +3,6 @@ export const PRODUCTION_MODE =
 export const SITE_BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL!;
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 export const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION!;
-export const STRIPE_PUBLICK_API_KEY =
-  process.env.NEXT_PUBLIC_STRIPE_PUBLICK_API_KEY!;
-export const STRIPE_SECRET_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!;
-export const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
-export const PAYPAL_CLIENT_SECRET =
-  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET!;
 export const AWS_ACCESS_KEY_ID = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!;
 export const AWS_SECRET_ACCESS_KEY =
   process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!;
@@ -32,8 +26,8 @@ export const DEFAULT_COVER_IMAGE = "/images/placeholder.jpg";
 export const DEFAULT_LOGO_IMAGE = "/images/logo.png";
 export const DEFAULT_ARTIST_IMAGE = "/images/fanclub/profile.jpg";
 
-export const DATETIME_FORMAT = "DD MMM YYYY hh:mm:ss A";
-export const DATE_FORMAT = "DD MMM YYYY";
+export const DATETIME_FORMAT = "MMM DD YYYY hh:mm:ss A";
+export const DATE_FORMAT = "MMM DD YYYY";
 export const US_DATETIME_FORMAT = "MMM dd, yyyy";
 
 //##########################################################

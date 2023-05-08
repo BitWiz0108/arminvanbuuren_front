@@ -234,7 +234,7 @@ export default function LiveStream() {
               isSidebarVisible ? "pl-16 md:pl-0" : "pl-16"
             )}
           >
-            {artist.firstName} Live Streams
+            {artist.artistName} Live Streams
           </h1>
           <h5
             className={twMerge(

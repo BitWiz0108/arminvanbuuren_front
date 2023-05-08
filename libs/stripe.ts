@@ -1,4 +1,4 @@
-export const createClientSecret = async (amount: number, currency: string) => {
+export const createClientSecret = async (amount: number, currency: string, stripeSecretKey: string) => {
   const response = await fetch("/api/createstripepayment", {
     method: "POST",
     headers: {
@@ -7,6 +7,7 @@ export const createClientSecret = async (amount: number, currency: string) => {
     body: JSON.stringify({
       amount: amount,
       currency: currency,
+      stripeSecretKey
     }),
   });
 

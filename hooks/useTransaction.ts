@@ -111,7 +111,32 @@ const useTransaction = () => {
     return [];
   };
 
-  return { isLoading, transact, fetchPlans, fetchCurrencies };
+  const fetchPaymentData = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/admin/payment-gateways`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      return {
+        paypalClientId: data.paypalClientId,
+        paypalClientSecret: data.paypalClientSecret,
+        stripePublicApiKey: data.stripePublicApiKey,
+        stripeSecretKey: data.stripeSecretKey
+      };
+    } else {
+      return null;
+    }
+  };
+
+  return { isLoading, transact, fetchPlans, fetchCurrencies, fetchPaymentData };
 };
 
 export default useTransaction;

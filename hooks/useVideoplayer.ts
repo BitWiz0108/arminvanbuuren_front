@@ -10,7 +10,7 @@ const useVideoPlayer = (videoRef: any) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [track, setTrack] = useState<IStream>(DEFAULT_STREAM);
   const [playingQuality, setPlayingQuality] = useState<LIVESTREAM_QUALITY>(
-    LIVESTREAM_QUALITY.LOW
+    LIVESTREAM_QUALITY.AUTO
   );
 
   const intervalRef = useRef<NodeJS.Timer>();
@@ -95,10 +95,10 @@ const useVideoPlayer = (videoRef: any) => {
       videoRef.current?.pause();
 
       let myVideo = videoRef.current;
-      if (playingQuality == LIVESTREAM_QUALITY.HIGH) {
-        myVideo.src = track.fullVideo;
-      } else {
+      if (playingQuality == LIVESTREAM_QUALITY.LOW) {
         myVideo.src = track.fullVideoCompressed;
+      } else {
+        myVideo.src = track.fullVideo;
       }
 
       videoRef.current.play(); // Disable/Enalbe Auto play

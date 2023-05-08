@@ -9,25 +9,29 @@ import { DEFAULT_SHAREDATA, IShareData } from "@/interfaces/IShareData";
 export const ShareContext = createContext({
   audioPlayer: {} as IAudioPlayer,
   isLyricsVisible: false,
-  setIsLyricsVisible: (flag: boolean) => {},
+  setIsLyricsVisible: (flag: boolean) => { },
   lyrics: null as any,
-  setLyrics: (value: any) => {},
+  setLyrics: (value: any) => { },
   isMetaVisible: false,
-  setIsMetaVisible: (flag: boolean) => {},
+  setIsMetaVisible: (flag: boolean) => { },
   metaData: null as any,
-  setMetaData: (value: any) => {},
+  setMetaData: (value: any) => { },
   isSubscriptionModalVisible: false,
-  setIsSubscriptionModalVisible: (flag: boolean) => {},
+  setIsSubscriptionModalVisible: (flag: boolean) => { },
   isViewExclusiveModalVisible: false,
-  setIsViewExclusiveModalVisible: (flag: boolean) => {},
+  setIsViewExclusiveModalVisible: (flag: boolean) => { },
   isDonationModalVisible: false,
-  setIsDonationModalVisible: (flag: boolean) => {},
+  setIsDonationModalVisible: (flag: boolean) => { },
   isLivestreamCommentVisible: false,
-  setIsLivestreamCommentVisible: (flag: boolean) => {},
+  setIsLivestreamCommentVisible: (flag: boolean) => { },
   isShareModalVisible: false,
-  setIsShareModalVisible: (flag: boolean) => {},
+  setIsShareModalVisible: (flag: boolean) => { },
   shareData: DEFAULT_SHAREDATA,
-  setShareData: (value: IShareData) => {},
+  setShareData: (value: IShareData) => { },
+  paypalClientId: "",
+  paypalClientSecret: "",
+  stripePublicApiKey: "",
+  stripeSecretKey: "",
 });
 
 export const ShareProvider = ({ children }: { children: ReactNode }) => {
@@ -53,6 +57,10 @@ export const ShareProvider = ({ children }: { children: ReactNode }) => {
     setIsShareModalVisible,
     shareData,
     setShareData,
+    paypalClientId,
+    paypalClientSecret,
+    stripePublicApiKey,
+    stripeSecretKey,
   } = useShareData();
 
   return (
@@ -79,6 +87,10 @@ export const ShareProvider = ({ children }: { children: ReactNode }) => {
         setIsShareModalVisible,
         shareData,
         setShareData,
+        paypalClientId,
+        paypalClientSecret,
+        stripePublicApiKey,
+        stripeSecretKey,
       }}
     >
       {children}

@@ -55,19 +55,18 @@ const MusicCard = ({
   return (
     <div
       className={twJoin(
-        "relative rounded-3xl overflow-hidden cursor-pointer select-none border-8",
+        "relative rounded-3xl overflow-hidden cursor-pointer select-none border-4",
         playing ? "border-bluePrimary" : "border-transparent"
       )}
       style={{
-        width: `${
-          isMobile
-            ? active
-              ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
-              : MUSIC_CARD_NORMAL_WIDTH_MOBILE
-            : active
+        width: `${isMobile
+          ? active
+            ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
+            : MUSIC_CARD_NORMAL_WIDTH_MOBILE
+          : active
             ? MUSIC_CARD_ACTIVE_WIDTH_DESKTOP
             : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
-        }px`,
+          }px`,
       }}
       onMouseEnter={() => onHover()}
       onMouseLeave={() => onOut()}
@@ -81,15 +80,14 @@ const MusicCard = ({
           }
         }}
         style={{
-          height: `${
-            isMobile
-              ? active
-                ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
-                : MUSIC_CARD_NORMAL_WIDTH_MOBILE
-              : active
+          height: `${isMobile
+            ? active
+              ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
+              : MUSIC_CARD_NORMAL_WIDTH_MOBILE
+            : active
               ? MUSIC_CARD_ACTIVE_WIDTH_DESKTOP
               : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
-          }px`,
+            }px`,
         }}
       >
         <Image

@@ -36,7 +36,7 @@ export default function TermsOfService() {
     <Layout>
       <div
         className={twMerge(
-          "relative w-full h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
+          "relative w-full lg:px-10 xl:px-20 h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
           isSignedIn ? "pb-24 lg:pb-36" : "pb-5"
         )}
       >

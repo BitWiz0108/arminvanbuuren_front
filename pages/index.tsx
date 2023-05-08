@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Link from "next/link";
 
 import Layout from "@/components/Layout";
 import AudioControl from "@/components/AudioControl";
@@ -8,13 +9,13 @@ import DonationModal from "@/components/DonationModal";
 import SubscriptionModal from "@/components/SubscriptionModal";
 import HomepageButton from "@/components/HomepageButton";
 import RoundPlay from "@/components/Icons/RoundPlay";
-import X from "@/components/Icons/X";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
 import useFanclub from "@/hooks/useFanclub";
+import useLivestream from "@/hooks/useLivestream";
 
 import { ASSET_TYPE, DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
@@ -26,32 +27,25 @@ export default function Home() {
   const { audioPlayer, setIsSubscriptionModalVisible } = useShareValues();
   const { isLoading, fetchPageContent } = useHomepage();
   const { fetchArtist } = useFanclub();
+  const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
 
   const [backgroundVideo, setBackgroundVideo] = useState<string>(
     DEFAULT_HOMEPAGE.backgroundVideo
   );
-  const [youtubeVideoUrl, setYoutubeVideoUrl] = useState<string>(
-    DEFAULT_HOMEPAGE.youtubeVideoUrl
-  );
-  const [youtubeTitle, setYoutubeTitle] = useState<string>(
-    DEFAULT_HOMEPAGE.youtubeTitle
-  );
+
+  const [latestLivestreamTitle, setLatestLivestreamTitle] = useState<string>("");
   const [artistName, setArtistName] = useState<string>("");
-  const [showYouTubeFrame, setShowYouTubeFrame] = useState<boolean>(false);
   const [logoImage, setLogoImage] = useState<string>(DEFAULT_LOGO_IMAGE);
 
   const fetchPageContentData = () => {
     fetchPageContent().then((data) => {
       if (data) {
         setBackgroundVideo(data.backgroundVideo);
-        setYoutubeVideoUrl(data.youtubeVideoUrl);
-        setYoutubeTitle(data.youtubeTitle);
       }
     });
-  };
-
-  const onYouTubeLinkClicked = () => {
-    setShowYouTubeFrame(true);
+    fetchLivestreams(1, true, 6).then((data) => {
+      setLatestLivestreamTitle(data.livestreams[0]?.title);
+    })
   };
 
   useEffect(() => {
@@ -102,7 +96,7 @@ export default function Home() {
           </div>
           <div
             className="flex flex-row justify-center items-center space-x-5 cursor-pointer"
-            onClick={onYouTubeLinkClicked}
+            onClick={() => { router.push('/live-stream') }}
           >
             <div className="relative">
               <RoundPlay
@@ -113,7 +107,7 @@ export default function Home() {
               />
               <div className="absolute left-0 top-0 w-full h-full rounded-full border border-primary animate-ping"></div>
             </div>
-            <h3 className="text-sm text-center">{youtubeTitle}</h3>
+            <h3 className="text-sm text-center">{latestLivestreamTitle}</h3>
           </div>
         </div>
 
@@ -129,27 +123,6 @@ export default function Home() {
             ></video>
           </div>
         </div>
-
-        {showYouTubeFrame && (
-          <div className="absolute left-0 top-0 w-full h-full px-5 lg:px-10 pt-5 lg:pt-10 pb-24 lg:pb-36 flex justify-center items-center bg-[#000000aa] z-20">
-            <div
-              className="absolute top-0 left-0 w-full h-full"
-              onClick={() => setShowYouTubeFrame(false)}
-            >
-              <div className="absolute top-5 left-5 cursor-pointer">
-                <X />
-              </div>
-            </div>
-            <div className="relative w-full h-0 pb-[56.25%]">
-              <iframe
-                className="absolute w-full h-full top-0 left-0"
-                src={youtubeVideoUrl}
-                allowFullScreen
-                frameBorder="0"
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       <DonationModal

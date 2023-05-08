@@ -1,4 +1,5 @@
 import { KeyboardEvent, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -25,6 +26,7 @@ import {
   TAG_USERNAME,
 } from "@/libs/constants";
 import { getErrorMessageForCode } from "@/libs/utils";
+import { DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
 import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
@@ -41,6 +43,7 @@ export default function Signin() {
   const [password, setPassword] = useState<string>("");
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
   const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
+  const [logoImage, setLogoImage] = useState<string>(DEFAULT_LOGO_IMAGE);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
 
   const onSignin = () => {
@@ -157,9 +160,15 @@ export default function Signin() {
         <div className="w-full h-full flex flex-col justify-end md:justify-center items-center z-10">
           <div className="w-full h-fit flex flex-col justify-end md:justify-center items-center text-primary pb-5">
             <h3 className="text-center text-primary text-2xl mb-2">
-              {artist.artistName}
+              <Image
+                className="w-56 object-cover mb-5"
+                src={logoImage ?? DEFAULT_LOGO_IMAGE}
+                width={311}
+                height={220}
+                alt=""
+              />
             </h3>
-            <p className="text-center text-primary text-xl font-medium mb-5">
+            <p className="text-center text-primary text-sm sm:text-lg md:text-xl font-medium mb-5 whitespace-nowrap">
               Exclusive Music, Live Concerts & {artist.artistName} Fan Community
             </p>
             <div className="w-80 mb-5">

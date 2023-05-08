@@ -277,8 +277,8 @@ export default function Music() {
         (isMobile
           ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
           : MUSIC_CARD_ACTIVE_WIDTH_DESKTOP)) /
-        2 -
-        60
+      2 -
+      60
     );
     setActiveWidth(
       (isMobile
@@ -357,7 +357,7 @@ export default function Music() {
         <h1 className="text-primary text-xl md:text-2xl text-center">
           <span className="font-semibold">
             {audioPlayer.albumId == null
-              ? artist.firstName
+              ? artist.artistName
               : getAlbumById().name}
           </span>
           &nbsp;Music
@@ -439,8 +439,7 @@ export default function Music() {
             {audioPlayer.musics[activeIndex]?.title}
           </h2>
           <p className="text-secondary text-left text-lg md:text-xl mb-2">
-            {audioPlayer.musics[activeIndex]?.singer?.firstName}&nbsp;
-            {audioPlayer.musics[activeIndex]?.singer?.lastName}
+            {audioPlayer.musics[activeIndex]?.singer?.artistName}
           </p>
           <p className="text-secondary text-left text-sm md:text-base">
             {audioPlayer.musics[activeIndex]?.copyright}
@@ -504,7 +503,7 @@ export default function Music() {
                   }
                   soundStatus={
                     music.id == audioPlayer.getPlayingTrack().id &&
-                    audioPlayer.albumId == null
+                      audioPlayer.albumId == null
                       ? audioPlayer.isPlaying
                         ? "playing"
                         : "paused"
@@ -565,7 +564,7 @@ export default function Music() {
                       }
                       soundStatus={
                         music.id == audioPlayer.getPlayingTrack().id &&
-                        audioPlayer.albumId == album.id
+                          audioPlayer.albumId == album.id
                           ? audioPlayer.isPlaying
                             ? "playing"
                             : "paused"

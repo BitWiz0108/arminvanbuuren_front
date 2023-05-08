@@ -70,11 +70,10 @@ const LiveStreamListCard = ({
     <div
       className="flex flex-col justify-start items-start"
       style={{
-        width: `${
-          isTablet
+        width: `${isTablet
             ? LIVESTREAM_CARD_NORMAL_WIDTH_MOBILE
             : LIVESTREAM_CARD_NORMAL_WIDTH_DESKTOP
-        }px`,
+          }px`,
       }}
     >
       <div
@@ -125,7 +124,7 @@ const LiveStreamListCard = ({
             {livestream.title}
           </p>
           <p className="w-full text-secondary text-xs md:text-sm text-left truncate">
-            {livestream.singer.firstName + " " + livestream.singer.lastName}
+            {livestream.singer.artistName}
           </p>
         </div>
 

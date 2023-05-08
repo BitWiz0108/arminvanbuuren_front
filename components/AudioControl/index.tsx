@@ -88,7 +88,7 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                   {track.title}
                 </h2>
                 <p className="w-full text-secondary text-left text-small md:text-base truncate">
-                  {track.singer?.firstName} {track.singer?.lastName}
+                  {track.singer?.artistName}
                 </p>
               </div>
             </div>

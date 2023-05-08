@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { twJoin } from "tailwind-merge";
 
@@ -39,15 +39,18 @@ const MusicListCard = ({
 
   const [lastPosX, setLastPosX] = useState<number>(0);
 
+  const onTitleClick = () => {
+    play();
+  }
+
   return (
     <div
       className="relative flex flex-col justify-start items-start space-y-5"
       style={{
-        width: `${
-          isMobile
-            ? MUSIC_CARD_NORMAL_WIDTH_MOBILE
-            : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
-        }px`,
+        width: `${isMobile
+          ? MUSIC_CARD_NORMAL_WIDTH_MOBILE
+          : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
+          }px`,
       }}
     >
       <div
@@ -65,11 +68,10 @@ const MusicListCard = ({
             }
           }}
           style={{
-            height: `${
-              isMobile
-                ? MUSIC_CARD_NORMAL_WIDTH_MOBILE
-                : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
-            }px`,
+            height: `${isMobile
+              ? MUSIC_CARD_NORMAL_WIDTH_MOBILE
+              : MUSIC_CARD_NORMAL_WIDTH_DESKTOP
+              }px`,
           }}
         >
           <Image
@@ -101,11 +103,11 @@ const MusicListCard = ({
       </div>
       <div className="w-full flex flex-row justify-start items-start space-x-2 px-5">
         <div className="flex flex-col justify-start items-start flex-grow truncate">
-          <p className="w-full text-primary text-base md:text-lg text-left truncate">
+          <p className="w-full text-primary text-base md:text-lg text-left truncate cursor-pointer" onClick={onTitleClick}>
             {music.title}
           </p>
           <p className="text-secondary text-xs md:text-sm text-left truncate">
-            {music.singer?.firstName} {music.singer?.lastName}
+            {music.singer?.artistName}
           </p>
         </div>
 

@@ -5,6 +5,7 @@ type Props = {
   checked: boolean;
   setChecked: Function;
   labelPos: "top" | "bottom" | "left" | "right";
+  className?: any;
 };
 
 const Switch = ({ label, checked, setChecked, labelPos }: Props) => {
@@ -20,7 +21,7 @@ const Switch = ({ label, checked, setChecked, labelPos }: Props) => {
       {(labelPos == "top" || labelPos == "left") && (
         <label
           htmlFor="checkbox"
-          className="text-sm md:text-base lg:text-lg text-primary text-center"
+          className="text-sm md:text-base md:text-md text-primary text-center"
         >
           {label}
         </label>

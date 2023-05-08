@@ -35,7 +35,7 @@ import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
 const SubscriptionModal = () => {
   const { isSignedIn } = useAuthValues();
-  const { isSubscriptionModalVisible, setIsSubscriptionModalVisible } =
+  const { isSubscriptionModalVisible, setIsSubscriptionModalVisible, paypalClientId, paypalClientSecret, stripeSecretKey } =
     useShareValues();
   const { fetchArtist } = useFanclub();
 
@@ -94,7 +94,7 @@ const SubscriptionModal = () => {
 
     setIsWorking(true);
 
-    const clientSecret = await createClientSecret(amount, currency.code);
+    const clientSecret = await createClientSecret(amount, currency.code, stripeSecretKey);
 
     if (clientSecret) {
       const result = await stripe.confirmCardPayment(clientSecret, {
@@ -157,7 +157,7 @@ const SubscriptionModal = () => {
       throw new Error("Please enter amount correctly.");
     }
 
-    const orderId = await createOrderId(amount, currency.code);
+    const orderId = await createOrderId(amount, currency.code, paypalClientId, paypalClientSecret);
     if (orderId) return orderId;
 
     throw new Error("Failed to create PayPal order. Please try again later.");
@@ -299,11 +299,10 @@ const SubscriptionModal = () => {
               <div className="w-full p-4 border border-dashed border-third rounded-lg flex flex-col justify-start items-center space-y-5">
                 <div className="w-full flex justify-start items-center space-x-2 border-b border-gray-700">
                   <button
-                    className={`w-full inline-flex justify-center items-center space-x-2 rounded-tl-md rounded-tr-md px-5 h-11 ${
-                      provider == PROVIDER.STRIPE
-                        ? "bg-third text-primary"
-                        : "bg-transparent text-secondary hover:bg-third"
-                    } transition-all duration-300`}
+                    className={`w-full inline-flex justify-center items-center space-x-2 rounded-tl-md rounded-tr-md px-5 h-11 ${provider == PROVIDER.STRIPE
+                      ? "bg-third text-primary"
+                      : "bg-transparent text-secondary hover:bg-third"
+                      } transition-all duration-300`}
                     onClick={() => setProvider(PROVIDER.STRIPE)}
                     disabled={isWorking}
                   >
@@ -317,11 +316,10 @@ const SubscriptionModal = () => {
                     <span>STRIPE</span>
                   </button>
                   <button
-                    className={`w-full inline-flex justify-center items-center rounded-tl-md rounded-tr-md px-5 h-11 ${
-                      provider == PROVIDER.PAYPAL
-                        ? "bg-third text-primary"
-                        : "bg-transparent text-secondary hover:bg-third"
-                    } transition-all duration-300`}
+                    className={`w-full inline-flex justify-center items-center rounded-tl-md rounded-tr-md px-5 h-11 ${provider == PROVIDER.PAYPAL
+                      ? "bg-third text-primary"
+                      : "bg-transparent text-secondary hover:bg-third"
+                      } transition-all duration-300`}
                     onClick={() => {
                       if (amount <= 0) {
                         toast.warn("Please enter amount correctly.");

@@ -19,6 +19,7 @@ export interface IArtist {
   description: string;
   albumNames: Array<string>;
   address: string;
+  phoneNumber: string;
   bannerImage: string;
   avatarImage: string;
   facebook: string;
@@ -43,6 +44,7 @@ export const DEFAULT_ARTIST = {
   description: "",
   albumNames: [],
   address: "",
+  phoneNumber: "+1 (949) 577-2895",
   bannerImage: DEFAULT_BANNER_IMAGE,
   avatarImage: DEFAULT_ARTIST_IMAGE,
   facebook: "",

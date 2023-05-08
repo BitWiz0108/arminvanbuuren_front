@@ -35,7 +35,7 @@ import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
 const ViewExclusiveModal = () => {
   const { isSignedIn } = useAuthValues();
-  const { isViewExclusiveModalVisible, setIsViewExclusiveModalVisible } =
+  const { isViewExclusiveModalVisible, setIsViewExclusiveModalVisible, paypalClientId, paypalClientSecret, stripeSecretKey } =
     useShareValues();
   const { fetchArtist } = useFanclub();
 
@@ -94,7 +94,7 @@ const ViewExclusiveModal = () => {
 
     setIsWorking(true);
 
-    const clientSecret = await createClientSecret(amount, currency.code);
+    const clientSecret = await createClientSecret(amount, currency.code, stripeSecretKey);
 
     if (clientSecret) {
       const result = await stripe.confirmCardPayment(clientSecret, {
@@ -157,7 +157,7 @@ const ViewExclusiveModal = () => {
       throw new Error("Please enter amount correctly.");
     }
 
-    const orderId = await createOrderId(amount, currency.code);
+    const orderId = await createOrderId(amount, currency.code, paypalClientId, paypalClientSecret);
     if (orderId) return orderId;
 
     throw new Error("Failed to create PayPal order. Please try again later.");

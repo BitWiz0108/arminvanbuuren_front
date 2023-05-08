@@ -145,7 +145,7 @@ const VideoControl = ({
                         {track.title}
                       </h2>
                       <p className="text-secondary text-left text-sm truncate">
-                        {track.singer.firstName + " " + track.singer.lastName}
+                        {track.singer?.artistName}
                       </p>
                       <p className="text-[red] text-left text-sm truncate">
                         *LIVE {moment(track.releaseDate).format(DATE_FORMAT)}

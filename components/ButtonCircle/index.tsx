@@ -5,6 +5,7 @@ type Props = {
   dark: boolean;
   size: "small" | "big" | "large";
   onClick: Function;
+  ref?: any;
 };
 
 const ButtonCircle = ({ icon, dark, size, onClick }: Props) => {

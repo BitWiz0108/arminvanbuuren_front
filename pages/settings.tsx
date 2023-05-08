@@ -12,6 +12,7 @@ import DateInput from "@/components/DateInput";
 import Profile from "@/components/Icons/Profile";
 import Edit from "@/components/Icons/Edit";
 import AudioControl from "@/components/AudioControl";
+import Switch from "@/components/Switch";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -30,6 +31,7 @@ import { DEFAULT_PROFILE } from "@/interfaces/IProfile";
 import { DEFAULT_COUNTRY, ICountry } from "@/interfaces/ICountry";
 import { DEFAULT_STATE, IState } from "@/interfaces/IState";
 import { DEFAULT_CITY, ICity } from "@/interfaces/ICity";
+import SubscriptionModal from "@/components/SubscriptionModal";
 
 export default function Settings() {
   const router = useRouter();
@@ -43,8 +45,8 @@ export default function Settings() {
     fetchStates,
     fetchCities,
   } = useProfile();
-  const { isSignedIn, accessToken, checkAuth } = useAuthValues();
-  const { audioPlayer } = useShareValues();
+  const { isSignedIn, accessToken, checkAuth, servertime, user, isMembership } = useAuthValues();
+  const { audioPlayer, setIsSubscriptionModalVisible } = useShareValues();
 
   const [username, setUsername] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -65,6 +67,7 @@ export default function Settings() {
   const [countries, setCountries] = useState<Array<ICountry>>([]);
   const [states, setStates] = useState<Array<IState>>([]);
   const [cities, setCities] = useState<Array<ICity>>([]);
+  const [isSubscribed, setIsSubScribed] = useState<boolean>(true);
 
   const updateUserProfile = () => {
     if (!username || !email) {
@@ -75,6 +78,27 @@ export default function Settings() {
     if (username.includes(" ") || checkContainsSpecialCharacters(username)) {
       toast.error("Username can't contain space or a special character.");
       return;
+    }
+
+    let planId: number | null = null;
+
+    if (isSubscribed) {
+      if (user.planStartDate && user.planEndDate) {
+        if (
+          moment(servertime).isAfter(moment(user.planStartDate)) &&
+          moment(servertime).isBefore(moment(user.planEndDate))
+        ) {
+          planId = 1;
+        } else { // Subscription expired user
+          setIsSubscriptionModalVisible(true);
+          return;
+        }
+      } else { // Newly subscribing user
+        setIsSubscriptionModalVisible(true);
+        return;
+      }
+    } else {
+      planId = null;
     }
 
     updateProfile(
@@ -89,7 +113,8 @@ export default function Settings() {
       country.id,
       state.id,
       city.id,
-      zipcode
+      zipcode,
+      planId
     ).then((data) => {
       if (data) {
         setUsername(data.username);
@@ -144,6 +169,7 @@ export default function Settings() {
             setState(data.state ?? DEFAULT_STATE);
             setCity(data.city ?? DEFAULT_CITY);
             setZipcode(data.zipcode ?? "");
+            setIsSubScribed(isMembership);
           }
         });
       });
@@ -155,8 +181,8 @@ export default function Settings() {
   return (
     <Layout>
       <div className="relative px-5 pt-16 pb-36 bg-background w-full min-h-screen flex justify-center items-center">
-        <div className="w-full md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg">
-          <div className="w-full flex justify-center -mt-16 mb-10">
+        <div className="w-full flex flex-col md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg justify-center items-center">
+          <div className="w-full flex justify-center -mt-16 mb-5">
             <div
               className="relative w-32 h-32 rounded-full overflow-hidden border border-secondary cursor-pointer bg-third"
               onMouseEnter={() => setIsAvatarImageHover(true)}
@@ -205,7 +231,16 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-5">
+          <div className="relative w-full flex justify-center items-center mb-5">
+            <Switch
+              checked={isSubscribed}
+              setChecked={setIsSubScribed}
+              label="Subscription"
+              labelPos="left"
+            />
+          </div>
+
+          <div className="w-full flex flex-col lg:flex-row mt-5 space-x-0 lg:space-x-5">
             <TextInput
               sname="First name"
               label=""
@@ -362,6 +397,8 @@ export default function Settings() {
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}
       />
+
+      <SubscriptionModal />
     </Layout>
   );
 }
