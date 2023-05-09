@@ -1,9 +1,5 @@
 import { DEFAULT_AVATAR_IMAGE, GENDER } from "@/libs/constants";
 
-import { DEFAULT_COUNTRY, ICountry } from "@/interfaces/ICountry";
-import { DEFAULT_STATE, IState } from "@/interfaces/IState";
-import { DEFAULT_CITY, ICity } from "@/interfaces/ICity";
-
 export interface IProfile {
   id: number | null;
   username: string;
@@ -14,9 +10,9 @@ export interface IProfile {
   gender: string;
   dob: string;
   address: string;
-  country: ICountry;
-  state: IState;
-  city: ICity;
+  country: string;
+  state: string;
+  city: string;
   zipcode: string;
 }
 
@@ -30,8 +26,8 @@ export const DEFAULT_PROFILE = {
   gender: GENDER.MALE,
   dob: "1960-01-01",
   address: "",
-  country: DEFAULT_COUNTRY,
-  state: DEFAULT_STATE,
-  city: DEFAULT_CITY,
+  country: "",
+  state: "",
+  city: "",
   zipcode: "",
 } as IProfile;

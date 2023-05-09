@@ -93,6 +93,14 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+div.none-tailwind {
+  color: var(--color-primary);
+}
+div.none-tailwind * {
+  all: revert;
+  color: var(--color-primary);
+}
+
 .loading {
   position: fixed;
   left: 0;

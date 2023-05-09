@@ -1,4 +1,4 @@
-import { SITE_BASE_URL } from "@/libs/constants";
+import { APP_NAME, SITE_BASE_URL } from "@/libs/constants";
 
 export interface IShareData {
   url: string;
@@ -17,15 +17,15 @@ export interface IShareData {
 
 export const DEFAULT_SHAREDATA = {
   url: SITE_BASE_URL,
-  title: "Armin Van Buuren Music",
-  subject: "Armin Van Buuren Music",
-  quote: "Armin Van Buuren Music",
-  about: "Armin Van Buuren Music",
-  body: "Armin Van Buuren Music",
-  summary: "Armin Van Buuren Music",
-  hashtag: "arminvanbuuren",
-  hashtags: ["arminvanbuuren"],
-  source: "arminvanbuuren.io",
+  title: `${APP_NAME} Music`,
+  subject: `${APP_NAME} Music`,
+  quote: `${APP_NAME} Music`,
+  about: `${APP_NAME} Music`,
+  body: `${APP_NAME} Music`,
+  summary: `${APP_NAME} Music`,
+  hashtag: APP_NAME.toLowerCase(),
+  hashtags: [APP_NAME.toLowerCase()],
+  source: SITE_BASE_URL,
   separator: "\n",
-  related: ["@arminvanbuuren"],
+  related: [`@${APP_NAME.toLowerCase()}`],
 } as IShareData;

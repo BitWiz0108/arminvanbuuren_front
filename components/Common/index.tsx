@@ -21,7 +21,7 @@ export const composeLyrics = (
         }}
       ></div>
       <div
-        className="text-primary text-center text-base leading-10"
+        className="none-tailwind"
         dangerouslySetInnerHTML={{
           __html: lyrics,
         }}
@@ -51,7 +51,7 @@ export const composeMetadata = (
         {durationLabel(duration)}
       </p>
       <div
-        className="text-primary text-center text-base leading-10"
+        className="none-tailwind"
         dangerouslySetInnerHTML={{
           __html: lyrics,
         }}

@@ -3558,6 +3558,11 @@ react-onclickoutside@^6.12.2:
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.13.0.tgz#e165ea4e5157f3da94f4376a3ab3e22a565f4ffc"
   integrity sha512-ty8So6tcUpIb+ZE+1HAhbLROvAIJYyJe/1vRrrcmW+jLsaM+/powDRqxzo6hSh9CuRZGSL1Q8mvcF5WRD93a0A==
 
+react-photo-album@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-photo-album/-/react-photo-album-2.2.0.tgz#3efb9f7ccecc1484ce21b2e7c7dc47f3960ae6f7"
+  integrity sha512-IyXpGc4pOKp/A9/CiUIIQobrGpCCNdSB7/vKmQWW92J0ivqxKGjuJHS/4n9F3N3GmfF4StRn3SJ/yY0g6ryKuA==
+
 react-popper@^2.2.5, react-popper@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.3.0.tgz#17891c620e1320dce318bad9fede46a5f71c70ba"

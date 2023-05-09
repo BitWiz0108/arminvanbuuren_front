@@ -94,14 +94,14 @@ export default function About() {
               <h1 className="text-5xl uppercase font-thin font-[100] text-center tracking-[-6px]">
                 ABOUT THE ARTIST
               </h1>
-              <div
-                className={twMerge(
-                  "relative w-full h-[500px] text-center my-5 overflow-x-hidden overflow-y-auto"
-                )}
-                dangerouslySetInnerHTML={{
-                  __html: artist?.description ?? "",
-                }}
-              ></div>
+              <div className="relative w-full h-[500px] text-center my-5 overflow-x-hidden overflow-y-auto">
+                <div
+                  className="none-tailwind"
+                  dangerouslySetInnerHTML={{
+                    __html: artist?.description ?? "",
+                  }}
+                ></div>
+              </div>
               <div className="w-full flex justify-center items-center flex-wrap gap-5">
                 {artist.facebook && (
                   <Link href={artist.facebook} target="_blank">

@@ -44,7 +44,7 @@ export default function TermsOfService() {
           Terms of Service
         </h1>
         <div
-          className="w-full p-5 mb-5"
+          className="none-tailwind"
           dangerouslySetInnerHTML={{
             __html: content,
           }}

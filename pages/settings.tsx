@@ -13,6 +13,7 @@ import Profile from "@/components/Icons/Profile";
 import Edit from "@/components/Icons/Edit";
 import AudioControl from "@/components/AudioControl";
 import Switch from "@/components/Switch";
+import SubscriptionModal from "@/components/SubscriptionModal";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -28,24 +29,14 @@ import {
 } from "@/libs/constants";
 
 import { DEFAULT_PROFILE } from "@/interfaces/IProfile";
-import { DEFAULT_COUNTRY, ICountry } from "@/interfaces/ICountry";
-import { DEFAULT_STATE, IState } from "@/interfaces/IState";
-import { DEFAULT_CITY, ICity } from "@/interfaces/ICity";
-import SubscriptionModal from "@/components/SubscriptionModal";
 
 export default function Settings() {
   const router = useRouter();
   const avatarImageRef = useRef(null);
 
-  const {
-    isLoading,
-    fetchProfile,
-    updateProfile,
-    fetchCountries,
-    fetchStates,
-    fetchCities,
-  } = useProfile();
-  const { isSignedIn, accessToken, checkAuth, servertime, user, isMembership } = useAuthValues();
+  const { fetchProfile, updateProfile, fetchLocation } = useProfile();
+  const { isSignedIn, accessToken, checkAuth, servertime, user, isMembership } =
+    useAuthValues();
   const { audioPlayer, setIsSubscriptionModalVisible } = useShareValues();
 
   const [username, setUsername] = useState<string>("");
@@ -55,18 +46,15 @@ export default function Settings() {
   const [gender, setGender] = useState<string>(DEFAULT_PROFILE.gender);
   const [dob, setDob] = useState<string>(DEFAULT_PROFILE.dob);
   const [address, setAddress] = useState<string>("");
-  const [country, setCountry] = useState<ICountry>(DEFAULT_COUNTRY);
-  const [state, setState] = useState<IState>(DEFAULT_STATE);
-  const [city, setCity] = useState<ICity>(DEFAULT_CITY);
   const [zipcode, setZipcode] = useState<string>("");
   const [avatarImagePreview, setAvatarImagePreview] = useState<string>(
     DEFAULT_PROFILE.avatarImage
   );
   const [avatarImageFile, setAvatarImageFile] = useState<File | null>(null);
   const [isAvatarImageHover, setIsAvatarImageHover] = useState<boolean>(false);
-  const [countries, setCountries] = useState<Array<ICountry>>([]);
-  const [states, setStates] = useState<Array<IState>>([]);
-  const [cities, setCities] = useState<Array<ICity>>([]);
+  const [country, setCountry] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [city, setCity] = useState<string>("");
   const [isSubscribed, setIsSubScribed] = useState<boolean>(true);
 
   const updateUserProfile = () => {
@@ -89,11 +77,13 @@ export default function Settings() {
           moment(servertime).isBefore(moment(user.planEndDate))
         ) {
           planId = 1;
-        } else { // Subscription expired user
+        } else {
+          // Subscription expired user
           setIsSubscriptionModalVisible(true);
           return;
         }
-      } else { // Newly subscribing user
+      } else {
+        // Newly subscribing user
         setIsSubscriptionModalVisible(true);
         return;
       }
@@ -110,9 +100,9 @@ export default function Settings() {
       gender,
       dob,
       address,
-      country.id,
-      state.id,
-      city.id,
+      country,
+      state,
+      city,
       zipcode,
       planId
     ).then((data) => {
@@ -125,9 +115,9 @@ export default function Settings() {
         setGender(data.gender ?? GENDER.MALE);
         setDob(data.dob ?? moment().format(DATETIME_FORMAT));
         setAddress(data.address ?? "");
-        setCountry(data.country ?? DEFAULT_COUNTRY);
-        setState(data.state ?? DEFAULT_STATE);
-        setCity(data.city ?? DEFAULT_CITY);
+        setCountry(data.country ?? "");
+        setState(data.state ?? "");
+        setCity(data.city ?? "");
         setZipcode(data.zipcode ?? "");
 
         if (avatarImageFile) {
@@ -140,38 +130,23 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    fetchStates(country.id).then((value) => {
-      setStates(value);
-    });
-    fetchCities(state.id).then((value) => {
-      setCities(value);
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country, state]);
-
-  useEffect(() => {
     if (isSignedIn) {
-      fetchCountries().then((value) => {
-        setCountries(value);
-
-        fetchProfile().then((data) => {
-          if (data) {
-            setUsername(data.username);
-            setAvatarImagePreview(data.avatarImage);
-            setFirstName(data.firstName ?? "");
-            setLastName(data.lastName ?? "");
-            setEmail(data.email ?? "");
-            setGender(data.gender ?? GENDER.MALE);
-            setDob(data.dob ?? moment().format(DATETIME_FORMAT));
-            setAddress(data.address ?? "");
-            setCountry(data.country ?? DEFAULT_COUNTRY);
-            setState(data.state ?? DEFAULT_STATE);
-            setCity(data.city ?? DEFAULT_CITY);
-            setZipcode(data.zipcode ?? "");
-            setIsSubScribed(isMembership);
-          }
-        });
+      fetchProfile().then((data) => {
+        if (data) {
+          setUsername(data.username);
+          setAvatarImagePreview(data.avatarImage);
+          setFirstName(data.firstName ?? "");
+          setLastName(data.lastName ?? "");
+          setEmail(data.email ?? "");
+          setGender(data.gender ?? GENDER.MALE);
+          setDob(data.dob ?? moment().format(DATETIME_FORMAT));
+          setAddress(data.address ?? "");
+          setCountry(data.country ?? "");
+          setState(data.state ?? "");
+          setCity(data.city ?? "");
+          setZipcode(data.zipcode ?? "");
+          setIsSubScribed(isMembership);
+        }
       });
     }
 
@@ -306,65 +281,26 @@ export default function Settings() {
           </div>
 
           <div className="w-full flex flex-col xl:flex-row space-x-0 xl:space-x-5">
-            <Select
-              label="Country"
-              options={countries.map((value) => {
-                return {
-                  label: value.iso,
-                  value: value.id ? value.id.toString() : "",
-                };
-              })}
-              value={country.id ? country.id : ""}
-              setValue={(value: string) => {
-                const id = Number(value);
-                const index = countries.findIndex((country) => {
-                  return country.id == id;
-                });
-                if (index >= 0) {
-                  setCountry(countries[index]);
+            <TextInput
+              sname="Zip code"
+              label=""
+              placeholder="Zip code"
+              type="text"
+              value={zipcode}
+              setValue={(zipcode: string) => {
+                setZipcode(zipcode);
+
+                if (zipcode) {
+                  fetchLocation(zipcode).then((value) => {
+                    if (value) {
+                      setCountry(value.country);
+                      setState(value.state);
+                      setCity(value.city);
+                    }
+                  });
                 }
               }}
             />
-            <Select
-              label="State"
-              options={[DEFAULT_STATE, ...states].map((value) => {
-                return {
-                  label: value.name,
-                  value: value.id ? value.id.toString() : "",
-                };
-              })}
-              value={state.id ? state.id : ""}
-              setValue={(value: string) => {
-                const id = Number(value);
-                const index = states.findIndex((state) => {
-                  return state.id == id;
-                });
-                if (index >= 0) {
-                  setState(states[index]);
-                }
-              }}
-            />
-            <Select
-              label="City"
-              options={[DEFAULT_CITY, ...cities].map((value) => {
-                return {
-                  label: value.name,
-                  value: value.id ? value.id.toString() : "",
-                };
-              })}
-              value={city.id ? city.id : ""}
-              setValue={(value: string) => {
-                const id = Number(value);
-                const index = cities.findIndex((city) => {
-                  return city.id == id;
-                });
-                if (index >= 0) {
-                  setCity(cities[index]);
-                }
-              }}
-            />
-          </div>
-          <div className="w-full flex flex-col xl:flex-row space-x-0 xl:space-x-5">
             <TextInput
               sname="Address"
               label=""
@@ -373,13 +309,31 @@ export default function Settings() {
               value={address}
               setValue={setAddress}
             />
+          </div>
+          <div className="w-full flex flex-col xl:flex-row space-x-0 xl:space-x-5">
             <TextInput
-              sname="Zip code"
+              sname="Country"
               label=""
-              placeholder="Zip code"
+              placeholder="Country"
               type="text"
-              value={zipcode}
-              setValue={setZipcode}
+              value={country}
+              setValue={setCountry}
+            />
+            <TextInput
+              sname="State"
+              label=""
+              placeholder="State"
+              type="text"
+              value={state}
+              setValue={setState}
+            />
+            <TextInput
+              sname="City"
+              label=""
+              placeholder="City"
+              type="text"
+              value={city}
+              setValue={setCity}
             />
           </div>
 

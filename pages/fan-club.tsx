@@ -20,6 +20,7 @@ import useLivestream from "@/hooks/useLivestream";
 
 import { bigNumberFormat } from "@/libs/utils";
 import {
+  APP_NAME,
   DEFAULT_COVER_IMAGE,
   IMAGE_MD_BLUR_DATA_URL,
   IMAGE_SM_BLUR_DATA_URL,
@@ -69,9 +70,9 @@ export default function FanClub() {
     setShareData({
       ...DEFAULT_SHAREDATA,
       url: `${SITE_BASE_URL}/fan-club`,
-      title: "Armin Van Buuren Music - Fan Club",
-      subject: "Armin Van Buuren Music - Fan Club",
-      quote: "Armin Van Buuren Music - Fan Club",
+      title: `${APP_NAME} Music - Fan Club`,
+      subject: `${APP_NAME} Music - Fan Club`,
+      quote: `${APP_NAME} Music - Fan Club`,
       about: artist.description,
       body: artist.description,
       summary: artist.description,
@@ -186,7 +187,7 @@ export default function FanClub() {
             </p>
           </Link>
           <div
-            className="w-full text-secondary text-sm"
+            className="none-tailwind"
             dangerouslySetInnerHTML={{
               __html: latestLivestreams[0].description,
             }}

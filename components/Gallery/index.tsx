@@ -2,17 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Carousel from "react-multi-carousel";
 import { twMerge } from "tailwind-merge";
+import PhotoAlbum from "react-photo-album";
 
-import GalleryItem from "@/components/GalleryItem";
 import X from "@/components/Icons/X";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
 import useGallery from "@/hooks/useGallery";
 
-import { IMAGE_MD_BLUR_DATA_URL } from "@/libs/constants";
-
-import { DEFAULT_GALLERY } from "@/interfaces/IGallery";
+import { IMAGE_MD_BLUR_DATA_URL, IMAGE_SIZE } from "@/libs/constants";
 
 const GalleryView = () => {
   const carouselRef = useRef(null);
@@ -21,11 +19,8 @@ const GalleryView = () => {
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [images, setImages] = useState<
-    Array<{
-      image: string;
-      compressedImage: string;
-    }>
-  >(DEFAULT_GALLERY.images);
+    Array<{ src: string; hqSrc: string; width: number; height: number }>
+  >([]);
   const [isCarouselVisible, setIsCarouselVisible] = useState<boolean>(false);
 
   const SINGLE_RESPONSIVENESS = {
@@ -51,11 +46,35 @@ const GalleryView = () => {
     },
   };
 
+  const getSizeValue = (size: IMAGE_SIZE) => {
+    const squareSize = 200;
+    switch (size) {
+      case IMAGE_SIZE.SQUARE:
+        return { width: squareSize, height: squareSize };
+      case IMAGE_SIZE.WIDE:
+        return { width: squareSize * 2, height: squareSize };
+      case IMAGE_SIZE.TALL:
+        return { width: squareSize, height: squareSize * 2 };
+      case IMAGE_SIZE.WIDEANDTALL:
+        return { width: squareSize * 2, height: squareSize * 2 };
+      default:
+        return { width: squareSize, height: squareSize };
+    }
+  };
+
   useEffect(() => {
     if (isSignedIn) {
       fetchPageContent().then((value) => {
         if (value) {
-          setImages(value.images);
+          setImages(
+            value.images.map((image) => {
+              return {
+                src: image.compressedImage,
+                hqSrc: image.image,
+                ...getSizeValue(image.size),
+              };
+            })
+          );
         }
       });
     }
@@ -65,30 +84,24 @@ const GalleryView = () => {
 
   return (
     <div className="relative w-full flex flex-col justify-start items-center">
-      <div className="w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-        {images.map((image, index) => {
-          return (
-            <div className="col-span-1" key={index}>
-              <GalleryItem
-                index={index}
-                image={image}
-                onClick={(index: number) => {
-                  setActiveSlide(index);
-                  setIsCarouselVisible(true);
-                  if (carouselRef && carouselRef.current) {
-                    // @ts-ignore
-                    carouselRef.current.goToSlide(index);
-                  }
-                }}
-              />
-            </div>
-          );
-        })}
+      <div className="w-full p-5">
+        <PhotoAlbum
+          layout="masonry"
+          photos={images}
+          onClick={(props) => {
+            setActiveSlide(props.index + 2);
+            setIsCarouselVisible(true);
+            if (carouselRef && carouselRef.current) {
+              // @ts-ignore
+              carouselRef.current.goToSlide(props.index + 2);
+            }
+          }}
+        />
       </div>
 
       <div
         className={twMerge(
-          "left-0 top-0 w-full h-screen px-5 lg:px-10 pt-5 lg:pt-10 pb-24 lg:pb-36 flex justify-center items-center bg-[#000000aa] z-top",
+          "left-0 top-0 w-full h-screen p-5 flex justify-center items-center bg-[#000000aa] z-top",
           isCarouselVisible ? "fixed" : "hidden"
         )}
       >
@@ -100,14 +113,14 @@ const GalleryView = () => {
             <X />
           </div>
         </div>
-        <div className="w-full md:w-4/5 lg:5/6">
+        <div className="w-full md:w-4/5 lg:w-11/12">
           <Carousel
             ref={carouselRef}
             ssr
             partialVisible
             autoPlay={false}
             responsive={SINGLE_RESPONSIVENESS}
-            className="w-full max-h-[640px] bg-transparent"
+            className="w-full max-h-screen bg-transparent"
             infinite
             swipeable
             draggable
@@ -115,12 +128,15 @@ const GalleryView = () => {
           >
             {images.map((image, index) => {
               return (
-                <div key={index} className="w-full h-full">
+                <div
+                  key={index}
+                  className="w-full h-full flex justify-center items-center"
+                >
                   <Image
                     className={twMerge(
-                      "w-full h-full object-contain select-none pointer-events-none"
+                      "w-full object-cover md:object-none select-none pointer-events-none"
                     )}
-                    src={image.image}
+                    src={image.hqSrc}
                     width={1600}
                     height={900}
                     alt=""
@@ -133,7 +149,6 @@ const GalleryView = () => {
           </Carousel>
         </div>
       </div>
-
       {isLoading && <div className="loading"></div>}
     </div>
   );

@@ -1,3 +1,4 @@
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME!;
 export const PRODUCTION_MODE =
   Number(process.env.NEXT_PUBLIC_PRODUCTION_MODE!) == 1;
 export const SITE_BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL!;
@@ -8,6 +9,12 @@ export const AWS_SECRET_ACCESS_KEY =
   process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!;
 export const AWS_REGION = process.env.NEXT_PUBLIC_AWS_REGION!;
 export const AWS_BUCKET_NAME = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!;
+export const STRIPE_PUBLICK_API_KEY =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLICK_API_KEY!;
+export const STRIPE_SECRET_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!;
+export const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+export const PAYPAL_CLIENT_SECRET =
+  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_SECRET!;
 
 export const TAG_USERNAME = "EMAIL";
 export const TAG_PASSWORD = "PASSWORD";
@@ -64,6 +71,13 @@ export enum ASSET_TYPE {
   NONE = "NONE",
   MUSIC = "MUSIC",
   LIVESTREAM = "LIVESTREAM",
+}
+
+export enum IMAGE_SIZE {
+  SQUARE = "SQUARE",
+  WIDE = "WIDE",
+  TALL = "TALL",
+  WIDEANDTALL = "WIDEANDTALL",
 }
 
 //##########################################################

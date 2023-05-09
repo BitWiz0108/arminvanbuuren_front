@@ -105,7 +105,7 @@ export default function Post() {
           </p>
 
           <div
-            className="w-full p-5 mb-5"
+            className="none-tailwind"
             dangerouslySetInnerHTML={{
               __html: post.content,
             }}
