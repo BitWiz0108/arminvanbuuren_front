@@ -15,29 +15,33 @@ import PlayNext from "@/components/Icons/PlayNext";
 import Setting from "@/components/Icons/Setting";
 import Donate from "@/components/Icons/Donate";
 import Comment from "@/components/Icons/Comment";
+import Album from "@/components/Icons/Album";
 import LiveStreamSettingsModal from "@/components/LiveStreamSettingsModal";
-
-import {
-  DATE_FORMAT,
-  DEFAULT_COVER_IMAGE,
-  IMAGE_MD_BLUR_DATA_URL,
-} from "@/libs/constants";
+import AudioSlider from "@/components/AudioSlider";
 
 import { useShareValues } from "@/contexts/contextShareData";
 import { useSizeValues } from "@/contexts/contextSize";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
+import {
+  DATE_FORMAT,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
+  VIEW_MODE,
+} from "@/libs/constants";
+
 import { IStream } from "@/interfaces/IStream";
 
 type Props = {
   track: IStream;
   videoPlayer: any;
+  viewMode: VIEW_MODE;
   onListView: Function;
-  onPrevMusic: Function;
-  onPlayMusic: Function;
-  onNextMusic: Function;
-  onFullScreenView: Function;
+  onPrevLivestream: Function;
+  onPlayLivestream: Function;
+  onNextLivestream: Function;
+  onFullScreenViewOn: Function;
   onFullScreenViewOff: Function;
   isFullScreenView: boolean;
 };
@@ -45,12 +49,13 @@ type Props = {
 const VideoControl = ({
   track,
   videoPlayer,
+  viewMode,
   onListView,
-  onPrevMusic,
-  onPlayMusic,
-  onNextMusic,
-  onFullScreenView,
+  onPrevLivestream,
+  onPlayLivestream,
+  onNextLivestream,
   isFullScreenView,
+  onFullScreenViewOn,
   onFullScreenViewOff,
 }: Props) => {
   const livestreamsettingsmodalRefMd = useRef(null);
@@ -101,7 +106,7 @@ const VideoControl = ({
       <AnimatePresence>
         {!isFullScreenView && (
           <motion.div
-            className="fixed bottom-0 flex flex-col justify-start items-start bg-background z-50"
+            className="fixed bottom-0 flex flex-col justify-start items-start bg-background border-l border-[#464646] ml-[1px] z-50"
             initial={{ y: 100 }}
             animate={{ y: 1 }}
             exit={{ y: 100 }}
@@ -112,30 +117,42 @@ const VideoControl = ({
               <div className="h-32 w-[128px] hidden md:flex">
                 <Image
                   className="object-cover h-full"
-                  src={track.coverImage ?? DEFAULT_COVER_IMAGE}
+                  src={track.coverImage ?? PLACEHOLDER_IMAGE}
                   width={1500}
                   height={1500}
                   alt=""
                   placeholder="blur"
-                  blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                  priority
                 />
               </div>
-              <div className="flex flex-grow h-full flex-col justify-start items-center">
-                <div className="relative w-full h-1 bg-[#363636]">
-                  <div
-                    className="absolute left-0 top-0 h-full bg-blueSecondary"
-                    style={{
-                      width: `${videoPlayer.currentPercentage}%`,
-                    }}
-                  ></div>
+              <div className="relative flex flex-grow h-full flex-col justify-start items-center">
+                <div className="relative w-full h-1 bg-[#363636] z-0">
+                  {viewMode == VIEW_MODE.VIDEO && (
+                    <div className="absolute left-0 top-0 w-full h-full z-0">
+                      <AudioSlider
+                        min={0}
+                        max={videoPlayer.duration}
+                        value={videoPlayer.trackProgress}
+                        step={1}
+                        onChange={(value: number) => videoPlayer.onScrub(value)}
+                      />
+                    </div>
+                  )}
                 </div>
 
-                <div className="w-full h-full flex flex-row px-2 lg:px-10 justify-between items-center space-x-2">
+                <div className="relative w-full h-full flex flex-row px-2 lg:px-10 justify-between items-center space-x-2 z-10">
                   <div className="flex flex-row justify-start items-center space-x-5 w-1/4">
                     <ButtonCircle
                       dark
                       size="small"
-                      icon={<List width={24} height={24} />}
+                      icon={
+                        viewMode == VIEW_MODE.LIST ? (
+                          <Album width={24} height={24} />
+                        ) : (
+                          <List width={24} height={24} />
+                        )
+                      }
                       onClick={() => {
                         onListView();
                       }}
@@ -157,7 +174,7 @@ const VideoControl = ({
                       dark
                       size="small"
                       icon={<PlayPrev />}
-                      onClick={() => onPrevMusic()}
+                      onClick={() => onPrevLivestream()}
                     />
                     <ButtonCircle
                       dark={false}
@@ -169,13 +186,13 @@ const VideoControl = ({
                           <Play width={34} height={34} />
                         )
                       }
-                      onClick={() => onPlayMusic()}
+                      onClick={() => onPlayLivestream()}
                     />
                     <ButtonCircle
                       dark
                       size="small"
                       icon={<PlayNext />}
-                      onClick={() => onNextMusic()}
+                      onClick={() => onNextLivestream()}
                     />
                   </div>
 
@@ -214,7 +231,7 @@ const VideoControl = ({
                           className="text-background"
                         />
                       }
-                      onClick={() => onFullScreenView()}
+                      onClick={() => onFullScreenViewOn()}
                     />
 
                     <div className="hidden lg:flex">
@@ -282,7 +299,7 @@ const VideoControl = ({
                     dark={false}
                     size="small"
                     icon={<FullScreen width={24} height={24} />}
-                    onClick={() => onFullScreenView()}
+                    onClick={() => onFullScreenViewOn()}
                   />
                   <AnimatePresence>
                     {isSettingsModalSmVisible && (
@@ -305,21 +322,29 @@ const VideoControl = ({
                 </div>
               </div>
               <div className="relative w-full h-1 bg-[#363636]">
-                <div
-                  className="absolute left-0 top-0 h-full bg-blueSecondary"
-                  style={{ width: `${videoPlayer.currentPercentage}%` }}
-                ></div>
+                {viewMode == VIEW_MODE.VIDEO && (
+                  <div className="absolute left-0 top-0 w-full h-full">
+                    <AudioSlider
+                      min={0}
+                      max={videoPlayer.duration}
+                      value={videoPlayer.trackProgress}
+                      step={1}
+                      onChange={(value: number) => videoPlayer.onScrub(value)}
+                    />
+                  </div>
+                )}
               </div>
               <div className="w-full h-[75px] flex justify-center items-center">
                 <div className="w-[75px] h-[75px]">
                   <Image
                     className="w-full object-cover h-full"
-                    src={track.coverImage ?? DEFAULT_COVER_IMAGE}
+                    src={track.coverImage ?? PLACEHOLDER_IMAGE}
                     width={1500}
                     height={1500}
                     alt=""
                     placeholder="blur"
-                    blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                    priority
                   />
                 </div>
                 <div className="flex flex-grow justify-center items-center">
@@ -329,7 +354,7 @@ const VideoControl = ({
                         dark
                         size="small"
                         icon={<PlayPrev />}
-                        onClick={onPrevMusic}
+                        onClick={onPrevLivestream}
                       />
                       <ButtonCircle
                         dark={false}
@@ -341,13 +366,13 @@ const VideoControl = ({
                             <Play width={24} height={24} />
                           )
                         }
-                        onClick={onPlayMusic}
+                        onClick={onPlayLivestream}
                       />
                       <ButtonCircle
                         dark
                         size="small"
                         icon={<PlayNext />}
-                        onClick={onNextMusic}
+                        onClick={onNextLivestream}
                       />
                     </div>
 

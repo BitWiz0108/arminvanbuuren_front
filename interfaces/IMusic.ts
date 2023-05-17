@@ -1,4 +1,4 @@
-import { DEFAULT_COVER_IMAGE } from "@/libs/constants";
+import { PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 export interface IMusic {
   id: number | null;
@@ -23,7 +23,7 @@ export const DEFAULT_MUSIC = {
   creator: null,
   duration: 0,
   description: "",
-  coverImage: DEFAULT_COVER_IMAGE,
+  coverImage: PLACEHOLDER_IMAGE,
   musicFile: "",
   musicFileCompressed: "",
   isFavorite: false,

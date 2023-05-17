@@ -93,7 +93,7 @@ export default function ForgotPassword() {
                 </p>
               </Link>
               <div className="w-[1px] h-4 bg-primary"></div>
-              <Link href="/signin">
+              <Link href="/">
                 <p className="text-center text-primary text-lg hover:underline transition-all duration-300 cursor-pointer">
                   Sign In
                 </p>

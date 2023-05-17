@@ -67,7 +67,7 @@ export default function Signup() {
 
     signUp(email, userId, password, firstName, lastName).then((result) => {
       if (result) {
-        router.push("/signin");
+        router.push("/");
       }
     });
   };
@@ -164,10 +164,7 @@ export default function Signup() {
               <ButtonOutline label="SIGN UP" onClick={() => onSignup()} />
             </div>
             <div className="mb-5">
-              <Link
-                href="/signin"
-                className="text-xl font-semibold hover:underline"
-              >
+              <Link href="/" className="text-xl font-semibold hover:underline">
                 LOG IN
               </Link>
             </div>

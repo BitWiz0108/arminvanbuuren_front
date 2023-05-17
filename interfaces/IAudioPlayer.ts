@@ -5,6 +5,7 @@ import { IMusic } from "@/interfaces/IMusic";
 export interface IAudioPlayer {
   volume: number;
   isPlaying: boolean;
+  trackProgress: number;
   currentPercentage: number;
   duration: number;
   musics: Array<IMusic>;

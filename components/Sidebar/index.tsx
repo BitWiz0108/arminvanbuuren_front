@@ -6,8 +6,6 @@ import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 
-import styles from "./index.module.scss";
-
 import Menu from "@/components/Icons/Menu";
 import Power from "@/components/Icons/Power";
 import Music from "@/components/Icons/Music";
@@ -22,8 +20,9 @@ import Info from "@/components/Icons/Info";
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useSizeValues } from "@/contexts/contextSize";
 
-import { DEFAULT_LOGO_IMAGE, SIDEBARWIDTH_SM } from "@/libs/constants";
 import useFanclub from "@/hooks/useFanclub";
+
+import { DEFAULT_LOGO_IMAGE, SIDEBARWIDTH_SM } from "@/libs/constants";
 
 type Props = {
   visible: boolean;
@@ -77,9 +76,9 @@ const Sidebar = ({ visible, setVisible }: Props) => {
           animate={{ width: isMobile ? SIDEBARWIDTH_SM : sidebarWidth }}
           exit={{ width: 0 }}
           transition={{ duration: 0.3 }}
-          className={`${styles.container} ${twMerge(
-            "absolute left-0 top-0 md:relative bg-background h-fit md:h-screen rounded-br-3xl md:rounded-br-none pt-5 pb-0 md:py-5 overflow-x-hidden overflow-y-auto z-30"
-          )}`}
+          className={twMerge(
+            "fixed left-0 top-0 bg-background h-fit md:h-screen rounded-br-3xl md:rounded-br-none pt-5 pb-0 md:py-5 overflow-x-hidden overflow-y-auto z-30"
+          )}
           style={{ width: `${isMobile ? SIDEBARWIDTH_SM : sidebarWidth}px` }}
         >
           <div
@@ -111,23 +110,24 @@ const Sidebar = ({ visible, setVisible }: Props) => {
               isSidebarCollapsed ? "invisible" : "visible"
             )}
           >
-            <Link href="/" className="w-full">
+            <Link href="/home" className="w-full">
               <Image
                 className="w-full object-cover"
                 src={logoImage ?? DEFAULT_LOGO_IMAGE}
                 width={202}
                 height={83}
                 alt=""
+                priority
               />
             </Link>
           </div>
 
           <ButtonSidebar
-            active={router.pathname == "/"}
+            active={router.pathname == "/home"}
             collapsed={isSidebarCollapsed}
             icon={<Power width={28} height={28} />}
             label="Home"
-            onClick={() => goToLink("/")}
+            onClick={() => goToLink("/home")}
           />
           <ButtonSidebar
             active={router.pathname == "/about"}
@@ -147,7 +147,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             active={router.pathname == "/live-stream"}
             collapsed={isSidebarCollapsed}
             icon={<Mic width={24} height={24} />}
-            label="Live Streams"
+            label="Live Stream"
             onClick={() => goToLink("/live-stream")}
           />
           <ButtonSidebar
@@ -184,14 +184,14 @@ const Sidebar = ({ visible, setVisible }: Props) => {
                 className="text-primary text-lg text-center hover:underline cursor-pointer"
                 onClick={() => {
                   signOut();
-                  router.push("/signin");
+                  router.push("/");
                 }}
               >
                 Logout
               </p>
             ) : (
               <>
-                <Link href="/signin">
+                <Link href="/">
                   <p className="text-primary text-lg text-center hover:underline">
                     Login
                   </p>
@@ -213,7 +213,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             )}
           >
             <div className="w-1/2 flex justify-center items-center">
-              <Link href="/">
+              <Link href="/home">
                 <Image
                   className="w-[81px] h-[28px] object-fill"
                   width={97}
@@ -224,7 +224,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
               </Link>
             </div>
             <div className="w-1/2 justify-center items-center">
-              <Link href="/">
+              <Link href="/home">
                 <Image
                   className="w-[86px] h-[28px] object-fill"
                   width={102}

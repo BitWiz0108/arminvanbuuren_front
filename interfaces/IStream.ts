@@ -1,4 +1,4 @@
-import { DEFAULT_COVER_IMAGE } from "@/libs/constants";
+import { PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 export interface IStream {
   id: number | null;
@@ -22,7 +22,7 @@ export interface IStream {
 
 export const DEFAULT_STREAM = {
   id: null,
-  coverImage: DEFAULT_COVER_IMAGE,
+  coverImage: PLACEHOLDER_IMAGE,
   previewVideo: "",
   previewVideoCompressed: "",
   fullVideo: "",

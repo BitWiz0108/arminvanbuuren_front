@@ -1,4 +1,5 @@
 import { DEFAULT_CURRENCY, ICurrency } from "@/interfaces/ICurrency";
+import { PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 export interface IPlan {
   id: number | null;
@@ -13,7 +14,7 @@ export interface IPlan {
 
 export const DEFAULT_PLAN = {
   id: null,
-  coverImage: "",
+  coverImage: PLACEHOLDER_IMAGE,
   name: "",
   description: "",
   price: 0,

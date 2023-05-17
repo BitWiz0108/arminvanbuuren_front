@@ -1,0 +1,113 @@
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
+
+import X from "@/components/Icons/X";
+import TextInput from "@/components/TextInput";
+import ButtonSettings from "@/components/ButtonSettings";
+
+import useProfile from "@/hooks/useProfile";
+
+type Props = {
+  visible: boolean;
+  setVisible: Function;
+};
+
+const ChangePasswordModal = ({ visible, setVisible }: Props) => {
+  const { isLoading, changePassword } = useProfile();
+
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const onChangePassword = async () => {
+    if (!oldPassword) {
+      toast.warn("Please enter current password.");
+      return;
+    }
+    if (!newPassword) {
+      toast.warn("Please enter new password.");
+      return;
+    }
+    if (
+      !confirmPassword ||
+      newPassword != confirmPassword ||
+      newPassword == oldPassword
+    ) {
+      toast.warn("Please confirm new password.");
+      return;
+    }
+
+    changePassword(oldPassword, newPassword).then((value) => {
+      if (value) {
+        setVisible(false);
+      }
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-36 bg-[#000000aa] flex justify-center items-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="relative w-full md:w-[540px] max-h-full px-5 md:px-10 pt-20 pb-5 md:pb-10 bg-background rounded-lg overflow-x-hidden overflow-y-auto pr-5">
+            <h1 className="absolute top-5 left-1/2 -translate-x-1/2 text-2xl text-center text-primary font-semibold">
+              Change Password
+            </h1>
+
+            <div className="absolute top-5 right-5 text-primary cursor-pointer">
+              <X width={24} height={24} onClick={() => setVisible(false)} />
+            </div>
+
+            <div className="w-full h-fit flex flex-col justify-start items-center">
+              <div className="w-full flex flex-row justify-center items-center space-x-2">
+                <div className="w-full flex flex-col justify-start items-start space-y-5">
+                  <TextInput
+                    sname="Current Password"
+                    label=""
+                    placeholder="Current Password"
+                    type="password"
+                    value={oldPassword}
+                    setValue={setOldPassword}
+                  />
+                  <TextInput
+                    sname="New Password"
+                    label=""
+                    placeholder="New Password"
+                    type="password"
+                    value={newPassword}
+                    setValue={setNewPassword}
+                  />
+                  <TextInput
+                    sname="Confirm Password"
+                    label=""
+                    placeholder="Confirm Password"
+                    type="password"
+                    value={confirmPassword}
+                    setValue={setConfirmPassword}
+                  />
+                  <div className="w-full">
+                    <ButtonSettings
+                      label="Save"
+                      bgColor={"1"}
+                      onClick={() => onChangePassword()}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {isLoading && <div className="loading"></div>}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default ChangePasswordModal;

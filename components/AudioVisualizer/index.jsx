@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSizeValues } from "@/contexts/contextSize";
 
 const AudioVisualizer = ({ url }) => {
-  const { width } = useSizeValues();
+  const { width, height } = useSizeValues();
 
   var BufferLoader = function (sources) {
     this.buffers = {};
@@ -274,7 +274,8 @@ const AudioVisualizer = ({ url }) => {
 
   return (
     <canvas
-      className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none scale-100 md:scale-75"
+      className="absolute left-1/2 -translate-x-1/2 pointer-events-none scale-100 md:scale-75"
+      style={{ top: `${-5 + 4 * (height / 3876)}%` }}
       id="freq"
       width={300}
       height={300}

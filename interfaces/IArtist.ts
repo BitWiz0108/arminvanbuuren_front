@@ -1,8 +1,8 @@
 import {
-  DEFAULT_ARTIST_IMAGE,
-  DEFAULT_BANNER_IMAGE,
-  DEFAULT_COVER_IMAGE,
+  DEFAULT_AVATAR_IMAGE,
   DEFAULT_LOGO_IMAGE,
+  FILE_TYPE,
+  IMAGE_BLUR_DATA_URL,
 } from "@/libs/constants";
 
 export interface IArtist {
@@ -19,8 +19,12 @@ export interface IArtist {
   description: string;
   albumNames: Array<string>;
   address: string;
-  phoneNumber: string;
+  mobile: string;
+  bannerType: FILE_TYPE;
   bannerImage: string;
+  bannerImageCompressed: string;
+  bannerVideo: string;
+  bannerVideoCompressed: string;
   avatarImage: string;
   facebook: string;
   twitter: string;
@@ -44,9 +48,13 @@ export const DEFAULT_ARTIST = {
   description: "",
   albumNames: [],
   address: "",
-  phoneNumber: "+1 (949) 577-2895",
-  bannerImage: DEFAULT_BANNER_IMAGE,
-  avatarImage: DEFAULT_ARTIST_IMAGE,
+  mobile: "",
+  bannerType: FILE_TYPE.IMAGE,
+  bannerImage: IMAGE_BLUR_DATA_URL,
+  bannerImageCompressed: IMAGE_BLUR_DATA_URL,
+  bannerVideo: "",
+  bannerVideoCompressed: "",
+  avatarImage: DEFAULT_AVATAR_IMAGE,
   facebook: "",
   twitter: "",
   instagram: "",

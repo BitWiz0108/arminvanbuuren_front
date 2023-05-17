@@ -7,14 +7,14 @@ import {
   API_BASE_URL,
   API_VERSION,
   DATETIME_FORMAT,
-  DEFAULT_AVATAR_IMAGE,
+  OAUTH_PROVIDER,
+  PROVIDER,
   TAG_ACCESS_TOKEN,
 } from "@/libs/constants";
 import { initializeFirebase } from "@/libs/firebase-client";
 
 import { IUser } from "@/interfaces/IUser";
 import { DEFAULT_USER } from "@/interfaces/IUser";
-import { getAWSSignedURL } from "@/libs/aws";
 
 initializeFirebase();
 
@@ -87,10 +87,6 @@ const useAuth = () => {
       const user = data.user as IUser;
 
       if (user.status) {
-        user.avatarImage = await getAWSSignedURL(
-          user.avatarImage,
-          DEFAULT_AVATAR_IMAGE
-        );
         setUser(user);
         setIsSignedIn(true);
 
@@ -174,10 +170,6 @@ const useAuth = () => {
       setIsLoading(false);
 
       if (user.status) {
-        user.avatarImage = await getAWSSignedURL(
-          user.avatarImage,
-          DEFAULT_AVATAR_IMAGE
-        );
         setUser(user);
 
         window.localStorage.setItem(TAG_ACCESS_TOKEN, data.accessToken);
@@ -379,6 +371,77 @@ const useAuth = () => {
     return false;
   };
 
+  const oAuthSignIn = async (
+    provider: OAUTH_PROVIDER,
+    accessToken: string,
+    refreshToken: string
+  ) => {
+    setIsLoading(true);
+
+    const response = await fetch(`${API_BASE_URL}/${API_VERSION}/auth/oauth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        provider,
+        accessToken,
+        refreshToken,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const user = data.user as IUser;
+
+      setIsLoading(false);
+
+      if (user.status) {
+        setUser(user);
+
+        window.localStorage.setItem(TAG_ACCESS_TOKEN, data.accessToken);
+        setAcessToken(data.accessToken);
+
+        setIsSignedIn(true);
+
+        // Check membership
+        if (user.planId && user.planStartDate && user.planEndDate) {
+          if (
+            moment(servertime).isAfter(moment(user.planStartDate)) &&
+            moment(servertime).isBefore(moment(user.planEndDate))
+          ) {
+            setIsMembership(true);
+          } else {
+            setIsMembership(false);
+          }
+        } else {
+          setIsMembership(false);
+        }
+
+        toast.success("Successfully signed in!");
+        return true;
+      } else {
+        signOut();
+        toast.warn("Your account is deactivated. Please verify your account.");
+        return false;
+      }
+    } else {
+      if (response.status == 500) {
+        toast.error("Error occured on signing in.");
+      } else {
+        const data = await response.json();
+        toast.error(
+          data.message ? data.message : "Error occured on signing in."
+        );
+      }
+
+      signOut();
+      setIsLoading(false);
+    }
+
+    return false;
+  };
+
   return {
     servertime,
     isLoading,
@@ -393,6 +456,7 @@ const useAuth = () => {
     resetPassword,
     verifyEmail,
     resendVerificationLink,
+    oAuthSignIn,
     isMembership,
   };
 };

@@ -70,7 +70,7 @@ export default function Signin() {
     const userId = username.replace(" ", "").toLowerCase().trim();
     signIn(userId, password).then((result) => {
       if (result) {
-        router.push("/");
+        router.push("/home");
       }
     });
   };
@@ -116,7 +116,7 @@ export default function Signin() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.push("/");
+      router.push("/home");
     } else {
       if (window) {
         let username = window.localStorage.getItem(TAG_USERNAME);
@@ -166,6 +166,7 @@ export default function Signin() {
                 width={311}
                 height={220}
                 alt=""
+                priority
               />
             </h3>
             <p className="text-center text-primary text-sm sm:text-lg md:text-xl font-medium mb-5 whitespace-nowrap">

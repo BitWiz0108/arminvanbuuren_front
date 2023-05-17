@@ -2,18 +2,13 @@ import { useState } from "react";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
-import {
-  API_BASE_URL,
-  API_VERSION,
-  DEFAULT_AVATAR_IMAGE,
-} from "@/libs/constants";
+import { API_BASE_URL, API_VERSION } from "@/libs/constants";
 
 import { IProfile } from "@/interfaces/IProfile";
-import { getAWSSignedURL } from "@/libs/aws";
-
 import { DEFAULT_COUNTRY, ICountry } from "@/interfaces/ICountry";
 import { DEFAULT_STATE, IState } from "@/interfaces/IState";
 import { ICity } from "@/interfaces/ICity";
+import { toast } from "react-toastify";
 
 const useProfile = () => {
   const { accessToken, user } = useAuthValues();
@@ -36,11 +31,6 @@ const useProfile = () => {
       const data = await response.json();
       const profile = data as IProfile;
 
-      profile.avatarImage = await getAWSSignedURL(
-        profile.avatarImage,
-        DEFAULT_AVATAR_IMAGE
-      );
-
       setIsLoading(false);
       return profile;
     } else {
@@ -61,8 +51,7 @@ const useProfile = () => {
     country: string,
     state: string,
     city: string,
-    zipcode: string,
-    planId: number | null
+    zipcode: string
   ) => {
     setIsLoading(true);
 
@@ -83,8 +72,6 @@ const useProfile = () => {
     formData.append("state", state);
     formData.append("city", city);
     formData.append("zipcode", zipcode.toString());
-    if (planId) formData.append("planId", planId.toString());
-    else formData.append("planId", "");
 
     const response = await fetch(`${API_BASE_URL}/${API_VERSION}/profile`, {
       method: "POST",
@@ -98,17 +85,67 @@ const useProfile = () => {
       const data = await response.json();
       const profile = data as IProfile;
 
-      profile.avatarImage = await getAWSSignedURL(
-        profile.avatarImage,
-        DEFAULT_AVATAR_IMAGE
-      );
-
       setIsLoading(false);
       return profile;
     } else {
       setIsLoading(false);
     }
     return null;
+  };
+
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/auth/change-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ id: user.id, oldPassword, newPassword }),
+      }
+    );
+
+    if (response.ok) {
+      toast.success("Successfully updated!");
+      setIsLoading(false);
+      return true;
+    } else {
+      const data = await response.json();
+      toast.error(
+        data.message ? data.message : "Error occured on changing password."
+      );
+      setIsLoading(false);
+    }
+    return false;
+  };
+
+  const subscribe = async (planId: number | null) => {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    if (user.id) formData.append("id", user.id.toString());
+    else formData.append("id", "");
+    if (planId) formData.append("planId", planId.toString());
+    else formData.append("planId", "");
+
+    const response = await fetch(`${API_BASE_URL}/${API_VERSION}/profile`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (response.ok) {
+      setIsLoading(false);
+      return true;
+    } else {
+      setIsLoading(false);
+    }
+    return false;
   };
 
   const fetchCountries = async () => {
@@ -228,11 +265,13 @@ const useProfile = () => {
   return {
     isLoading,
     fetchProfile,
+    subscribe,
     updateProfile,
     fetchCountries,
     fetchStates,
     fetchCities,
     fetchLocation,
+    changePassword,
   };
 };
 

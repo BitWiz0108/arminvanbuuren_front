@@ -2,17 +2,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
-import Layout from "@/components/Layout";
 import Share from "@/components/Icons/Share";
+import X from "@/components/Icons/X";
+import Layout from "@/components/Layout";
 import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 import PostModal from "@/components/PostModal";
 import ShareModal from "@/components/ShareModal";
 import AudioControl from "@/components/AudioControl";
+import DonationModal from "@/components/DonationModal";
+import ButtonCircle from "@/components/ButtonCircle";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useFanclub from "@/hooks/useFanclub";
 import useMusic from "@/hooks/useMusic";
@@ -21,9 +26,11 @@ import useLivestream from "@/hooks/useLivestream";
 import { bigNumberFormat } from "@/libs/utils";
 import {
   APP_NAME,
-  DEFAULT_COVER_IMAGE,
-  IMAGE_MD_BLUR_DATA_URL,
-  IMAGE_SM_BLUR_DATA_URL,
+  ASSET_TYPE,
+  DEFAULT_AVATAR_IMAGE,
+  FILE_TYPE,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
   SITE_BASE_URL,
 } from "@/libs/constants";
 
@@ -33,8 +40,8 @@ import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
-const POSTS_PAGE_SIZE = 5;
-const MUSICS_PAGE_SIZE = 5;
+const POSTS_PAGE_SIZE = 30;
+const MUSICS_PAGE_SIZE = 8;
 const LIVESTREAMS_PAGE_SIZE = 6;
 
 export default function FanClub() {
@@ -48,6 +55,7 @@ export default function FanClub() {
   } = useFanclub();
   const { isLoading: isWorkingMusics, fetchMusics } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
+  const { height } = useSizeValues();
   const { audioPlayer, setIsShareModalVisible, setShareData } =
     useShareValues();
 
@@ -65,6 +73,8 @@ export default function FanClub() {
   const [postsPageCount, setPostsPageCount] = useState<number>(1);
   const [isPostModalOpened, setIsPostModalOpened] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<IPost>(DEFAULT_POST);
+  const [isPostFullScreenView, setIsPostFullScreenView] =
+    useState<boolean>(false);
 
   const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShareData({
@@ -127,7 +137,7 @@ export default function FanClub() {
         setLivestreamPageCount(value.pages);
         setLivestreamPage(1);
       });
-      fetchMusics(1, true, LIVESTREAMS_PAGE_SIZE).then((result) => {
+      fetchMusics(1, true, MUSICS_PAGE_SIZE).then((result) => {
         setLatestMusics(result.musics);
         setMusicPageCount(result.pages);
         setMusicPage(1);
@@ -143,7 +153,7 @@ export default function FanClub() {
   }, [isSignedIn]);
 
   const leftSideView = (
-    <div className="w-full lg:w-[260px] flex flex-col space-y-5 lg:space-y-10">
+    <div className="w-full lg:w-[260px] flex flex-col space-y-[10px] lg:space-y-[15px]">
       <div className="w-full flex flex-row justify-around items-start space-x-10 bg-third rounded-lg p-5 lg:p-10">
         <div className="flex flex-col space-y-5">
           <p className="text-primary text-base text-center font-semibold">
@@ -166,23 +176,22 @@ export default function FanClub() {
       </div>
 
       {latestLivestreams?.length > 0 && (
-        <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-5 lg:p-10">
-          <p className="text-primary text-base font-medium">
-            Latest Livestream
-          </p>
-          <Link href="/live-stream" target="_blank">
+        <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+          <p className="text-primary text-sm font-medium">Latest Livestream</p>
+          <Link href="/live-stream">
             <Image
               className="w-full h-28 object-cover rounded-md"
-              src={latestLivestreams[0].coverImage ?? DEFAULT_COVER_IMAGE}
+              src={latestLivestreams[0].coverImage ?? PLACEHOLDER_IMAGE}
               width={460}
               height={200}
               alt=""
               placeholder="blur"
-              blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+              blurDataURL={IMAGE_BLUR_DATA_URL}
+              priority
             />
           </Link>
-          <Link href="/live-stream" target="_blank">
-            <p className="text-primary text-base font-medium">
+          <Link href="/live-stream">
+            <p className="text-primary text-sm font-medium">
               {latestLivestreams[0].title}
             </p>
           </Link>
@@ -195,10 +204,8 @@ export default function FanClub() {
         </div>
       )}
 
-      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-5 lg:p-10">
-        <p className="text-primary text-base font-medium">
-          Exclusive Livestreams
-        </p>
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+        <p className="text-primary text-sm font-medium">Livestreams</p>
         <div className="w-full grid grid-cols-4 md:grid-cols-3 gap-2">
           {latestLivestreams?.map((value, index) => {
             return (
@@ -206,15 +213,16 @@ export default function FanClub() {
                 key={index}
                 className="col-span-1 flex justify-center items-center cursor-pointer"
               >
-                <Link href="/live-stream" className="w-full" target="_blank">
+                <Link href="/live-stream" className="w-full">
                   <Image
                     className="w-full h-10 object-cover rounded-md"
-                    src={value.coverImage ?? DEFAULT_COVER_IMAGE}
+                    src={value.coverImage ?? PLACEHOLDER_IMAGE}
                     width={460}
                     height={200}
                     alt=""
                     placeholder="blur"
-                    blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                    priority
                   />
                 </Link>
               </div>
@@ -226,7 +234,7 @@ export default function FanClub() {
             ) : (
               livestreamPageCount > livestreamPage && (
                 <button
-                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-background rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
                   onClick={() => fetchMoreLivestreams()}
                 >
                   + More
@@ -237,45 +245,101 @@ export default function FanClub() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-5 lg:p-10">
-        <p className="text-primary text-base font-medium">
-          {artist.artistName} | Exclusive Musics
-        </p>
-        <div className="w-full flex flex-col justify-start items-start space-y-3">
-          {latestMusics.map((value, index) => {
-            return (
-              <div
-                key={index}
-                className="w-full flex flex-row justify-start items-center space-x-3"
-              >
-                <Image
-                  className="w-20 h-20 object-cover rounded-md"
-                  width={200}
-                  height={200}
-                  src={value.coverImage ?? DEFAULT_COVER_IMAGE}
-                  alt=""
-                  placeholder="blur"
-                  blurDataURL={IMAGE_MD_BLUR_DATA_URL}
-                />
-                <div className="flex flex-col justify-start items-start space-y-2">
-                  <Link href="/music" target="_blank">
-                    <p className="text-primary text-base font-medium">
-                      {value.title}
-                    </p>
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+        <p className="text-primary text-sm font-medium text-center">Music</p>
+        <div className="w-full flex flex-col justify-start items-center space-y-3">
+          <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
+            {latestMusics.map((value, index) => {
+              return (
+                <div
+                  key={index}
+                  className="col-span-1 flex justify-center items-center"
+                >
+                  <Link href="/music">
+                    <Image
+                      className="w-20 h-20 object-cover rounded-md"
+                      width={200}
+                      height={200}
+                      src={value.coverImage ?? PLACEHOLDER_IMAGE}
+                      alt=""
+                      placeholder="blur"
+                      blurDataURL={IMAGE_BLUR_DATA_URL}
+                      priority
+                    />
                   </Link>
-                  <p className="text-secondary text-sm">{value.singer.name}</p>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
           <div className="w-full flex justify-center items-center">
             {isWorkingMusics ? (
               <Loading width={30} height={30} />
             ) : (
               musicPageCount > musicPage && (
                 <button
-                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-background rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
                   onClick={() => fetchMoreMusics()}
+                >
+                  + More
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+        <p className="text-primary text-sm font-medium">Latest Posts</p>
+        <div className="w-full grid grid-cols-4 md:grid-cols-3 gap-2">
+          {posts.slice(0, 12)?.map((post, index) => {
+            return (
+              <div
+                key={index}
+                className="col-span-1 flex justify-center items-center cursor-pointer"
+              >
+                {post.type == FILE_TYPE.IMAGE ? (
+                  <Image
+                    className="w-full h-20 lg:h-10 object-cover rounded-md"
+                    src={post.imageCompressed ?? PLACEHOLDER_IMAGE}
+                    width={1600}
+                    height={900}
+                    alt=""
+                    placeholder="blur"
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                    priority
+                    onClick={() => {
+                      setSelectedPost(post);
+                      setIsPostFullScreenView(true);
+                      // setIsPostModalOpened(true);
+                    }}
+                  />
+                ) : (
+                  <video
+                    loop
+                    muted
+                    autoPlay
+                    playsInline
+                    className="w-full h-20 lg:h-10 object-cover rounded-md"
+                    src={post.videoCompressed}
+                    onClick={() => {
+                      setSelectedPost(post);
+                      setIsPostFullScreenView(true);
+                      // setIsPostModalOpened(true);
+                      audioPlayer.pause();
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
+          <div className="col-span-4 md:col-span-3 flex justify-center items-center">
+            {isWorkingLivestreams ? (
+              <Loading width={30} height={30} />
+            ) : (
+              livestreamPageCount > livestreamPage && (
+                <button
+                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                  onClick={() => fetchMoreLivestreams()}
                 >
                   + More
                 </button>
@@ -306,9 +370,16 @@ export default function FanClub() {
                 }
               });
             }}
+            fullscreenView={() => {
+              setSelectedPost(post);
+              setIsPostFullScreenView(true);
+            }}
             comment={() => {
               setSelectedPost(post);
               setIsPostModalOpened(true);
+              if (post.type == FILE_TYPE.VIDEO) {
+                audioPlayer.pause();
+              }
             }}
           />
         );
@@ -319,7 +390,7 @@ export default function FanClub() {
         postsPageCount > postsPage && (
           <div className="w-full flex justify-center items-center">
             <button
-              className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-third rounded-full border border-secondary cursor-pointer transition-all duration-300"
+              className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
               onClick={() => fetchMorePosts()}
             >
               + More
@@ -330,80 +401,116 @@ export default function FanClub() {
     </div>
   );
 
+  console.log("!!!!!: ", selectedPost.video);
+
   return (
     <Layout>
-      <div className="relative w-full xl:w-5/6 min-h-screen flex flex-col justify-start items-center px-5 pt-16 pb-36 lg:pt-16 lg:px-10">
-        <div className="relative w-full h-[360px] p-3 flex flex-col justify-start items-center rounded-lg bg-third mb-5 lg:mb-10">
-          <div className="w-full h-[260px] rounded-lg overflow-hidden">
-            <Image
-              className="w-full h-full object-cover"
-              src={artist.bannerImage ?? DEFAULT_ARTIST.bannerImage}
-              width={1600}
-              height={450}
-              alt=""
-              placeholder="blur"
-              blurDataURL={IMAGE_MD_BLUR_DATA_URL}
-            />
-          </div>
-          <div className="w-full flex flex-col lg:flex-row flex-grow justify-start items-center pl-10 pr-20">
-            <div className="w-full h-full flex flex-col lg:flex-row justify-start items-center space-x-0 lg:space-x-5 space-y-3 lg:space-y-0">
-              <div className="w-24 h-24 -mt-10 rounded-full overflow-hidden flex justify-center items-center">
+      <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
+        <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-36">
+          <div className="relative w-full flex flex-col justify-start items-center bg-third mb-5 lg:mb-10">
+            <div
+              className="relative w-full h-auto flex flex-col justify-start items-center overflow-hidden z-0"
+              style={{
+                maxHeight: `${height / 2}px`,
+                minHeight: `320px`,
+              }}
+            >
+              {artist.bannerType == FILE_TYPE.VIDEO ? (
+                <video
+                  loop
+                  muted
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-cover object-center"
+                  style={{
+                    maxHeight: `${height / 2}px`,
+                    minHeight: `320px`,
+                  }}
+                  src={artist.bannerVideo}
+                />
+              ) : (
                 <Image
-                  className="w-full h-full object-cover"
-                  src={artist.avatarImage ?? DEFAULT_ARTIST.avatarImage}
-                  width={200}
-                  height={200}
+                  className="relative w-full h-full object-cover object-center"
+                  src={artist.bannerImage ?? IMAGE_BLUR_DATA_URL}
+                  style={{
+                    maxHeight: `${height / 2}px`,
+                    minHeight: `320px`,
+                  }}
+                  width={1600}
+                  height={450}
                   alt=""
                   placeholder="blur"
-                  blurDataURL={IMAGE_SM_BLUR_DATA_URL}
+                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                  priority
                 />
-              </div>
-              <div className="flex flex-col flex-grow justify-start items-center lg:items-start">
-                <p className="text-blueSecondary text-center text-2xl xl:text-3xl font-medium">
-                  {artist?.artistName}
-                </p>
-                <p className="text-white text-center text-sm font-medium">
-                  {artist.phoneNumber ?? DEFAULT_ARTIST.phoneNumber}
-                </p>
-              </div>
-              <div className="flex flex-col justify-start items-center">
-                <p className="text-primary text-center text-base">
-                  {artist?.email}
-                </p>
-                {artist?.website && (
-                  <Link
-                    href={artist.website}
-                    target="_blank"
-                    className="text-secondary text-center text-sm"
-                  >
-                    {artist.website
-                      .replaceAll("https://", "")
-                      .replaceAll("/", "")}
-                  </Link>
-                )}
+              )}
+            </div>
+            <div className="w-full flex flex-col lg:flex-row flex-grow justify-center items-center px-5 lg:px-10 z-10">
+              <div className="relative w-full xl:w-5/6 h-full flex flex-col lg:flex-row justify-start items-center space-x-0 lg:space-x-5 space-y-3 lg:space-y-0 px-5  lg:pl-10 lg:pr-20 py-2">
+                <div className="w-28 h-28 -mt-14 rounded-full border border-background bg-background overflow-hidden flex justify-center items-center">
+                  <Image
+                    className="w-full h-full object-cover"
+                    src={artist.avatarImage ?? DEFAULT_AVATAR_IMAGE}
+                    width={200}
+                    height={200}
+                    alt=""
+                    placeholder="blur"
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col flex-grow justify-start items-center lg:items-start">
+                  <p className="text-primary text-center text-[26px] uppercase">
+                    {artist?.artistName}
+                  </p>
+                  <p className="text-white font-thin text-center text-sm font-medium">
+                    {artist.mobile}
+                  </p>
+                </div>
+                <div className="flex flex-col justify-start items-center">
+                  <p className="text-primary text-center text-base">
+                    {artist?.email}
+                  </p>
+                  {artist?.website && (
+                    <Link
+                      href={artist.website}
+                      className="text-secondary text-center text-sm"
+                    >
+                      {artist.website
+                        .replaceAll("https://", "")
+                        .replaceAll("/", "")}
+                    </Link>
+                  )}
+                </div>
+
+                <div className="absolute right-5 bottom-5 w-10 h-10 rounded-md flex justify-center items-center text-white bg-bluePrimary hover:bg-blueSecondary transition-all duration-300 cursor-pointer z-10">
+                  <Share width={20} height={20} onClick={onShare} />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="absolute top-5 right-5 lg:top-[83%] w-10 h-10 rounded-md flex justify-center items-center text-white bg-background hover:bg-blueSecondary transition-all duration-300 cursor-pointer">
-            <Share width={20} height={20} onClick={onShare} />
+          <div className="w-full xl:w-5/6 flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-10 lg:space-y-0 px-5 lg:px-10">
+            {leftSideView}
+
+            {postsView}
           </div>
-        </div>
 
-        <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-10 lg:space-y-0">
-          {leftSideView}
-
-          {postsView}
-        </div>
-
-        <PostModal
-          post={selectedPost}
-          setPost={setSelectedPost}
-          visible={isPostModalOpened}
-          setVisible={setIsPostModalOpened}
-          favorite={() => {
-            togglePostFavorite(selectedPost.id, !selectedPost.isFavorite).then(
-              (value) => {
+          <PostModal
+            post={selectedPost}
+            setPost={setSelectedPost}
+            visible={isPostModalOpened}
+            setVisible={(visible: boolean) => {
+              setIsPostModalOpened(visible);
+              if (!visible) {
+                audioPlayer.play();
+              }
+            }}
+            favorite={() => {
+              togglePostFavorite(
+                selectedPost.id,
+                !selectedPost.isFavorite
+              ).then((value) => {
                 if (value) {
                   const tposts = posts.slice();
                   const index = tposts.findIndex((tpost) => {
@@ -422,18 +529,73 @@ export default function FanClub() {
                     });
                   }
                 }
-              }
-            );
-          }}
-        />
+              });
+            }}
+          />
+        </div>
+      </div>
+
+      <DonationModal
+        assetType={ASSET_TYPE.MUSIC}
+        musicId={audioPlayer.getPlayingTrack().id}
+      />
+
+      <ShareModal />
+
+      <div
+        className={twMerge(
+          "left-0 top-0 w-screen h-screen flex justify-center items-center bg-[#000000aa] z-top",
+          isPostFullScreenView ? "fixed" : "hidden"
+        )}
+      >
+        <div className="absolute top-5 left-5 cursor-pointer z-10">
+          <ButtonCircle
+            dark={false}
+            icon={<X />}
+            size="small"
+            onClick={() => {
+              setIsPostFullScreenView(false);
+              audioPlayer.play();
+            }}
+          />
+        </div>
+        <div className="relative w-full h-full z-0">
+          <div className="relative w-full h-full flex justify-center items-center z-0">
+            {selectedPost.type == FILE_TYPE.IMAGE ? (
+              <Image
+                className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
+                width={1600}
+                height={1600}
+                src={selectedPost.image ?? PLACEHOLDER_IMAGE}
+                loading="eager"
+                alt=""
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
+                priority
+              />
+            ) : (
+              <div className="relative max-h-screen w-full h-full z-10">
+                <video
+                  controls
+                  autoPlay={true}
+                  disablePictureInPicture
+                  controlsList="nodownload nopictureinpicture noplaybackrate"
+                  className="absolute inset-0 object-center w-full h-full rounded-md"
+                  src={selectedPost.video}
+                  onPlay={(event) => {
+                    audioPlayer.pause();
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <AudioControl
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}
       />
-
-      <ShareModal />
     </Layout>
   );
 }

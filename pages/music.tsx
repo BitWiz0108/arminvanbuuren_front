@@ -45,7 +45,7 @@ export default function Music() {
   const albumsScrollRefs = useRef([]);
 
   const { isSignedIn, isMembership } = useAuthValues();
-  const { isMobile, contentWidth, isSidebarVisible, isTopbarVisible } =
+  const { isMobile, height, contentWidth, isSidebarVisible, isTopbarVisible } =
     useSizeValues();
   const {
     audioPlayer,
@@ -157,7 +157,7 @@ export default function Music() {
   const onMenuView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setLyrics(
       composeLyrics(
-        audioPlayer.musics[activeIndex].singer.username,
+        audioPlayer.musics[activeIndex].singer.artistName,
         audioPlayer.musics[activeIndex].title,
         audioPlayer.musics[activeIndex].duration,
         audioPlayer.musics[activeIndex].description,
@@ -254,7 +254,7 @@ export default function Music() {
           }
         })
         .catch((_) => {
-          setAllMusics([]);
+          setAlbums([]);
           resolve(false);
         });
     });
@@ -277,8 +277,8 @@ export default function Music() {
         (isMobile
           ? MUSIC_CARD_ACTIVE_WIDTH_MOBILE
           : MUSIC_CARD_ACTIVE_WIDTH_DESKTOP)) /
-      2 -
-      60
+        2 -
+        60
     );
     setActiveWidth(
       (isMobile
@@ -296,21 +296,21 @@ export default function Music() {
     }
 
     // Check scroll reach the end
-    if (activeIndex == audioPlayer.musics.length - 1) {
-      if (audioPlayer.albumId == null) {
-        getAllMusics(page + 1).then((value) => {
-          if (value) {
-            setPage((prev) => prev + 1);
-          }
-        });
-      } else {
-        getAlbumMusics(page + 1).then((value) => {
-          if (value) {
-            setPage((prev) => prev + 1);
-          }
-        });
-      }
-    }
+    // if (activeIndex == audioPlayer.musics.length - 1) {
+    //   if (audioPlayer.albumId == null) {
+    //     getAllMusics(page + 1).then((value) => {
+    //       if (value) {
+    //         setPage((prev) => prev + 1);
+    //       }
+    //     });
+    //   } else {
+    //     getAlbumMusics(page + 1).then((value) => {
+    //       if (value) {
+    //         setPage((prev) => prev + 1);
+    //       }
+    //     });
+    //   }
+    // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex, scrollRef, activeWidth, isListView]);
@@ -346,125 +346,127 @@ export default function Music() {
   }, [isSignedIn, isExclusive]);
 
   const sliderView = (
-    <div className="relative w-full h-full pt-20">
-      <div className="relative w-full flex flex-row justify-center items-center space-x-14 md:space-x-20 z-10">
-        <ButtonCircle
-          dark
-          icon={<List width={24} height={24} />}
-          size="small"
-          onClick={onListView}
-        />
-        <h1 className="text-primary text-xl md:text-2xl text-center">
-          <span className="font-semibold">
-            {audioPlayer.albumId == null
-              ? artist.artistName
-              : getAlbumById().name}
-          </span>
-          &nbsp;Music
-        </h1>
-        <div className="flex flex-col justify-center items-center space-y-3">
-          <div
-            className="cursor-pointer text-primary hover:text-activePrimary transition-all duration-300"
-            onClick={onHeart}
-          >
-            {audioPlayer.musics[activeIndex]?.isFavorite ? (
-              <HeartFill width={22} height={22} />
-            ) : (
-              <Heart width={22} height={22} />
-            )}
-          </div>
-          <div
-            className="cursor-pointer text-primary hover:text-activePrimary transition-all duration-300"
-            onClick={onShare}
-          >
-            <Share width={22} height={22} />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="relative flex flex-row overflow-x-auto overflow-y-hidden px-5 py-10 my-10 mx-5 z-10"
-        ref={scrollRef}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-        onMouseLeave={onMouseOut}
-        style={{
-          scrollBehavior: isScrolling ? "unset" : "smooth",
-        }}
-      >
-        <div className="w-fit h-[380px] flex flex-row justify-start items-center gap-10">
-          <div
-            style={{
-              width: `${gapWidth}px`,
-            }}
-          ></div>
-          {audioPlayer.musics.map((music, index) => {
-            return (
-              <MusicCard
-                active={activeIndex == index}
-                playing={audioPlayer.playingIndex == index}
-                soundStatus={
-                  audioPlayer.playingIndex == index
-                    ? audioPlayer.isPlaying
-                      ? "playing"
-                      : "paused"
-                    : "none"
-                }
-                music={music}
-                togglePlay={() => {
-                  if (audioPlayer.isPlaying) {
-                    audioPlayer.pause();
-                  } else {
-                    audioPlayer.play();
-                  }
-                }}
-                play={() => audioPlayer.setPlayingIndex(index)}
-                onClick={() => setActiveIndex(index)}
-                key={index}
-              />
-            );
-          })}
-          <div
-            style={{
-              width: `${gapWidth}px`,
-            }}
-          ></div>
-        </div>
-      </div>
-
-      <div className="relative w-full flex flex-row justify-center items-center px-5 pb-48 space-x-2 z-10">
-        <div className="w-auto flex-grow md:flex-grow-0 md:w-80 lg:w-96 flex flex-col justify-start items-start">
-          <h2 className="text-primary text-left text-xl md:text-3xl font-semibold mb-1">
-            {audioPlayer.musics[activeIndex]?.title}
-          </h2>
-          <p className="text-secondary text-left text-lg md:text-xl mb-2">
-            {audioPlayer.musics[activeIndex]?.singer?.artistName}
-          </p>
-          <p className="text-secondary text-left text-sm md:text-base">
-            {audioPlayer.musics[activeIndex]?.copyright}
-          </p>
-        </div>
-        <div className="flex justify-center items-center">
-          <VDots
-            width={32}
-            height={32}
-            className="text-secondary hover:text-primary transition-all duration-300 cursor-pointer"
-            onClick={onMenuView}
+    <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
+      <div className="w-full min-h-[768px] flex flex-col justify-start overflow-hidden">
+        <div className="relative w-full flex flex-row justify-center items-center px-5 space-x-14 md:space-x-20 z-10">
+          <ButtonCircle
+            dark
+            icon={<List width={24} height={24} />}
+            size="small"
+            onClick={onListView}
           />
+          <h1 className="text-primary text-xl md:text-2xl text-center">
+            <span className="font-semibold">
+              {audioPlayer.albumId == null
+                ? artist.artistName
+                : getAlbumById().name}
+            </span>
+            &nbsp;Music
+          </h1>
+          <div className="flex flex-col justify-center items-center space-y-3">
+            <div
+              className="cursor-pointer text-primary hover:text-activePrimary transition-all duration-300"
+              onClick={onHeart}
+            >
+              {audioPlayer.musics[activeIndex]?.isFavorite ? (
+                <HeartFill width={22} height={22} />
+              ) : (
+                <Heart width={22} height={22} />
+              )}
+            </div>
+            <div
+              className="cursor-pointer text-primary hover:text-activePrimary transition-all duration-300"
+              onClick={onShare}
+            >
+              <Share width={22} height={22} />
+            </div>
+          </div>
         </div>
-      </div>
 
-      {audioPlayer.isPlaying && (
         <div
-          className={`absolute left-0 top-5 h-full flex flex-col justify-start items-start z-0`}
-          style={{ width: `${contentWidth}px` }}
+          className={twMerge(
+            "relative flex flex-row overflow-x-auto overflow-y-hidden px-5 mb-10 mx-5 z-10",
+            height < 768 ? "-mt-8" : "mt-24"
+          )}
+          ref={scrollRef}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseOut}
+          style={{
+            scrollBehavior: isScrolling ? "unset" : "smooth",
+          }}
         >
-          <AudioVisualizer
-            url={audioPlayer.getPlayingTrack().musicFileCompressed}
-          />
+          <div className="w-fit h-[380px] flex flex-row justify-start items-center gap-10">
+            <div
+              style={{
+                width: `${gapWidth}px`,
+              }}
+            ></div>
+            {audioPlayer.musics.map((music, index) => {
+              return (
+                <MusicCard
+                  active={activeIndex == index}
+                  playing={audioPlayer.playingIndex == index}
+                  soundStatus={
+                    audioPlayer.playingIndex == index
+                      ? audioPlayer.isPlaying
+                        ? "playing"
+                        : "paused"
+                      : "none"
+                  }
+                  music={music}
+                  togglePlay={() => {
+                    if (audioPlayer.isPlaying) {
+                      audioPlayer.pause();
+                    } else {
+                      audioPlayer.play();
+                    }
+                  }}
+                  play={() => audioPlayer.setPlayingIndex(index)}
+                  onClick={() => setActiveIndex(index)}
+                  key={index}
+                />
+              );
+            })}
+            <div
+              style={{
+                width: `${gapWidth}px`,
+              }}
+            ></div>
+          </div>
         </div>
-      )}
+
+        <div className="relative w-full flex flex-row justify-center items-center px-5 pb-48 space-x-2 z-10">
+          <div className="w-auto flex-grow md:flex-grow-0 md:w-80 lg:w-96 flex flex-col justify-start items-start">
+            <h2 className="text-primary text-left text-xl md:text-2xl font-semibold mb-1">
+              {audioPlayer.musics[activeIndex]?.title}
+            </h2>
+            <p className="text-secondary text-left text-md md:text-lg mb-2">
+              {audioPlayer.musics[activeIndex]?.singer?.artistName}
+            </p>
+          </div>
+          <div className="flex justify-center items-center">
+            <VDots
+              width={32}
+              height={32}
+              className="text-secondary hover:text-primary transition-all duration-300 cursor-pointer"
+              onClick={onMenuView}
+            />
+          </div>
+        </div>
+
+        {audioPlayer.isPlaying && (
+          <div
+            className={`absolute left-0 top-0 h-full flex flex-col justify-center items-center z-0 overflow-hidden`}
+            style={{ width: `${contentWidth}px` }}
+          >
+            <AudioVisualizer
+              url={audioPlayer.getPlayingTrack().musicFileCompressed}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -473,7 +475,7 @@ export default function Music() {
       <div className="relative w-full flex flex-col justify-start items-start px-5">
         <h1
           className={twMerge(
-            "text-primary text-2xl md:text-4xl text-center pl-16",
+            "text-primary text-xl md:text-2xl text-center pl-16",
             isSidebarVisible ? "md:pl-0" : "md:pl-16"
           )}
         >
@@ -503,7 +505,7 @@ export default function Music() {
                   }
                   soundStatus={
                     music.id == audioPlayer.getPlayingTrack().id &&
-                      audioPlayer.albumId == null
+                    audioPlayer.albumId == null
                       ? audioPlayer.isPlaying
                         ? "playing"
                         : "paused"
@@ -538,7 +540,7 @@ export default function Music() {
             key={index}
             className="w-full flex flex-col justify-start items-start px-5"
           >
-            <h1 className="text-primary text-xl md:text-3xl text-center">
+            <h1 className="text-primary text-base md:text-xl text-center">
               <span className="font-semibold">{album.name}</span>
             </h1>
             <p className="text-secondary text-xs md:text-sm text-center">
@@ -564,7 +566,7 @@ export default function Music() {
                       }
                       soundStatus={
                         music.id == audioPlayer.getPlayingTrack().id &&
-                          audioPlayer.albumId == album.id
+                        audioPlayer.albumId == album.id
                           ? audioPlayer.isPlaying
                             ? "playing"
                             : "paused"
@@ -600,26 +602,26 @@ export default function Music() {
   );
 
   const pageContent = (
-    <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
-      {!isMembership && (
-        <div
-          className={twMerge(
-            "absolute top-2 z-10",
-            isTopbarVisible ? "right-24 md:right-56" : "right-2"
-          )}
-        >
-          <Switch
-            checked={isExclusive}
-            setChecked={setIsExclusive}
-            label="Exclusive"
-            labelPos="top"
-          />
-        </div>
-      )}
+    <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
+      <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
+        {!isMembership && (
+          <div
+            className={twMerge(
+              "absolute top-2 z-10",
+              isTopbarVisible ? "right-24 md:right-56" : "right-2"
+            )}
+          >
+            <Switch
+              checked={isExclusive}
+              setChecked={setIsExclusive}
+              label="Exclusive"
+              labelPos="top"
+            />
+          </div>
+        )}
 
-      {isListView ? listView : sliderView}
-
-      <AudioControl audioPlayer={audioPlayer} onListView={onListView} />
+        {isListView ? listView : sliderView}
+      </div>
     </div>
   );
 
@@ -646,6 +648,8 @@ export default function Music() {
         <ViewExclusiveModal />
 
         <ShareModal />
+
+        <AudioControl audioPlayer={audioPlayer} onListView={onListView} />
       </div>
     </Layout>
   );

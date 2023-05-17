@@ -2,26 +2,34 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Carousel from "react-multi-carousel";
 import { twMerge } from "tailwind-merge";
-import PhotoAlbum from "react-photo-album";
 
 import X from "@/components/Icons/X";
+import ButtonCircle from "@/components/ButtonCircle";
+import GalleryItem from "@/components/GalleryItem";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import useGallery from "@/hooks/useGallery";
 
-import { IMAGE_MD_BLUR_DATA_URL, IMAGE_SIZE } from "@/libs/constants";
+import {
+  FILE_TYPE,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
+} from "@/libs/constants";
+
+import { IImage } from "@/interfaces/IGallery";
 
 const GalleryView = () => {
   const carouselRef = useRef(null);
   const { isSignedIn } = useAuthValues();
-  const { isLoading, fetchPageContent } = useGallery();
+  const { fetchPageContent } = useGallery();
+  const { audioPlayer } = useShareValues();
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const [images, setImages] = useState<
-    Array<{ src: string; hqSrc: string; width: number; height: number }>
-  >([]);
+  const [images, setImages] = useState<Array<IImage>>([]);
   const [isCarouselVisible, setIsCarouselVisible] = useState<boolean>(false);
+  const [lastPosX, setLastPosX] = useState<number>(0);
 
   const SINGLE_RESPONSIVENESS = {
     superLargeDesktop: {
@@ -46,35 +54,11 @@ const GalleryView = () => {
     },
   };
 
-  const getSizeValue = (size: IMAGE_SIZE) => {
-    const squareSize = 200;
-    switch (size) {
-      case IMAGE_SIZE.SQUARE:
-        return { width: squareSize, height: squareSize };
-      case IMAGE_SIZE.WIDE:
-        return { width: squareSize * 2, height: squareSize };
-      case IMAGE_SIZE.TALL:
-        return { width: squareSize, height: squareSize * 2 };
-      case IMAGE_SIZE.WIDEANDTALL:
-        return { width: squareSize * 2, height: squareSize * 2 };
-      default:
-        return { width: squareSize, height: squareSize };
-    }
-  };
-
   useEffect(() => {
     if (isSignedIn) {
       fetchPageContent().then((value) => {
         if (value) {
-          setImages(
-            value.images.map((image) => {
-              return {
-                src: image.compressedImage,
-                hqSrc: image.image,
-                ...getSizeValue(image.size),
-              };
-            })
-          );
+          setImages(value.images);
         }
       });
     }
@@ -84,36 +68,53 @@ const GalleryView = () => {
 
   return (
     <div className="relative w-full flex flex-col justify-start items-center">
-      <div className="w-full p-5">
-        <PhotoAlbum
-          layout="masonry"
-          photos={images}
-          onClick={(props) => {
-            setActiveSlide(props.index + 2);
-            setIsCarouselVisible(true);
-            if (carouselRef && carouselRef.current) {
-              // @ts-ignore
-              carouselRef.current.goToSlide(props.index + 2);
-            }
-          }}
-        />
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {images.map((image, index) => (
+          <GalleryItem
+            key={index}
+            image={image}
+            onClick={() => {
+              setActiveSlide(index + 2);
+              setIsCarouselVisible(true);
+              if (carouselRef && carouselRef.current) {
+                // @ts-ignore
+                carouselRef.current.goToSlide(index + 2);
+              }
+              if (image.type == FILE_TYPE.VIDEO) {
+                audioPlayer.pause();
+                const videos = document.getElementsByClassName(
+                  "carousel-video-player"
+                );
+                for (let i = 0; i < videos.length; i++) {
+                  if (image.video == videos[i].getAttribute("src")) {
+                    // @ts-ignore
+                    videos[i].play();
+                  }
+                }
+              }
+            }}
+          />
+        ))}
       </div>
 
       <div
         className={twMerge(
-          "left-0 top-0 w-full h-screen p-5 flex justify-center items-center bg-[#000000aa] z-top",
+          "left-0 top-0 w-screen h-screen flex justify-center items-center bg-[#000000aa] z-top",
           isCarouselVisible ? "fixed" : "hidden"
         )}
       >
-        <div
-          className="absolute top-0 left-0 w-full h-full"
-          onClick={() => setIsCarouselVisible(false)}
-        >
-          <div className="absolute top-5 left-5 cursor-pointer">
-            <X />
-          </div>
+        <div className="absolute top-5 left-5 cursor-pointer z-10">
+          <ButtonCircle
+            dark={false}
+            icon={<X />}
+            size="small"
+            onClick={() => {
+              setIsCarouselVisible(false);
+              audioPlayer.play();
+            }}
+          />
         </div>
-        <div className="w-full md:w-4/5 lg:w-11/12">
+        <div className="relative w-full z-0">
           <Carousel
             ref={carouselRef}
             ssr
@@ -125,31 +126,94 @@ const GalleryView = () => {
             swipeable
             draggable
             arrows
+            beforeChange={(nextSlide, state) => {
+              const videos = document.getElementsByClassName(
+                "carousel-video-player"
+              );
+              for (let i = 0; i < videos.length; i++) {
+                // @ts-ignore
+                videos[i].pause();
+              }
+            }}
+            afterChange={(prevSlide, state) => {
+              const videos = document.getElementsByClassName(
+                "carousel-video-player"
+              );
+              for (let i = 0; i < videos.length; i++) {
+                // @ts-ignore
+                videos[i].pause();
+              }
+              if (
+                images[state.currentSlide - 2] &&
+                images[state.currentSlide - 2].type == FILE_TYPE.VIDEO
+              ) {
+                for (let i = 0; i < videos.length; i++) {
+                  if (
+                    images[state.currentSlide - 2].video ==
+                    videos[i].getAttribute("src")
+                  ) {
+                    // @ts-ignore
+                    videos[i].play();
+                  }
+                }
+              }
+            }}
           >
             {images.map((image, index) => {
               return (
                 <div
                   key={index}
-                  className="w-full h-full flex justify-center items-center"
+                  className="relative w-full h-full flex justify-center items-center z-0"
+                  onMouseDown={(e) => setLastPosX(e.screenX)}
+                  onMouseUp={(e) => {
+                    if (image.type == FILE_TYPE.VIDEO) return;
+                    if (Math.abs(e.screenX - lastPosX) < 30) {
+                      setIsCarouselVisible(false);
+                    }
+                  }}
                 >
-                  <Image
-                    className={twMerge(
-                      "w-full object-cover md:object-none select-none pointer-events-none"
-                    )}
-                    src={image.hqSrc}
-                    width={1600}
-                    height={900}
-                    alt=""
-                    placeholder="blur"
-                    blurDataURL={IMAGE_MD_BLUR_DATA_URL}
-                  />
+                  {image.type == FILE_TYPE.IMAGE ? (
+                    <Image
+                      className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
+                      width={800}
+                      height={800}
+                      src={image.image ?? PLACEHOLDER_IMAGE}
+                      loading="eager"
+                      alt=""
+                      placeholder="blur"
+                      blurDataURL={IMAGE_BLUR_DATA_URL}
+                      priority
+                    />
+                  ) : (
+                    <div className="relative max-h-screen w-full h-full z-10">
+                      <video
+                        controls
+                        autoPlay={false}
+                        disablePictureInPicture
+                        controlsList="nodownload nopictureinpicture noplaybackrate"
+                        className="absolute inset-0 object-center w-full h-full rounded-md carousel-video-player"
+                        src={image.video}
+                        onPlay={(event) => {
+                          audioPlayer.pause();
+                          const videos = document.getElementsByClassName(
+                            "carousel-video-player"
+                          );
+                          for (let i = 0; i < videos.length; i++) {
+                            if (event.target != videos[i]) {
+                              // @ts-ignore
+                              videos[i].pause();
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}
           </Carousel>
         </div>
       </div>
-      {isLoading && <div className="loading"></div>}
     </div>
   );
 };

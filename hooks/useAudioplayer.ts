@@ -47,6 +47,8 @@ const useAudioPlayer = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = value;
       setTrackProgress(audioRef.current.currentTime);
+
+      onScrubEnd();
     }
   };
 
@@ -222,6 +224,7 @@ const useAudioPlayer = () => {
   return {
     volume,
     isPlaying,
+    trackProgress,
     currentPercentage,
     duration,
     musics,

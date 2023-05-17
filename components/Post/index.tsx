@@ -1,19 +1,20 @@
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 import Heart from "@/components/Icons/Heart";
 import HeartFill from "@/components/Icons/HeartFill";
 import Comment from "@/components/Icons/Comment";
 import Share from "@/components/Icons/Share";
+import VideoPlayer from "@/components/VideoPlayer";
 
 import { useShareValues } from "@/contexts/contextShareData";
 
 import { bigNumberFormat } from "@/libs/utils";
 import {
-  DEFAULT_BANNER_IMAGE,
-  IMAGE_MD_BLUR_DATA_URL,
+  FILE_TYPE,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
   SITE_BASE_URL,
 } from "@/libs/constants";
 
@@ -24,9 +25,10 @@ type Props = {
   post: IPost;
   favorite: Function;
   comment: Function;
+  fullscreenView: Function;
 };
 
-const Post = ({ post, favorite, comment }: Props) => {
+const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
   const { setIsShareModalVisible, setShareData } = useShareValues();
 
   const [isSeenMore, setIsSeenMore] = useState<boolean>(false);
@@ -47,18 +49,17 @@ const Post = ({ post, favorite, comment }: Props) => {
 
   return (
     <div className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-third">
-      <Link href={`/post/${post.id}`} target="_blank">
-        <p
-          className={twMerge(
-            "w-full text-left text-base lg:text-lg font-medium transition-all duration-300",
-            isSeenMore
-              ? "text-blueSecondary"
-              : "text-primary hover:text-blueSecondary"
-          )}
-        >
-          {post.title}
-        </p>
-      </Link>
+      <p
+        className={twMerge(
+          "w-full text-left text-base lg:text-lg font-medium transition-all duration-300 hover:cursor-pointer",
+          isSeenMore
+            ? "text-blueSecondary"
+            : "text-primary hover:text-blueSecondary"
+        )}
+        onClick={() => comment()}
+      >
+        {post.title}
+      </p>
       <div className={twMerge("relative w-full", isSeenMore ? "pb-5" : "pb-0")}>
         <div
           className={twMerge(
@@ -88,17 +89,32 @@ const Post = ({ post, favorite, comment }: Props) => {
         )}
       </div>
       <div className="relative w-full">
-        <Link className="w-full" href={`/post/${post.id}`}>
-          <Image
-            className="w-full aspect-w-16 aspect-h-9 object-cover rounded-md"
-            src={post.compressedImage ?? DEFAULT_BANNER_IMAGE}
-            width={1600}
-            height={900}
-            alt=""
-            placeholder="blur"
-            blurDataURL={IMAGE_MD_BLUR_DATA_URL}
-          />
-        </Link>
+        <div
+          className="w-full relative pb-[56.25%] hover:cursor-pointer rounded-md"
+          onClick={() => fullscreenView()}
+        >
+          {post.type == FILE_TYPE.IMAGE ? (
+            <Image
+              className="absolute inset-0 object-cover object-center w-full h-full rounded-md"
+              src={post.imageCompressed ?? PLACEHOLDER_IMAGE}
+              width={1600}
+              height={900}
+              alt=""
+              placeholder="blur"
+              blurDataURL={IMAGE_BLUR_DATA_URL}
+              priority
+            />
+          ) : (
+            <VideoPlayer
+              loop
+              muted
+              autoPlay
+              playsInline
+              className="absolute inset-0 object-cover object-center w-full h-full rounded-md"
+              src={post.videoCompressed}
+            />
+          )}
+        </div>
       </div>
 
       <div className="w-full flex flex-wrap justify-center items-center">

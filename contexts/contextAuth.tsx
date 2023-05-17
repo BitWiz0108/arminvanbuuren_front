@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import useAuth from "@/hooks/useAuth";
 
 import { DEFAULT_USER } from "@/interfaces/IUser";
+import { OAUTH_PROVIDER } from "@/libs/constants";
 
 export const AuthContext = createContext({
   servertime: "",
@@ -39,6 +40,13 @@ export const AuthContext = createContext({
   resendVerificationLink: async (email: string) => {
     return false;
   },
+  oAuthSignIn: async (
+    provider: OAUTH_PROVIDER,
+    accessToken: string,
+    refreshToken: string
+  ) => {
+    return false;
+  },
   isMembership: false,
 });
 
@@ -57,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     resetPassword,
     verifyEmail,
     resendVerificationLink,
+    oAuthSignIn,
     isMembership,
   } = useAuth();
 
@@ -76,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         resetPassword,
         verifyEmail,
         resendVerificationLink,
+        oAuthSignIn,
         isMembership,
       }}
     >

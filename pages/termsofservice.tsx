@@ -4,11 +4,14 @@ import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
 import AudioControl from "@/components/AudioControl";
+import DonationModal from "@/components/DonationModal";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useTermsOfService from "@/hooks/useTermsOfService";
+
+import { ASSET_TYPE } from "@/libs/constants";
 
 import { DEFAULT_TERMSOFSERVICE } from "@/interfaces/ITermsOfService";
 
@@ -36,7 +39,7 @@ export default function TermsOfService() {
     <Layout>
       <div
         className={twMerge(
-          "relative w-full lg:px-10 xl:px-20 h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
+          "relative w-full px-5 lg:px-10 xl:px-20 h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
           isSignedIn ? "pb-24 lg:pb-36" : "pb-5"
         )}
       >
@@ -52,10 +55,16 @@ export default function TermsOfService() {
       </div>
 
       {isSignedIn && (
-        <AudioControl
-          audioPlayer={audioPlayer}
-          onListView={() => router.push("/music")}
-        />
+        <>
+          <DonationModal
+            assetType={ASSET_TYPE.MUSIC}
+            musicId={audioPlayer.getPlayingTrack().id}
+          />
+          <AudioControl
+            audioPlayer={audioPlayer}
+            onListView={() => router.push("/music")}
+          />
+        </>
       )}
 
       {isLoading && <div className="loading"></div>}

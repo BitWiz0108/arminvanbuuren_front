@@ -8,6 +8,9 @@ import X from "@/components/Icons/X";
 import Loading from "@/components/Loading";
 import Reply from "@/components/Icons/Reply";
 import Heart from "@/components/Icons/Heart";
+import Home from "@/components/Icons/Home";
+import ArrowLeft from "@/components/Icons/ArrowLeft";
+import ArrowRight from "@/components/Icons/ArrowRight";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
@@ -16,9 +19,9 @@ import useFanclub from "@/hooks/useFanclub";
 import {
   DATETIME_FORMAT,
   DEFAULT_AVATAR_IMAGE,
-  DEFAULT_BANNER_IMAGE,
-  IMAGE_MD_BLUR_DATA_URL,
-  IMAGE_SM_BLUR_DATA_URL,
+  FILE_TYPE,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
 } from "@/libs/constants";
 import { bigNumberFormat } from "@/libs/utils";
 
@@ -39,6 +42,36 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
   const [replyContent, setReplyContent] = useState<string>("");
   const [repliesPage, setRepliesPage] = useState<number>(1);
   const [repliesPageCount, setRepliesPageCount] = useState<number>(1);
+
+  const onPrevArticleClick = () => {
+    if (post && post.id && isSignedIn && visible) {
+      const postId = Number(post.id.toString());
+      fetchPost(postId + 1).then((value) => {
+        if (value) {
+          setPost(value);
+          setRepliesPageCount(1);
+          setRepliesPage(1);
+        } else {
+          setVisible(false);
+        }
+      });
+    }
+  };
+
+  const onNextArticleClick = () => {
+    if (post && post.id && isSignedIn && visible) {
+      const postId = Number(post.id.toString());
+      fetchPost(postId - 1).then((value) => {
+        if (value) {
+          setPost(value);
+          setRepliesPageCount(1);
+          setRepliesPage(1);
+        } else {
+          setVisible(false);
+        }
+      });
+    }
+  };
 
   const reply = () => {
     createReply(post.id, replyContent).then((value) => {
@@ -79,22 +112,22 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen p-5 bg-[#000000aa] flex justify-center items-center z-50"
+          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-36 bg-[#000000aa] flex justify-center items-center z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="relative w-full md:w-[640px] h-fit max-h-full px-5 md:px-10 pt-16 pb-5 md:pb-10 bg-background rounded-lg overscroll-contain overflow-x-hidden overflow-y-auto">
-            <div className="absolute top-5 right-5 text-primary cursor-pointer">
+          <div className="relative w-full md:w-[640px] h-fit max-h-full px-5 md:px-10 pt-5 pb-5 bg-background rounded-lg overscroll-contain overflow-x-hidden overflow-y-auto">
+            <div className="absolute top-2 right-2 text-primary cursor-pointer">
               <X width={24} height={24} onClick={() => setVisible(false)} />
             </div>
 
-            <p className="w-full text-center text-xl md:text-2xl lg:text-4xl text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-5">
+            <p className="w-full text-center font-sans text-[16px] text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-3">
               {post.title}
             </p>
 
-            <div className="w-full flex justify-center items-center mb-5">
+            <div className="w-full flex justify-center items-center mb-2">
               <div className="w-full flex flex-col justify-start items-start space-y-2 rounded-lg">
                 <div className="relative w-full flex justify-center items-center">
                   <button
@@ -102,7 +135,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                       post.isFavorite
                         ? "bg-bluePrimary hover:bg-blueSecondary"
                         : "bg-background hover:bg-blueSecondary"
-                    }  text-primary rounded-md transition-all duration-300`}
+                    }  text-primary rounded-md transition-all duration-300 z-10`}
                     onClick={() => favorite()}
                   >
                     <Heart width={20} height={20} />
@@ -110,26 +143,36 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                       {bigNumberFormat(post.numberOfFavorites)}
                     </span>
                   </button>
-                  {post.image ? (
+
+                  {post.type == FILE_TYPE.IMAGE ? (
                     <Image
-                      className="w-full aspect-w-16 aspect-h-9 object-cover rounded-md"
-                      src={post.image ? post.image : DEFAULT_BANNER_IMAGE}
+                      className="object-center w-full rounded-md"
+                      src={post.image ?? PLACEHOLDER_IMAGE}
                       width={1600}
                       height={900}
                       alt=""
                       placeholder="blur"
-                      blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+                      blurDataURL={IMAGE_BLUR_DATA_URL}
+                      priority
                     />
                   ) : (
-                    <div className="p-10">
-                      <Loading width={44} height={44} />
+                    <div className="relative w-full pb-[56.25%] z-0">
+                      <video
+                        controls
+                        autoPlay
+                        playsInline
+                        controlsList="nodownload nopictureinpicture noplaybackrate"
+                        disablePictureInPicture
+                        className="absolute inset-0 object-center w-full h-full rounded-md"
+                        src={post.video}
+                      />
                     </div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="w-full h-fit max-h-[340px] flex flex-col justify-start items-center overscroll-contain overflow-x-hidden overflow-y-auto pr-1 mb-2">
+            <div className="w-full h-fit max-h-[200px] flex flex-col justify-start items-center overscroll-contain overflow-x-hidden overflow-y-auto pr-1 mb-2">
               {post.replies?.length > 0 && (
                 <div className="w-full flex flex-col justify-start items-start space-y-2 mb-2">
                   {post.replies.map((reply, index) => {
@@ -148,7 +191,8 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                             height={40}
                             alt=""
                             placeholder="blur"
-                            blurDataURL={IMAGE_SM_BLUR_DATA_URL}
+                            blurDataURL={IMAGE_BLUR_DATA_URL}
+                            priority
                           />
                           <p className="w-full text-primary text-sm text-center truncate">
                             {reply.replier?.username ?? "anonymous"}
@@ -183,7 +227,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center space-x-0 md:space-x-2 space-y-2 md:space-y-0">
+            <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center space-x-0 md:space-x-2 space-y-2 md:space-y-0 mb-2">
               <input
                 type="text"
                 placeholder="Please type what you want..."
@@ -213,6 +257,31 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                 <Reply />
                 <span>Comment</span>
               </button>
+            </div>
+            <div className="w-full flex justify-center items-center space-x-5 border-t border-dashed border-[#3e454d] px-5 pt-2">
+              <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
+                {post.id && post.id > 1 && (
+                  <ArrowLeft
+                    width={28}
+                    height={28}
+                    onClick={onPrevArticleClick}
+                  />
+                )}
+              </div>
+              <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
+                <Home
+                  width={24}
+                  height={24}
+                  onClick={() => setVisible(false)}
+                />
+              </div>
+              <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
+                <ArrowRight
+                  width={28}
+                  height={28}
+                  onClick={onNextArticleClick}
+                />
+              </div>
             </div>
           </div>
         </motion.div>

@@ -13,7 +13,7 @@ import { useAuthValues } from "@/contexts/contextAuth";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-import { DEFAULT_AVATAR_IMAGE, IMAGE_SM_BLUR_DATA_URL } from "@/libs/constants";
+import { DEFAULT_AVATAR_IMAGE, IMAGE_BLUR_DATA_URL } from "@/libs/constants";
 
 type Props = {
   visible: boolean;
@@ -65,7 +65,8 @@ const Topbar = ({ visible, setVisible }: Props) => {
           height={60}
           alt=""
           placeholder="blur"
-          blurDataURL={IMAGE_SM_BLUR_DATA_URL}
+          blurDataURL={IMAGE_BLUR_DATA_URL}
+          priority
         />
         <span className="hidden md:inline-flex w-28 text-white text-left text-base font-medium select-none truncate">
           {user.firstName && user.lastName
@@ -100,7 +101,7 @@ const Topbar = ({ visible, setVisible }: Props) => {
               className="w-full p-2 flex justify-center md:justify-start items-center space-x-0 md:space-x-2 text-primary text-sm hover:bg-blueSecondary transition-all duration-300 cursor-pointer select-none"
               onClick={() => {
                 signOut();
-                router.push("/signin");
+                router.push("/");
                 setIsMenuVisible(false);
               }}
             >

@@ -4,10 +4,10 @@
 
 :root {
   --color-transparent: #00000000;
-  --color-background: #272828;
+  --color-background: #21292c;
   --color-primary: #ffffff;
   --color-secondary: #888888;
-  --color-third: #393939;
+  --color-third: #2f363e;
   --color-active-primary: #0f2680;
   --color-active-secondary: #1b1c1d;
   --color-blue-primary: #0052e4;
@@ -99,6 +99,91 @@ div.none-tailwind {
 div.none-tailwind * {
   all: revert;
   color: var(--color-primary);
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 4px;
+}
+
+.slider {
+  position: relative;
+  width: 100%;
+}
+
+.slider__track,
+.slider__range,
+.slider__left-value,
+.slider__right-value {
+  position: absolute;
+}
+
+.slider__track,
+.slider__range {
+  height: 4px;
+}
+
+.slider__track {
+  background-color: #363636;
+  width: 100%;
+  z-index: 1;
+}
+
+.slider__range {
+  background-color: var(--color-blue-secondary);
+  z-index: 2;
+}
+
+/* Removing the default appearance */
+.thumb,
+.thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.thumb {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  height: 0;
+  width: 100%;
+  outline: none;
+}
+
+/* For Chrome browsers */
+.thumb::-webkit-slider-thumb {
+  background-color: var(--color-blue-secondary);
+  &:hover {
+    background-color: var(--color-primary);
+  }
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+  transition: background-color 0.3s ease-in;
+}
+
+/* For Firefox browsers */
+.thumb::-moz-range-thumb {
+  background-color: var(--color-blue-secondary);
+  &:hover {
+    background-color: var(--color-primary);
+  }
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+  transition: background-color 0.3s ease-in;
 }
 
 .loading {

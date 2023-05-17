@@ -42,7 +42,7 @@ export default function VerifyEmail() {
 
     resendVerificationLink(email).then((value) => {
       if (value) {
-        router.push("/signin");
+        router.push("/");
       }
     });
   };
@@ -51,7 +51,7 @@ export default function VerifyEmail() {
     if (token) {
       verifyEmail(token.toString()).then((value) => {
         if (value) {
-          router.push("/signin");
+          router.push("/");
         }
       });
     }
@@ -118,7 +118,7 @@ export default function VerifyEmail() {
                 </p>
               </Link>
               <div className="w-[1px] h-4 bg-primary"></div>
-              <Link href="/signin">
+              <Link href="/">
                 <p className="text-center text-primary text-lg hover:underline transition-all duration-300 cursor-pointer">
                   Sign In
                 </p>

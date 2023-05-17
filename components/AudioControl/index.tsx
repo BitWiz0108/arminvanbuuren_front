@@ -12,15 +12,17 @@ import Setting from "@/components/Icons/Setting";
 import Donate from "@/components/Icons/Donate";
 import ButtonVolume from "@/components/ButtonVolume";
 import MusicSettingsModal from "@/components/MusicSettingsModal";
+import AudioSlider from "@/components/AudioSlider";
 
 import { useShareValues } from "@/contexts/contextShareData";
 import { useSizeValues } from "@/contexts/contextSize";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-import { DEFAULT_COVER_IMAGE, IMAGE_MD_BLUR_DATA_URL } from "@/libs/constants";
+import { IMAGE_BLUR_DATA_URL, PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
+import { DEFAULT_MUSIC } from "@/interfaces/IMusic";
 
 type Props = {
   audioPlayer: IAudioPlayer;
@@ -50,32 +52,38 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
 
   return (
     <div
-      className={`fixed bottom-0 flex flex-col justify-start items-start bg-background z-50`}
+      className={`fixed bottom-0 flex flex-col justify-start items-start bg-background border-l border-[#464646] ml-[1px] z-50`}
       style={{ left: `${sidebarWidth}px`, width: `${contentWidth}px` }}
     >
       <div className="w-full h-24 lg:h-32 hidden xs:flex flex-row justify-start items-start">
         <div className="w-24 h-24 lg:w-32 lg:h-32 min-w-[96px]">
           <Image
             className="w-full h-full object-cover"
-            src={track.coverImage ?? DEFAULT_COVER_IMAGE}
+            src={track.coverImage ?? PLACEHOLDER_IMAGE}
             width={1500}
             height={1500}
             alt=""
             placeholder="blur"
-            blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+            blurDataURL={IMAGE_BLUR_DATA_URL}
+            priority
           />
         </div>
-        <div className="flex flex-grow h-full flex-col justify-start items-center">
+        <div className="reltive flex flex-grow h-full flex-col justify-start items-center z-0">
           <div className="relative w-full h-1 bg-[#363636]">
-            <div
-              className="absolute left-0 top-0 h-full bg-blueSecondary"
-              style={{
-                width: `${audioPlayer.currentPercentage}%`,
-              }}
-            ></div>
+            {audioPlayer.getPlayingTrack().id != DEFAULT_MUSIC.id && (
+              <div className="absolute left-0 top-0 w-full h-full">
+                <AudioSlider
+                  min={0}
+                  max={audioPlayer.duration}
+                  value={audioPlayer.trackProgress}
+                  step={1}
+                  onChange={(value: number) => audioPlayer.onScrub(value)}
+                />
+              </div>
+            )}
           </div>
 
-          <div className="w-full h-full flex flex-row px-2 lg:px-10 justify-center lg:justify-between items-center space-x-1 lg:space-x-2">
+          <div className="relative w-full h-full flex flex-row px-2 lg:px-10 justify-center lg:justify-between items-center space-x-1 lg:space-x-2 z-10">
             <div className="flex flex-row justify-start items-center space-x-0 lg:space-x-5 w-auto lg:w-1/3">
               <ButtonCircle
                 dark
@@ -216,21 +224,29 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
           </div>
         </div>
         <div className="relative w-full h-1 bg-[#363636]">
-          <div
-            className="absolute left-0 top-0 h-full bg-blueSecondary"
-            style={{ width: `${audioPlayer.currentPercentage}%` }}
-          ></div>
+          {audioPlayer.getPlayingTrack().id != DEFAULT_MUSIC.id && (
+            <div className="absolute left-0 top-0 w-full h-full">
+              <AudioSlider
+                min={0}
+                max={audioPlayer.duration}
+                value={audioPlayer.trackProgress}
+                step={1}
+                onChange={(value: number) => audioPlayer.onScrub(value)}
+              />
+            </div>
+          )}
         </div>
         <div className="w-full h-[75px] flex justify-center items-center">
           <div className="w-[75px] h-[75px]">
             <Image
-              className="w-full object-cover"
-              src={track.coverImage ?? DEFAULT_COVER_IMAGE}
+              className="w-full h-full object-cover"
+              src={track.coverImage ?? PLACEHOLDER_IMAGE}
               width={1500}
               height={1500}
               alt=""
               placeholder="blur"
-              blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+              blurDataURL={IMAGE_BLUR_DATA_URL}
+              priority
             />
           </div>
           <div className="flex flex-grow justify-center items-center">

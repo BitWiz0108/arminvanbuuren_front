@@ -46,7 +46,7 @@ export default function ResetPassword() {
 
     resetPassword(token.toString(), password).then((value) => {
       if (value) {
-        router.push("/signin");
+        router.push("/");
       }
     });
   };
@@ -124,7 +124,7 @@ export default function ResetPassword() {
                 </p>
               </Link>
               <div className="w-[1px] h-4 bg-primary"></div>
-              <Link href="/signin">
+              <Link href="/">
                 <p className="text-center text-primary text-lg hover:underline transition-all duration-300 cursor-pointer">
                   Sign In
                 </p>

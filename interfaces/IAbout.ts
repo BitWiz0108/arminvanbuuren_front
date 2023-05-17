@@ -1,4 +1,4 @@
-import { DEFAULT_COVER_IMAGE } from "@/libs/constants";
+import { PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 export interface IAbout {
   coverImage1: string;
@@ -6,6 +6,6 @@ export interface IAbout {
 }
 
 export const DEFAULT_ABOUT = {
-  coverImage1: DEFAULT_COVER_IMAGE,
-  coverImage2: DEFAULT_COVER_IMAGE,
+  coverImage1: PLACEHOLDER_IMAGE,
+  coverImage2: PLACEHOLDER_IMAGE,
 } as IAbout;

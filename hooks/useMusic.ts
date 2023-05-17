@@ -5,7 +5,7 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { getAWSSignedURL } from "@/libs/aws";
 import { API_BASE_URL, API_VERSION, PAGE_LIMIT } from "@/libs/constants";
 
-import { DEFAULT_MUSIC, IMusic } from "@/interfaces/IMusic";
+import { IMusic } from "@/interfaces/IMusic";
 import { IAlbum } from "@/interfaces/IAlbum";
 
 const useMusic = () => {
@@ -36,9 +36,6 @@ const useMusic = () => {
     if (response.ok) {
       const data = await response.json();
       const musics = data.musics as Array<IMusic>;
-      const coverImagePromises = musics.map((music) => {
-        return getAWSSignedURL(music.coverImage, DEFAULT_MUSIC.coverImage);
-      });
       const musicFilePromises = musics.map((music) => {
         return getAWSSignedURL(music.musicFile);
       });
@@ -46,14 +43,12 @@ const useMusic = () => {
         return getAWSSignedURL(music.musicFileCompressed);
       });
       const assets = await Promise.all([
-        Promise.all(coverImagePromises),
         Promise.all(musicFilePromises),
         Promise.all(musicFileCompressedPromises),
       ]);
       musics.forEach((music, index) => {
-        music.coverImage = assets[0][index];
-        music.musicFile = assets[1][index];
-        music.musicFileCompressed = assets[2][index];
+        music.musicFile = assets[0][index];
+        music.musicFileCompressed = assets[1][index];
       });
 
       const pages = Number(data.pages);
@@ -95,9 +90,6 @@ const useMusic = () => {
       const albums = data as Array<IAlbum>;
       const promises = albums.map((album) => {
         const musics = album.musics;
-        const coverImagePromises = musics.map((music) => {
-          return getAWSSignedURL(music.coverImage, DEFAULT_MUSIC.coverImage);
-        });
         const musicFilePromises = musics.map((music) => {
           return getAWSSignedURL(music.musicFile);
         });
@@ -105,7 +97,6 @@ const useMusic = () => {
           return getAWSSignedURL(music.musicFileCompressed);
         });
         return Promise.all([
-          Promise.all(coverImagePromises),
           Promise.all(musicFilePromises),
           Promise.all(musicFileCompressedPromises),
         ]);
@@ -113,9 +104,8 @@ const useMusic = () => {
       const assets = await Promise.all(promises);
       albums.forEach((album, indexAlbum) => {
         album.musics.forEach((music, indexMusic) => {
-          music.coverImage = assets[indexAlbum][0][indexMusic];
-          music.musicFile = assets[indexAlbum][1][indexMusic];
-          music.musicFileCompressed = assets[indexAlbum][2][indexMusic];
+          music.musicFile = assets[indexAlbum][0][indexMusic];
+          music.musicFileCompressed = assets[indexAlbum][1][indexMusic];
         });
       });
 
@@ -156,9 +146,6 @@ const useMusic = () => {
     if (response.ok) {
       const data = await response.json();
       const musics = data as Array<IMusic>;
-      const coverImagePromises = musics.map((music) => {
-        return getAWSSignedURL(music.coverImage, DEFAULT_MUSIC.coverImage);
-      });
       const musicFilePromises = musics.map((music) => {
         return getAWSSignedURL(music.musicFile);
       });
@@ -166,14 +153,12 @@ const useMusic = () => {
         return getAWSSignedURL(music.musicFileCompressed);
       });
       const assets = await Promise.all([
-        Promise.all(coverImagePromises),
         Promise.all(musicFilePromises),
         Promise.all(musicFileCompressedPromises),
       ]);
       musics.forEach((music, index) => {
-        music.coverImage = assets[0][index];
-        music.musicFile = assets[1][index];
-        music.musicFileCompressed = assets[2][index];
+        music.musicFile = assets[0][index];
+        music.musicFileCompressed = assets[1][index];
       });
 
       setIsLoading(false);

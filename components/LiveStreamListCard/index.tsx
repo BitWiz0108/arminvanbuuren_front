@@ -14,8 +14,8 @@ import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import {
-  DEFAULT_COVER_IMAGE,
-  IMAGE_MD_BLUR_DATA_URL,
+  IMAGE_BLUR_DATA_URL,
+  PLACEHOLDER_IMAGE,
   SITE_BASE_URL,
 } from "@/libs/constants";
 
@@ -70,10 +70,11 @@ const LiveStreamListCard = ({
     <div
       className="flex flex-col justify-start items-start"
       style={{
-        width: `${isTablet
+        width: `${
+          isTablet
             ? LIVESTREAM_CARD_NORMAL_WIDTH_MOBILE
             : LIVESTREAM_CARD_NORMAL_WIDTH_DESKTOP
-          }px`,
+        }px`,
       }}
     >
       <div
@@ -93,12 +94,13 @@ const LiveStreamListCard = ({
         >
           <Image
             className="w-full h-full object-cover select-none pointer-events-none max-h-[192px]"
-            src={livestream.coverImage ?? DEFAULT_COVER_IMAGE}
+            src={livestream.coverImage ?? PLACEHOLDER_IMAGE}
             width={342}
             height={342}
             alt=""
             placeholder="blur"
-            blurDataURL={IMAGE_MD_BLUR_DATA_URL}
+            blurDataURL={IMAGE_BLUR_DATA_URL}
+            priority
           />
         </div>
         {playing && soundStatus != "none" && (
@@ -143,7 +145,7 @@ const LiveStreamListCard = ({
             onClick={() => {
               setMetaData(
                 composeMetadata(
-                  livestream.singer.username,
+                  livestream.singer.artistName,
                   livestream.title,
                   livestream.duration,
                   livestream.description,

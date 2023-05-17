@@ -124,12 +124,11 @@ const useTransaction = () => {
     );
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       return {
         paypalClientId: data.paypalClientId,
         paypalClientSecret: data.paypalClientSecret,
         stripePublicApiKey: data.stripePublicApiKey,
-        stripeSecretKey: data.stripeSecretKey
+        stripeSecretKey: data.stripeSecretKey,
       };
     } else {
       return null;

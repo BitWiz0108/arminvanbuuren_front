@@ -3,9 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import getConfig from "next/config";
 import { Elements } from "@stripe/react-stripe-js";
-import {
-  PayPalScriptProvider,
-} from "@paypal/react-paypal-js";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
 
 import Sidebar from "@/components/Sidebar";
@@ -55,6 +53,7 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
 
   const {
     width,
+    sidebarWidth,
     contentWidth,
     isSidebarVisible,
     setIsSidebarVisible,
@@ -66,7 +65,7 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFirstLoading(false);
-    }, 2000);
+    }, 5000);
 
     fetchArtist().then((value) => {
       if (value) {
@@ -85,15 +84,15 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
     }
 
     if (
+      router.pathname != "/" &&
       router.pathname != "/termsofservice" &&
-      router.pathname != "/signin" &&
       router.pathname != "/signup" &&
       router.pathname != "/forgotpassword" &&
       !router.pathname.includes("/resetpassword") &&
       !router.pathname.includes("/verifyemail")
     ) {
       if (!isSignedIn) {
-        router.push("/signin");
+        router.push("/");
       }
     }
 
@@ -133,7 +132,11 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
 
           {/* Open Graph */}
           <meta property="og:url" content={`${url}${asPath}`} key="og_url" />
-          <meta property="og:site_name" content={meta.name} key="og_site_name" />
+          <meta
+            property="og:site_name"
+            content={meta.name}
+            key="og_site_name"
+          />
           <meta property="og:title" content={meta.title} key="og_title" />
           <meta
             property="og:description"
@@ -145,13 +148,21 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
             content={`${url}${socialPreview}`}
             key="og_image"
           />
-          <meta property="og:image:width" content={`1200`} key="og_image_width" />
+          <meta
+            property="og:image:width"
+            content={`1200`}
+            key="og_image_width"
+          />
           <meta
             property="og:image:height"
             content={`630`}
             key="og_image_height"
           />
-          <meta name="description" content={meta.description} key="description" />
+          <meta
+            name="description"
+            content={meta.description}
+            key="description"
+          />
           {meta.date && (
             <meta property="article:published_time" content={meta.date} />
           )}
@@ -170,7 +181,15 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
             />
           </div>
           <Topbar visible={isTopbarVisible} setVisible={setIsTopbarVisible} />
-          <Sidebar visible={isSidebarVisible} setVisible={setIsSidebarVisible} />
+          <Sidebar
+            visible={isSidebarVisible}
+            setVisible={setIsSidebarVisible}
+          />
+
+          <div
+            className="h-1 mr-[1px] transition-all duration-300"
+            style={{ width: `${sidebarWidth}px` }}
+          ></div>
 
           <div
             className="flex flex-col h-full justify-start items-center overflow-hidden border-l border-[#464646]"
@@ -182,7 +201,7 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
           </div>
         </main>
       </PayPalScriptProvider>
-    </Elements >
+    </Elements>
   );
 };
 

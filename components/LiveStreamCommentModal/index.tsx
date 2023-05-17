@@ -16,7 +16,7 @@ import useLivestream from "@/hooks/useLivestream";
 import {
   DATETIME_FORMAT,
   DEFAULT_AVATAR_IMAGE,
-  IMAGE_SM_BLUR_DATA_URL,
+  IMAGE_BLUR_DATA_URL,
 } from "@/libs/constants";
 
 import { IComment } from "@/interfaces/IComment";
@@ -102,7 +102,8 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
                           height={40}
                           alt=""
                           placeholder="blur"
-                          blurDataURL={IMAGE_SM_BLUR_DATA_URL}
+                          blurDataURL={IMAGE_BLUR_DATA_URL}
+                          priority
                         />
                         <p className="w-full text-primary text-sm text-center truncate">
                           {reply.author.username ?? "anonymous"}
@@ -125,7 +126,7 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
                   ) : (
                     pageCount > page && (
                       <button
-                        className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-third rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                        className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
                         onClick={() => fetchMoreComments()}
                       >
                         + More

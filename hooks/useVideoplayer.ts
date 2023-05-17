@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import { LIVESTREAM_QUALITY } from "@/libs/constants";
+
 import { DEFAULT_STREAM, IStream } from "@/interfaces/IStream";
 
 const useVideoPlayer = (videoRef: any) => {
@@ -40,6 +41,8 @@ const useVideoPlayer = (videoRef: any) => {
     if (videoRef.current) {
       videoRef.current.currentTime = value;
       setTrackProgress(videoRef.current?.currentTime ?? 0);
+
+      onScrubEnd();
     }
   };
 
@@ -101,8 +104,8 @@ const useVideoPlayer = (videoRef: any) => {
         myVideo.src = track.fullVideo;
       }
 
-      videoRef.current.play(); // Disable/Enalbe Auto play
-      setTrackProgress(videoRef.current?.currentTime);
+      videoRef.current.currentTime = 0;
+      setTrackProgress(0);
       if (isReady.current) {
         videoRef.current.volume = volume / 100;
       } else {
@@ -133,6 +136,7 @@ const useVideoPlayer = (videoRef: any) => {
     isPlaying,
     currentPercentage,
     duration,
+    trackProgress,
     play,
     pause,
     setTrack,
