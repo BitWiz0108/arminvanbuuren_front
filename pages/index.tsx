@@ -20,6 +20,7 @@ import useHomepage from "@/hooks/useHomepage";
 import useFanclub from "@/hooks/useFanclub";
 
 import {
+  DEFAULT_LOGO_IMAGE,
   OAUTH_PROVIDER,
   TAG_ACCESS_TOKEN,
   TAG_PASSWORD,
@@ -27,7 +28,6 @@ import {
   TAG_USERNAME,
 } from "@/libs/constants";
 import { getErrorMessageForCode } from "@/libs/utils";
-import { DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
 import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
@@ -44,7 +44,6 @@ export default function Signin() {
   const [password, setPassword] = useState<string>("");
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
   const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
-  const [logoImage, setLogoImage] = useState<string>(DEFAULT_LOGO_IMAGE);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
 
   const onSignin = () => {
@@ -170,7 +169,7 @@ export default function Signin() {
             <h3 className="text-center text-primary text-2xl mb-2">
               <Image
                 className="w-56 object-cover mb-5"
-                src={logoImage ?? DEFAULT_LOGO_IMAGE}
+                src={artist.logoImage ?? DEFAULT_LOGO_IMAGE}
                 width={311}
                 height={220}
                 alt=""
