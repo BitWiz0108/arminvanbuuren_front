@@ -110,16 +110,15 @@ const Sidebar = ({ visible, setVisible }: Props) => {
               isSidebarCollapsed ? "invisible" : "visible"
             )}
           >
-            <Link href="/home" className="w-full">
-              <Image
-                className="w-full object-cover"
-                src={logoImage ?? DEFAULT_LOGO_IMAGE}
-                width={202}
-                height={83}
-                alt=""
-                priority
-              />
-            </Link>
+            <Image
+              className="w-full object-cover"
+              src={logoImage ?? DEFAULT_LOGO_IMAGE}
+              width={202}
+              height={83}
+              alt=""
+              priority
+              onClick={() => goToLink("/home")}
+            />
           </div>
 
           <ButtonSidebar
@@ -213,26 +212,24 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             )}
           >
             <div className="w-1/2 flex justify-center items-center">
-              <Link href="/home">
-                <Image
-                  className="w-[81px] h-[28px] object-fill"
-                  width={97}
-                  height={34}
-                  src="/images/apple-store.png"
-                  alt=""
-                />
-              </Link>
+              <Image
+                className="w-[81px] h-[28px] object-fill cursor-pointer"
+                width={97}
+                height={34}
+                src="/images/apple-store.png"
+                alt=""
+                onClick={() => goToLink("/home")}
+              />
             </div>
             <div className="w-1/2 justify-center items-center">
-              <Link href="/home">
-                <Image
-                  className="w-[86px] h-[28px] object-fill"
-                  width={102}
-                  height={34}
-                  src="/images/google-store.png"
-                  alt=""
-                />
-              </Link>
+              <Image
+                className="w-[86px] h-[28px] object-fill cursor-pointer"
+                width={102}
+                height={34}
+                src="/images/google-store.png"
+                alt=""
+                onClick={() => goToLink("/home")}
+              />
             </div>
           </div>
 
