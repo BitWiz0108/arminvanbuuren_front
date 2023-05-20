@@ -99,6 +99,7 @@ div.none-tailwind {
 div.none-tailwind * {
   all: revert;
   color: var(--color-primary);
+  margin: 0;
 }
 
 .slider-container {
