@@ -195,12 +195,7 @@ export default function FanClub() {
               {latestLivestreams[0].title}
             </p>
           </Link>
-          <div
-            className="none-tailwind"
-            dangerouslySetInnerHTML={{
-              __html: latestLivestreams[0].description,
-            }}
-          ></div>
+
         </div>
       )}
 
