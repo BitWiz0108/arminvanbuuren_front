@@ -18,7 +18,7 @@ const VideoPlayer = (props: any) => {
     <>
       {loading && (
         <img
-          className="absolute left-0 top-0 w-full h-full object-cover opacity-10 z-10"
+          className="absolute left-0 top-0 w-full h-full object-cover opacity-20 z-10"
           src={LOADING_GIF}
           alt=""
         />
