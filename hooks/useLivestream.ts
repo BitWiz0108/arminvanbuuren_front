@@ -48,21 +48,21 @@ const useLivestream = () => {
         }
       });
       const previewVideoCompressedPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.previewVideoCompressed.includes("video/2023")) {
           return livestream.previewVideoCompressed;
         } else {
           return getAWSSignedURL(livestream.previewVideoCompressed);
         }
       });
       const fullVideoPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.fullVideo.includes("video/2023")) {
           return livestream.fullVideo;
         } else {
           return getAWSSignedURL(livestream.fullVideo);
         }
       });
       const fullVideoCompressedPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.fullVideoCompressed.includes("video/2023")) {
           return livestream.fullVideoCompressed;
         } else {
           return getAWSSignedURL(livestream.fullVideoCompressed);
@@ -123,19 +123,35 @@ const useLivestream = () => {
       const promises = categories.map((category) => {
         const livestreams = category.livestreams;
         const livestreamPreviewVideoPromises = livestreams.map((livestream) => {
-          return getAWSSignedURL(livestream.previewVideo);
+          if (!livestream.previewVideo.includes("video/2023")) {
+            return livestream.previewVideo;
+          } else {
+            return getAWSSignedURL(livestream.previewVideo);
+          }
         });
         const livestreamPreviewVideoCompressedPromises = livestreams.map(
           (livestream) => {
-            return getAWSSignedURL(livestream.previewVideoCompressed);
+            if (!livestream.previewVideoCompressed.includes("video/2023")) {
+              return livestream.previewVideoCompressed;
+            } else {
+              return getAWSSignedURL(livestream.previewVideoCompressed);
+            }
           }
         );
         const livestreamFullVideoPromises = livestreams.map((livestream) => {
-          return getAWSSignedURL(livestream.fullVideo);
+          if (!livestream.fullVideo.includes("video/2023")) {
+            return livestream.fullVideo;
+          } else {
+            return getAWSSignedURL(livestream.fullVideo);
+          }
         });
         const livestreamFullVideoCompressedVideoPromises = livestreams.map(
           (livestream) => {
-            return getAWSSignedURL(livestream.fullVideoCompressed);
+            if (!livestream.fullVideoCompressed.includes("video/2023")) {
+              return livestream.fullVideoCompressed;
+            } else {
+              return getAWSSignedURL(livestream.fullVideoCompressed);
+            }
           }
         );
 
@@ -203,21 +219,21 @@ const useLivestream = () => {
         }
       });
       const previewVideoCompressedPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.previewVideoCompressed.includes("video/2023")) {
           return livestream.previewVideoCompressed;
         } else {
           return getAWSSignedURL(livestream.previewVideoCompressed);
         }
       });
       const fullVideoPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.fullVideo.includes("video/2023")) {
           return livestream.fullVideo;
         } else {
           return getAWSSignedURL(livestream.fullVideo);
         }
       });
       const fullVideoCompressedPromises = livestreams.map((livestream) => {
-        if (!livestream.previewVideo.includes("video/2023")) {
+        if (!livestream.fullVideoCompressed.includes("video/2023")) {
           return livestream.fullVideoCompressed;
         } else {
           return getAWSSignedURL(livestream.fullVideoCompressed);

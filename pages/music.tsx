@@ -472,68 +472,6 @@ export default function Music() {
 
   const listView = (
     <div className="relative w-full min-h-screen flex flex-col justify-start items-start space-y-10 pt-5 pb-44 bg-background">
-      <div className="relative w-full flex flex-col justify-start items-start px-5">
-        <h1
-          className={twMerge(
-            "text-primary text-xl md:text-2xl text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
-          )}
-        >
-          {artist.firstName} <span className="font-semibold">Music</span>
-        </h1>
-        <p
-          className={twMerge(
-            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
-          )}
-        >
-          {artist.numberOfMusics} SONG{artist.numberOfMusics > 1 ? "S" : ""}
-        </p>
-        <div
-          ref={musicsScrollRef}
-          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-          onWheel={(e) => onWheel(e, musicsScrollRef)}
-          style={{ scrollBehavior: "unset" }}
-        >
-          <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
-            {allMusics.map((music, index) => {
-              return (
-                <MusicListCard
-                  playing={
-                    music.id == audioPlayer.getPlayingTrack().id &&
-                    audioPlayer.albumId == null
-                  }
-                  soundStatus={
-                    music.id == audioPlayer.getPlayingTrack().id &&
-                    audioPlayer.albumId == null
-                      ? audioPlayer.isPlaying
-                        ? "playing"
-                        : "paused"
-                      : "none"
-                  }
-                  music={music}
-                  togglePlay={() => {
-                    if (audioPlayer.isPlaying) {
-                      audioPlayer.pause();
-                    } else {
-                      audioPlayer.play();
-                    }
-                  }}
-                  play={() => {
-                    audioPlayer.setAlbumId(null);
-                    audioPlayer.setMusics(allMusics);
-                    setPage(Math.floor(allMusics.length / PAGE_LIMIT) + 1);
-                    audioPlayer.setPlayingIndex(index);
-                    setIsListView(false);
-                  }}
-                  key={index}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
       {albums.map((album, index) => {
         return (
           <div
@@ -598,6 +536,69 @@ export default function Music() {
           </div>
         );
       })}
+
+      <div className="relative w-full flex flex-col justify-start items-start px-5">
+        <h1
+          className={twMerge(
+            "text-primary text-xl md:text-2xl text-center pl-16",
+            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+          )}
+        >
+          {/* {artist.firstName} <span className="font-semibold">Music</span> */}
+          <span className="font-semibold">All Musics</span>
+        </h1>
+        <p
+          className={twMerge(
+            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
+            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+          )}
+        >
+          {artist.numberOfMusics} SONG{artist.numberOfMusics > 1 ? "S" : ""}
+        </p>
+        <div
+          ref={musicsScrollRef}
+          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
+          onWheel={(e) => onWheel(e, musicsScrollRef)}
+          style={{ scrollBehavior: "unset" }}
+        >
+          <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
+            {allMusics.map((music, index) => {
+              return (
+                <MusicListCard
+                  playing={
+                    music.id == audioPlayer.getPlayingTrack().id &&
+                    audioPlayer.albumId == null
+                  }
+                  soundStatus={
+                    music.id == audioPlayer.getPlayingTrack().id &&
+                    audioPlayer.albumId == null
+                      ? audioPlayer.isPlaying
+                        ? "playing"
+                        : "paused"
+                      : "none"
+                  }
+                  music={music}
+                  togglePlay={() => {
+                    if (audioPlayer.isPlaying) {
+                      audioPlayer.pause();
+                    } else {
+                      audioPlayer.play();
+                    }
+                  }}
+                  play={() => {
+                    audioPlayer.setAlbumId(null);
+                    audioPlayer.setMusics(allMusics);
+                    setPage(Math.floor(allMusics.length / PAGE_LIMIT) + 1);
+                    audioPlayer.setPlayingIndex(index);
+                    setIsListView(false);
+                  }}
+                  key={index}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 

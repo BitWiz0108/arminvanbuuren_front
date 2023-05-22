@@ -348,7 +348,7 @@ export default function LiveStream() {
               isSidebarVisible ? "pl-16 md:pl-0" : "pl-16"
             )}
           >
-            {categoryId == null ? size : getCategoryById().size} CONCERTS,&nbsp;
+            {categoryId == null ? size : getCategoryById().size} VIDEOS,&nbsp;
             {(categoryId == null ? hours : getCategoryById().hours).toFixed(2)}
             &nbsp;HOURS
           </h5>
@@ -446,75 +446,6 @@ export default function LiveStream() {
 
   const categoryView = (
     <div className="relative w-full min-h-screen flex flex-col justify-start items-start space-y-10 pt-5 pb-44 bg-background">
-      <div className="relative w-full flex flex-col justify-start items-start px-5">
-        <h1
-          className={twMerge(
-            "text-primary text-xl md:text-2xl text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
-          )}
-        >
-          {artist.firstName} <span className="font-semibold">Livestream</span>
-        </h1>
-        <p
-          className={twMerge(
-            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
-          )}
-        >
-          {artist.numberOfLivestreams} CONCERT
-          {artist.numberOfLivestreams > 1 ? "S" : ""}
-        </p>
-        <div
-          ref={livestreamScrollRef}
-          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-          onWheel={(e) => onWheel(e, livestreamScrollRef)}
-          style={{ scrollBehavior: "unset" }}
-        >
-          <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
-            {allLivestreams.map((livestream, index) => {
-              return (
-                <LiveStreamListCard
-                  playing={
-                    livestream.id == playingTrack.id && categoryId == null
-                  }
-                  soundStatus={
-                    livestream.id == playingTrack.id && categoryId == null
-                      ? videoPlayer.isPlaying
-                        ? "playing"
-                        : "paused"
-                      : "none"
-                  }
-                  livestream={livestream}
-                  togglePlay={() => {
-                    if (videoPlayer.isPlaying) {
-                      videoPlayer.pause();
-                    } else {
-                      setTimeout(() => {
-                        videoPlayer.play();
-                      }, 100);
-                    }
-
-                    setCategoryId(null);
-                    setLivestreams(allLivestreams);
-                    setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
-                    setPlayingIndex(index);
-                    setViewMode(VIEW_MODE.VIDEO);
-                  }}
-                  play={() => {
-                    setCategoryId(null);
-                    setLivestreams(allLivestreams);
-                    setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
-                    setPlayingIndex(index);
-                    setViewMode(VIEW_MODE.LIST);
-                  }}
-                  key={index}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
       {categories.map((category, index) => {
         return (
           <div
@@ -528,7 +459,7 @@ export default function LiveStream() {
               {category.description}
             </p>
             <p className="text-secondary text-sm md:text-base font-semibold text-center">
-              {category.size} CONCERT{category.size > 1 ? "S" : ""}
+              {category.size} Video{category.size > 1 ? "s" : ""}
             </p>
             <div
               // @ts-ignore
@@ -593,6 +524,74 @@ export default function LiveStream() {
           </div>
         );
       })}
+      <div className="relative w-full flex flex-col justify-start items-start px-5">
+        <h1
+          className={twMerge(
+            "text-primary text-xl md:text-2xl text-center pl-16",
+            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+          )}
+        >
+          <span className="font-semibold">All Livestreams</span>
+        </h1>
+        <p
+          className={twMerge(
+            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
+            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+          )}
+        >
+          {artist.numberOfLivestreams} Video
+          {artist.numberOfLivestreams > 1 ? "s" : ""}
+        </p>
+        <div
+          ref={livestreamScrollRef}
+          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
+          onWheel={(e) => onWheel(e, livestreamScrollRef)}
+          style={{ scrollBehavior: "unset" }}
+        >
+          <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
+            {allLivestreams.map((livestream, index) => {
+              return (
+                <LiveStreamListCard
+                  playing={
+                    livestream.id == playingTrack.id && categoryId == null
+                  }
+                  soundStatus={
+                    livestream.id == playingTrack.id && categoryId == null
+                      ? videoPlayer.isPlaying
+                        ? "playing"
+                        : "paused"
+                      : "none"
+                  }
+                  livestream={livestream}
+                  togglePlay={() => {
+                    if (videoPlayer.isPlaying) {
+                      videoPlayer.pause();
+                    } else {
+                      setTimeout(() => {
+                        videoPlayer.play();
+                      }, 100);
+                    }
+
+                    setCategoryId(null);
+                    setLivestreams(allLivestreams);
+                    setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
+                    setPlayingIndex(index);
+                    setViewMode(VIEW_MODE.VIDEO);
+                  }}
+                  play={() => {
+                    setCategoryId(null);
+                    setLivestreams(allLivestreams);
+                    setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
+                    setPlayingIndex(index);
+                    setViewMode(VIEW_MODE.LIST);
+                  }}
+                  key={index}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 
