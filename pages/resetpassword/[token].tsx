@@ -13,19 +13,16 @@ import Loading from "@/components/Loading";
 import { useAuthValues } from "@/contexts/contextAuth";
 
 import useHomepage from "@/hooks/useHomepage";
-import useFanclub from "@/hooks/useFanclub";
-
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
+import { useShareValues } from "@/contexts/contextShareData";
 
 export default function ResetPassword() {
   const router = useRouter();
   const { token } = router.query;
 
-  const { fetchPageContent } = useHomepage();
-  const { fetchArtist } = useFanclub();
   const { isLoading, resetPassword } = useAuthValues();
+  const { artist } = useShareValues();
+  const { fetchPageContent } = useHomepage();
 
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
@@ -53,16 +50,9 @@ export default function ResetPassword() {
   };
 
   useEffect(() => {
-    // Fetch background video signed url
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);
-      }
-    });
-
-    fetchArtist().then((value) => {
-      if (value) {
-        setArtist(value);
       }
     });
 

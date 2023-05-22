@@ -30,24 +30,22 @@ import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useMusic from "@/hooks/useMusic";
-import useFanclub from "@/hooks/useFanclub";
 
 import { ASSET_TYPE, PAGE_LIMIT, SITE_BASE_URL } from "@/libs/constants";
 
 import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function Music() {
   const scrollRef = useRef(null);
   const musicsScrollRef = useRef(null);
-  const albumsScrollRefs = useRef([]);
 
   const { isSignedIn, isMembership } = useAuthValues();
   const { isMobile, height, contentWidth, isSidebarVisible, isTopbarVisible } =
     useSizeValues();
   const {
+    artist,
     audioPlayer,
     setIsLyricsVisible,
     setLyrics,
@@ -62,7 +60,6 @@ export default function Music() {
     fetchAlbumMusics,
     toggleMusicFavorite,
   } = useMusic();
-  const { fetchArtist } = useFanclub();
 
   const [allMusics, setAllMusics] = useState<Array<IMusic>>([]);
   const [albums, setAlbums] = useState<Array<IAlbum>>([]);
@@ -75,8 +72,6 @@ export default function Music() {
   const [activeWidth, setActiveWidth] = useState<number>(0);
   const [isListView, setIsListView] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
-  const [emptyText, setEmptyText] = useState<string>("");
 
   const checkActiveIndex = (scrollPos: number, right: boolean) => {
     const value = scrollPos / activeWidth;
@@ -326,12 +321,6 @@ export default function Music() {
     if (isSignedIn) {
       setPage(1);
 
-      fetchArtist().then((data) => {
-        if (data) {
-          setArtist(data);
-        }
-      });
-
       getAllMusics(1, true);
 
       fetchAllAlbums(1, isExclusive).then((albums) => {
@@ -345,12 +334,6 @@ export default function Music() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn, isExclusive]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setEmptyText("No Musics");
-    }, 3000);
-  }, []);
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
@@ -488,7 +471,13 @@ export default function Music() {
             <h1
               className={twMerge(
                 "text-primary text-base md:text-xl text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               <span className="font-semibold">{album.name}</span>
@@ -496,7 +485,13 @@ export default function Music() {
             <p
               className={twMerge(
                 "text-secondary text-xs md:text-sm text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               {album.description}
@@ -504,18 +499,18 @@ export default function Music() {
             <p
               className={twMerge(
                 "text-secondary text-sm md:text-base font-semibold text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               {album.size} SONG{album.size > 1 ? "S" : ""}
             </p>
-            <div
-              // @ts-ignore
-              ref={(el) => (albumsScrollRefs.current[index] = el)}
-              className="w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-              onWheel={(e) => onWheel(e, albumsScrollRefs.current[index], true)}
-              style={{ scrollBehavior: "unset" }}
-            >
+            <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
                 {album.musics.map((music, index) => {
                   return (
@@ -563,7 +558,13 @@ export default function Music() {
         <h1
           className={twMerge(
             "text-primary text-base md:text-xl text-center",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+            albums.length == 0
+              ? isMobile
+                ? "pl-16"
+                : isSidebarVisible
+                ? "md:pl-0"
+                : "md:pl-16"
+              : "pl-0"
           )}
         >
           <span className="font-semibold">All Music</span>
@@ -571,7 +572,13 @@ export default function Music() {
         <p
           className={twMerge(
             "text-secondary text-xs md:text-sm font-semibold text-center",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+            albums.length == 0
+              ? isMobile
+                ? "pl-16"
+                : isSidebarVisible
+                ? "md:pl-0"
+                : "md:pl-16"
+              : "pl-0"
           )}
         >
           {artist.numberOfMusics} SONG{artist.numberOfMusics > 1 ? "S" : ""}
@@ -650,7 +657,7 @@ export default function Music() {
   const nullContent = (
     <div className="relative w-full h-screen flex justify-center items-center">
       <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : emptyText}
+        {isLoading ? <Loading width={40} height={40} /> : ""}
       </p>
     </div>
   );

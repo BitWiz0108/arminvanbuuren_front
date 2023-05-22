@@ -34,7 +34,6 @@ import {
   SITE_BASE_URL,
 } from "@/libs/constants";
 
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 import { IStream } from "@/interfaces/IStream";
 import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
@@ -49,17 +48,15 @@ export default function FanClub() {
   const { isSignedIn } = useAuthValues();
   const {
     isLoading: isWorkingFanclub,
-    fetchArtist,
     fetchPosts,
     togglePostFavorite,
   } = useFanclub();
   const { isLoading: isWorkingMusics, fetchMusics } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
   const { height } = useSizeValues();
-  const { audioPlayer, setIsShareModalVisible, setShareData } =
+  const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
     useShareValues();
 
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [latestLivestreams, setLatestLiveStreams] = useState<Array<IStream>>(
     []
   );
@@ -127,11 +124,6 @@ export default function FanClub() {
 
   useEffect(() => {
     if (isSignedIn) {
-      fetchArtist().then((data) => {
-        if (data) {
-          setArtist(data);
-        }
-      });
       fetchLivestreams(1, true, LIVESTREAMS_PAGE_SIZE).then((value) => {
         setLatestLiveStreams(value.livestreams);
         setLivestreamPageCount(value.pages);

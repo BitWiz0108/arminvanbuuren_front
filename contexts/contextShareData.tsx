@@ -5,29 +5,31 @@ import useShareData from "@/hooks/useShareData";
 
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
 import { DEFAULT_SHAREDATA, IShareData } from "@/interfaces/IShareData";
+import { DEFAULT_ARTIST } from "@/interfaces/IArtist";
 
 export const ShareContext = createContext({
+  artist: DEFAULT_ARTIST,
   audioPlayer: {} as IAudioPlayer,
   isLyricsVisible: false,
-  setIsLyricsVisible: (flag: boolean) => { },
+  setIsLyricsVisible: (flag: boolean) => {},
   lyrics: null as any,
-  setLyrics: (value: any) => { },
+  setLyrics: (value: any) => {},
   isMetaVisible: false,
-  setIsMetaVisible: (flag: boolean) => { },
+  setIsMetaVisible: (flag: boolean) => {},
   metaData: null as any,
-  setMetaData: (value: any) => { },
+  setMetaData: (value: any) => {},
   isSubscriptionModalVisible: false,
-  setIsSubscriptionModalVisible: (flag: boolean) => { },
+  setIsSubscriptionModalVisible: (flag: boolean) => {},
   isViewExclusiveModalVisible: false,
-  setIsViewExclusiveModalVisible: (flag: boolean) => { },
+  setIsViewExclusiveModalVisible: (flag: boolean) => {},
   isDonationModalVisible: false,
-  setIsDonationModalVisible: (flag: boolean) => { },
+  setIsDonationModalVisible: (flag: boolean) => {},
   isLivestreamCommentVisible: false,
-  setIsLivestreamCommentVisible: (flag: boolean) => { },
+  setIsLivestreamCommentVisible: (flag: boolean) => {},
   isShareModalVisible: false,
-  setIsShareModalVisible: (flag: boolean) => { },
+  setIsShareModalVisible: (flag: boolean) => {},
   shareData: DEFAULT_SHAREDATA,
-  setShareData: (value: IShareData) => { },
+  setShareData: (value: IShareData) => {},
   paypalClientId: "",
   paypalClientSecret: "",
   stripePublicApiKey: "",
@@ -36,6 +38,7 @@ export const ShareContext = createContext({
 
 export const ShareProvider = ({ children }: { children: ReactNode }) => {
   const {
+    artist,
     audioPlayer,
     isLyricsVisible,
     setIsLyricsVisible,
@@ -66,6 +69,7 @@ export const ShareProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ShareContext.Provider
       value={{
+        artist,
         audioPlayer,
         isLyricsVisible,
         setIsLyricsVisible,

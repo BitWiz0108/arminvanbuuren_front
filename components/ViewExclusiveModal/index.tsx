@@ -23,7 +23,6 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useTransaction from "@/hooks/useTransaction";
-import useFanclub from "@/hooks/useFanclub";
 
 import { ASSET_TYPE, PROVIDER, TRANSACTION_TYPE } from "@/libs/constants";
 import { createClientSecret } from "@/libs/stripe";
@@ -31,18 +30,17 @@ import { createOrderId } from "@/libs/paypal";
 import { checkNumber } from "@/libs/utils";
 
 import { DEFAULT_CURRENCY, ICurrency } from "@/interfaces/ICurrency";
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
 const ViewExclusiveModal = () => {
   const { isSignedIn } = useAuthValues();
   const {
+    artist,
     isViewExclusiveModalVisible,
     setIsViewExclusiveModalVisible,
     paypalClientId,
     paypalClientSecret,
     stripeSecretKey,
   } = useShareValues();
-  const { fetchArtist } = useFanclub();
 
   const [provider, setProvider] = useState<PROVIDER>(PROVIDER.STRIPE);
   const [currencies, setCurrencies] = useState<Array<ICurrency>>([]);
@@ -50,7 +48,6 @@ const ViewExclusiveModal = () => {
   const [amountString, setAmountString] = useState<string>("5");
   const [currency, setCurrency] = useState<ICurrency>(DEFAULT_CURRENCY);
   const [isWorking, setIsWorking] = useState<boolean>(false);
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -227,11 +224,6 @@ const ViewExclusiveModal = () => {
         setCurrency(currencies[0]);
         setAmountString(`${currencies[0].symbol}5`);
         setAmount(5);
-      });
-      fetchArtist().then((value) => {
-        if (value) {
-          setArtist(value);
-        }
       });
     }
 

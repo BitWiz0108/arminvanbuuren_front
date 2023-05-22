@@ -21,11 +21,10 @@ import Facebook from "@/components/Icons/Facebook";
 import DonationModal from "@/components/DonationModal";
 import Loading from "@/components/Loading";
 
+import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useAbout from "@/hooks/useAbout";
-import useAuth from "@/hooks/useAuth";
-import useFanclub from "@/hooks/useFanclub";
 
 import { validateEmail } from "@/libs/utils";
 import {
@@ -34,22 +33,14 @@ import {
   PLACEHOLDER_IMAGE,
 } from "@/libs/constants";
 
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
-
 export default function About() {
   const router = useRouter();
-  const { isSignedIn } = useAuth();
-  const {
-    isLoading: isLoadingAbout,
-    fetchAboutContent,
-    sendEmail,
-  } = useAbout();
-  const { isLoading: isLoadingArtist, fetchArtist } = useFanclub();
-  const { audioPlayer } = useShareValues();
+  const { isSignedIn } = useAuthValues();
+  const { isLoading, fetchAboutContent, sendEmail } = useAbout();
+  const { artist, audioPlayer } = useShareValues();
 
   const [coverImage1, setCoverImage1] = useState<string>(PLACEHOLDER_IMAGE);
   const [coverImage2, setCoverImage2] = useState<string>(PLACEHOLDER_IMAGE);
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [name, setName] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -64,14 +55,6 @@ export default function About() {
         setCoverImage2(
           data.coverImage2 == "" ? PLACEHOLDER_IMAGE : data.coverImage2
         );
-      }
-    });
-  };
-
-  const fetchAboutMeContent = () => {
-    fetchArtist().then((data) => {
-      if (data) {
-        setArtist(data);
       }
     });
   };
@@ -92,7 +75,6 @@ export default function About() {
   useEffect(() => {
     if (isSignedIn) {
       fetchAboutContentData();
-      fetchAboutMeContent();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -235,7 +217,7 @@ export default function About() {
         onListView={() => router.push("/music")}
       />
 
-      {(isLoadingAbout || isLoadingArtist) && (
+      {isLoading && (
         <div className="loading">
           <Loading width={64} height={64} />
         </div>

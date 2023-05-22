@@ -4,6 +4,7 @@ import useAudioPlayer from "@/hooks/useAudioplayer";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
+import useFanclub from "@/hooks/useFanclub";
 import useMusic from "@/hooks/useMusic";
 import useTransaction from "@/hooks/useTransaction";
 
@@ -15,13 +16,17 @@ import {
 } from "@/libs/constants";
 
 import { DEFAULT_SHAREDATA, IShareData } from "@/interfaces/IShareData";
+import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 
 const useShareData = () => {
   const { isSignedIn } = useAuthValues();
+  const { fetchArtist } = useFanclub();
   const { fetchMusics } = useMusic();
   const { fetchPaymentData } = useTransaction();
 
   const audioPlayer = useAudioPlayer();
+
+  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
 
   const [isLyricsVisible, setIsLyricsVisible] = useState<boolean>(false);
   const [lyrics, setLyrics] = useState<any>(null);
@@ -93,7 +98,18 @@ const useShareData = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
 
+  useEffect(() => {
+    fetchArtist().then((value) => {
+      if (value) {
+        setArtist(value);
+      }
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return {
+    artist,
     audioPlayer,
     isLyricsVisible,
     setIsLyricsVisible,

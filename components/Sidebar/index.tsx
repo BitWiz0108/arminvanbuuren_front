@@ -19,8 +19,7 @@ import Info from "@/components/Icons/Info";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useSizeValues } from "@/contexts/contextSize";
-
-import useFanclub from "@/hooks/useFanclub";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import { DEFAULT_LOGO_IMAGE, SIDEBARWIDTH_SM } from "@/libs/constants";
 
@@ -32,11 +31,10 @@ type Props = {
 const Sidebar = ({ visible, setVisible }: Props) => {
   const router = useRouter();
   const { isSignedIn, signOut } = useAuthValues();
-  const { fetchArtist } = useFanclub();
+  const { artist } = useShareValues();
+
   const { isMobile, sidebarWidth, isSidebarCollapsed, setIsSidebarCollapsed } =
     useSizeValues();
-
-  const [logoImage, setLogoImage] = useState<string>(DEFAULT_LOGO_IMAGE);
 
   const checkFullScreenPage = () => {
     return router.pathname == "/music" || router.pathname == "/live-stream";
@@ -57,16 +55,6 @@ const Sidebar = ({ visible, setVisible }: Props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
-
-  useEffect(() => {
-    fetchArtist().then((value) => {
-      if (value) {
-        setLogoImage(value.logoImage);
-      }
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <AnimatePresence>
@@ -112,7 +100,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
           >
             <Image
               className="w-full object-cover"
-              src={logoImage ?? DEFAULT_LOGO_IMAGE}
+              src={artist.logoImage ?? DEFAULT_LOGO_IMAGE}
               width={202}
               height={83}
               alt=""

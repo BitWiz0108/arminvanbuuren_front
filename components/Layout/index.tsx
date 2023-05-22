@@ -10,11 +10,9 @@ import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
 import Menu from "@/components/Icons/Menu";
 
-import { useSizeValues } from "@/contexts/contextSize";
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
-
-import useFanclub from "@/hooks/useFanclub";
 
 import { DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
@@ -32,7 +30,18 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
   const router = useRouter();
   const { asPath } = router;
 
-  const { paypalClientId, stripePublicApiKey } = useShareValues();
+  const { isSignedIn } = useAuthValues();
+  const { artist, paypalClientId, stripePublicApiKey } = useShareValues();
+  const {
+    width,
+    sidebarWidth,
+    contentWidth,
+    isSidebarVisible,
+    setIsSidebarVisible,
+    isTopbarVisible,
+    setIsTopbarVisible,
+  } = useSizeValues();
+
   const stripePromise = loadStripe(stripePublicApiKey);
 
   const { name, url, title, description, socialPreview } =
@@ -47,31 +56,12 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
     ...customMeta,
   };
 
-  const { isSignedIn } = useAuthValues();
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
-  const [logoUrl, setLogoUrl] = useState<string>(DEFAULT_LOGO_IMAGE);
-
-  const {
-    width,
-    sidebarWidth,
-    contentWidth,
-    isSidebarVisible,
-    setIsSidebarVisible,
-    isTopbarVisible,
-    setIsTopbarVisible,
-  } = useSizeValues();
-  const { fetchArtist } = useFanclub();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFirstLoading(false);
     }, 5000);
-
-    fetchArtist().then((value) => {
-      if (value) {
-        setLogoUrl(value.logoImage);
-      }
-    });
 
     return () => clearTimeout(timeout);
 
@@ -109,7 +99,11 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
     <Elements stripe={stripePromise}>
       <PayPalScriptProvider options={{ "client-id": paypalClientId }}>
         <Head>
-          <link rel="icon" href={logoUrl ?? DEFAULT_LOGO_IMAGE} key="favicon" />
+          <link
+            rel="icon"
+            href={artist.logoImage ?? DEFAULT_LOGO_IMAGE}
+            key="favicon"
+          />
           <link rel="canonical" href={`${url}${asPath}`} key="canonical" />
 
           {/* Twitter */}

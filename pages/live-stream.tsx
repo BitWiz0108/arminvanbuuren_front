@@ -27,7 +27,6 @@ import { useShareValues } from "@/contexts/contextShareData";
 
 import useVideoPlayer from "@/hooks/useVideoplayer";
 import useLivestream from "@/hooks/useLivestream";
-import useFanclub from "@/hooks/useFanclub";
 
 import {
   ASSET_TYPE,
@@ -38,13 +37,11 @@ import {
 } from "@/libs/constants";
 
 import { IStream, DEFAULT_STREAM } from "@/interfaces/IStream";
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
 import { DEFAULT_CATEGORY, ICategory } from "@/interfaces/ICategory";
 
 export default function LiveStream() {
   const videoRef = useRef(null);
   const scrollRef = useRef(null);
-  const categoriesScrollRefs = useRef([]);
   const livestreamScrollRef = useRef(null);
 
   const {
@@ -55,7 +52,7 @@ export default function LiveStream() {
     isTopbarVisible,
     setIsTopbarVisible,
   } = useSizeValues();
-  const { setIsViewExclusiveModalVisible } = useShareValues();
+  const { artist, setIsViewExclusiveModalVisible } = useShareValues();
   const { isSignedIn, isMembership } = useAuthValues();
   const {
     isLoading,
@@ -63,7 +60,6 @@ export default function LiveStream() {
     fetchAllCategories,
     fetchCategoryLivestreams,
   } = useLivestream();
-  const { fetchArtist } = useFanclub();
 
   const [categoryId, setCategoryId] = useState<number | null>(
     DEFAULT_CATEGORY.id
@@ -80,9 +76,7 @@ export default function LiveStream() {
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.CATEGORY);
-  const [emptyText, setEmptyText] = useState<string>("");
 
   const videoPlayer = useVideoPlayer(videoRef);
 
@@ -263,12 +257,6 @@ export default function LiveStream() {
     if (isSignedIn) {
       setPage(1);
 
-      fetchArtist().then((data) => {
-        if (data) {
-          setArtist(data);
-        }
-      });
-
       getAllLivestreams(1, true);
 
       fetchAllCategories(1, isExclusive).then((categories) => {
@@ -330,12 +318,6 @@ export default function LiveStream() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setEmptyText("No Livestreams");
-    }, 3000);
-  }, []);
-
   const listView = (
     <div className="relative w-full min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
       <div className="relative w-full h-auto max-h-[50%] flex-grow flex flex-col justify-start items-center z-0">
@@ -357,7 +339,7 @@ export default function LiveStream() {
           >
             {categoryId == null ? size : getCategoryById().size} VIDEOS,&nbsp;
             {(categoryId == null ? hours : getCategoryById().hours).toFixed(2)}
-            &nbsp;HOURS
+            &nbsp;&nbsp;HOURS
           </h5>
         </div>
 
@@ -431,26 +413,6 @@ export default function LiveStream() {
     </div>
   );
 
-  const fullScreenView = (
-    <div
-      id="livestreamfullview"
-      className="relative w-full min-h-[768px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
-    >
-      <video
-        ref={videoRef}
-        loop
-        autoPlay
-        playsInline
-        src={
-          videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
-            ? livestreams[playingIndex]?.fullVideoCompressed
-            : livestreams[playingIndex]?.fullVideo
-        }
-        className="absolute w-full h-full object-cover"
-      ></video>
-    </div>
-  );
-
   const categoryView = (
     <div className="relative w-full min-h-screen flex flex-col justify-start items-start space-y-10 pt-5 pb-44 bg-background">
       {categories.map((category, index) => {
@@ -462,7 +424,13 @@ export default function LiveStream() {
             <h1
               className={twMerge(
                 "text-primary text-base md:text-xl text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               <span className="font-semibold">{category.name}</span>
@@ -470,7 +438,13 @@ export default function LiveStream() {
             <p
               className={twMerge(
                 "text-secondary text-xs md:text-sm text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               {category.description}
@@ -478,24 +452,22 @@ export default function LiveStream() {
             <p
               className={twMerge(
                 "text-secondary text-sm md:text-base text-center",
-                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+                index == 0
+                  ? isMobile
+                    ? "pl-16"
+                    : isSidebarVisible
+                    ? "md:pl-0"
+                    : "md:pl-16"
+                  : "pl-0"
               )}
             >
               <span className="font-semibold">
                 {category.size} Video{category.size > 1 ? "s" : ""}
               </span>
-              &nbsp;
+              &nbsp;&nbsp;
               <span className="">{category.hours.toFixed(2)} Hours</span>
             </p>
-            <div
-              // @ts-ignore
-              ref={(el) => (categoriesScrollRefs.current[index] = el)}
-              className="w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-              onWheel={(e) =>
-                onWheel(e, categoriesScrollRefs.current[index], true)
-              }
-              style={{ scrollBehavior: "unset" }}
-            >
+            <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
                 {category.livestreams.map((livestream, index) => {
                   return (
@@ -553,23 +525,35 @@ export default function LiveStream() {
       <div className="relative w-full flex flex-col justify-start items-start px-5">
         <h1
           className={twMerge(
-            "text-primary text-base md:text-xl text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+            "text-primary text-base md:text-xl text-center",
+            categories.length == 0
+              ? isMobile
+                ? "pl-16"
+                : isSidebarVisible
+                ? "md:pl-0"
+                : "md:pl-16"
+              : "pl-0"
           )}
         >
           <span className="font-semibold">All Livestreams</span>
         </h1>
         <p
           className={twMerge(
-            "text-secondary text-xs md:text-sm text-center pl-16",
-            isSidebarVisible ? "md:pl-0" : "md:pl-16"
+            "text-secondary text-xs md:text-sm text-center",
+            categories.length == 0
+              ? isMobile
+                ? "pl-16"
+                : isSidebarVisible
+                ? "md:pl-0"
+                : "md:pl-16"
+              : "pl-0"
           )}
         >
           <span className="font-semibold">
             {artist.numberOfLivestreams} Video
             {artist.numberOfLivestreams > 1 ? "s" : ""}
           </span>
-          &ngsp;
+          &nbsp;&nbsp;
           <span>{hours.toFixed(2)} Hours</span>
         </p>
         <div
@@ -625,6 +609,26 @@ export default function LiveStream() {
     </div>
   );
 
+  const fullScreenView = (
+    <div
+      id="livestreamfullview"
+      className="relative w-full min-h-[768px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
+    >
+      <video
+        ref={videoRef}
+        loop
+        autoPlay
+        playsInline
+        src={
+          videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
+            ? livestreams[playingIndex]?.fullVideoCompressed
+            : livestreams[playingIndex]?.fullVideo
+        }
+        className="absolute w-full h-full object-cover"
+      ></video>
+    </div>
+  );
+
   const pageContent = (
     <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
       <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
@@ -656,7 +660,7 @@ export default function LiveStream() {
   const nullContent = (
     <div className="relative w-full h-screen flex justify-center items-center">
       <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : emptyText}
+        {isLoading ? <Loading width={40} height={40} /> : ""}
       </p>
     </div>
   );

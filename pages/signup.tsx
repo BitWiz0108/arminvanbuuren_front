@@ -12,25 +12,22 @@ import ButtonOutline from "@/components/ButtonOutline";
 import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
-import useFanclub from "@/hooks/useFanclub";
 
 import { checkContainsSpecialCharacters, validateEmail } from "@/libs/utils";
 
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
-
 export default function Signup() {
   const router = useRouter();
-  const { fetchPageContent } = useHomepage();
   const { isLoading, signUp } = useAuthValues();
-  const { fetchArtist } = useFanclub();
+  const { artist } = useShareValues();
+  const { fetchPageContent } = useHomepage();
 
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [repassword, setRePassword] = useState<string>("");
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
 
   const onSignup = () => {
@@ -74,13 +71,6 @@ export default function Signup() {
   };
 
   useEffect(() => {
-    fetchArtist().then((data) => {
-      if (data) {
-        setArtist(data);
-      }
-    });
-
-    // Fetch background video signed url
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);

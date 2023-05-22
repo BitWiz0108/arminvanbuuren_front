@@ -10,20 +10,17 @@ import Email from "@/components/Icons/Email";
 import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
-import useFanclub from "@/hooks/useFanclub";
 
 import { validateEmail } from "@/libs/utils";
 
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
-
 export default function ForgotPassword() {
   const { fetchPageContent } = useHomepage();
-  const { fetchArtist } = useFanclub();
   const { isLoading, forgotPassword } = useAuthValues();
+  const { artist } = useShareValues();
 
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
@@ -37,16 +34,9 @@ export default function ForgotPassword() {
   };
 
   useEffect(() => {
-    // Fetch background video signed url
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);
-      }
-    });
-
-    fetchArtist().then((value) => {
-      if (value) {
-        setArtist(value);
       }
     });
 

@@ -14,7 +14,6 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
-import useFanclub from "@/hooks/useFanclub";
 import useLivestream from "@/hooks/useLivestream";
 
 import {
@@ -29,17 +28,15 @@ import { DEFAULT_HOMEPAGE, IHomepage } from "@/interfaces/IHomepage";
 export default function Home() {
   const router = useRouter();
   const { isSignedIn, isMembership } = useAuthValues();
-  const { audioPlayer, setIsSubscriptionModalVisible } = useShareValues();
+  const { artist, audioPlayer, setIsSubscriptionModalVisible } =
+    useShareValues();
   const { isLoading, fetchPageContent } = useHomepage();
-  const { fetchArtist } = useFanclub();
   const { fetchLivestreams } = useLivestream();
 
   const [background, setBackground] = useState<IHomepage>(DEFAULT_HOMEPAGE);
 
   const [latestLivestreamTitle, setLatestLivestreamTitle] =
     useState<string>("");
-  const [artistName, setArtistName] = useState<string>("");
-  const [logoImage, setLogoImage] = useState<string>(DEFAULT_LOGO_IMAGE);
 
   const fetchPageContentData = () => {
     fetchPageContent().then((data) => {
@@ -55,12 +52,6 @@ export default function Home() {
   useEffect(() => {
     if (isSignedIn) {
       fetchPageContentData();
-      fetchArtist().then((data) => {
-        if (data) {
-          setArtistName(data.artistName);
-          setLogoImage(data.logoImage);
-        }
-      });
 
       if (!isMembership) {
         setTimeout(() => {
@@ -79,15 +70,16 @@ export default function Home() {
           <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center z-10">
             <Image
               className="w-56 object-cover mb-5"
-              src={logoImage ?? DEFAULT_LOGO_IMAGE}
+              src={artist.logoImage ?? DEFAULT_LOGO_IMAGE}
               width={311}
               height={220}
               alt=""
               priority
             />
             <h3 className="px-5 text-md text-center mb-10">
-              Welcome To {artistName} Official Fan Club. Watch private live
-              streams, listen to his latest music and engage with {artistName}
+              Welcome To {artist.artistName} Official Fan Club. Watch private
+              live streams, listen to his latest music and engage with{" "}
+              {artist.artistName}
               &nbsp;fans.
             </h3>
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0 mb-10">

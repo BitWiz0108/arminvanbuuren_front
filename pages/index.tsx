@@ -16,9 +16,9 @@ import Switch from "@/components/Switch";
 import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
-import useFanclub from "@/hooks/useFanclub";
 
 import {
   DEFAULT_LOGO_IMAGE,
@@ -30,21 +30,18 @@ import {
 } from "@/libs/constants";
 import { getErrorMessageForCode } from "@/libs/utils";
 
-import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
-
 const provider = new FacebookAuthProvider();
 const auth = getAuth();
 
 export default function Signin() {
   const router = useRouter();
-  const { fetchPageContent } = useHomepage();
   const { isLoading, isSignedIn, signIn, oAuthSignIn } = useAuthValues();
-  const { fetchArtist } = useFanclub();
+  const { artist } = useShareValues();
+  const { fetchPageContent } = useHomepage();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
-  const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
 
   const onSignin = () => {
@@ -146,13 +143,6 @@ export default function Signin() {
   }, [isSignedIn, router]);
 
   useEffect(() => {
-    fetchArtist().then((data) => {
-      if (data) {
-        setArtist(data);
-      }
-    });
-
-    // Fetch background video signed url
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);
