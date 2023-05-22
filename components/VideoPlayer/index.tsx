@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 
 import { LOADING_GIF } from "@/libs/constants";
@@ -17,10 +17,8 @@ const VideoPlayer = (props: any) => {
   return (
     <>
       {loading && (
-        <Image
+        <img
           className="absolute left-0 top-0 w-full h-full object-cover opacity-10 z-10"
-          width={800}
-          height={800}
           src={LOADING_GIF}
           alt=""
         />
