@@ -195,7 +195,6 @@ export default function FanClub() {
               {latestLivestreams[0].title}
             </p>
           </Link>
-
         </div>
       )}
 
@@ -396,10 +395,8 @@ export default function FanClub() {
     </div>
   );
 
-  console.log("!!!!!: ", selectedPost.video);
-
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-36">
           <div className="relative w-full flex flex-col justify-start items-center bg-third mb-5 lg:mb-10">
@@ -591,6 +588,8 @@ export default function FanClub() {
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}
       />
-    </Layout>
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

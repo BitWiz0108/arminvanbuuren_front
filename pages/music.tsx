@@ -76,6 +76,7 @@ export default function Music() {
   const [isListView, setIsListView] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
+  const [emptyText, setEmptyText] = useState<string>("");
 
   const checkActiveIndex = (scrollPos: number, right: boolean) => {
     const value = scrollPos / activeWidth;
@@ -345,6 +346,12 @@ export default function Music() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn, isExclusive]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setEmptyText("No Musics");
+    }, 3000);
+  }, []);
+
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
       <div className="w-full min-h-[768px] flex flex-col justify-start overflow-hidden">
@@ -478,13 +485,28 @@ export default function Music() {
             key={index}
             className="w-full flex flex-col justify-start items-start px-5"
           >
-            <h1 className="text-primary text-base md:text-xl text-center">
+            <h1
+              className={twMerge(
+                "text-primary text-base md:text-xl text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               <span className="font-semibold">{album.name}</span>
             </h1>
-            <p className="text-secondary text-xs md:text-sm text-center">
+            <p
+              className={twMerge(
+                "text-secondary text-xs md:text-sm text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               {album.description}
             </p>
-            <p className="text-secondary text-sm md:text-base font-semibold text-center">
+            <p
+              className={twMerge(
+                "text-secondary text-sm md:text-base font-semibold text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               {album.size} SONG{album.size > 1 ? "S" : ""}
             </p>
             <div
@@ -627,31 +649,31 @@ export default function Music() {
   );
 
   const nullContent = (
-    <div className="relative w-full h-screen bg-gradient-to-b from-activeSecondary to-activePrimary flex justify-center items-center">
+    <div className="relative w-full h-screen flex justify-center items-center">
       <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : "No Music"}
+        {isLoading ? <Loading width={40} height={40} /> : emptyText}
       </p>
     </div>
   );
 
-  return (
-    <Layout>
-      <div className="bg-gradient-to-b from-activeSecondary to-activePrimary w-full h-full">
-        {audioPlayer.musics.length > 0 ? pageContent : nullContent}
+  const fullContent = (
+    <div className="bg-gradient-to-b from-activeSecondary to-activePrimary w-full h-full">
+      {audioPlayer.musics.length > 0 ? pageContent : nullContent}
 
-        <LyricView />
+      <LyricView />
 
-        <DonationModal
-          assetType={ASSET_TYPE.MUSIC}
-          musicId={audioPlayer.getPlayingTrack().id}
-        />
+      <DonationModal
+        assetType={ASSET_TYPE.MUSIC}
+        musicId={audioPlayer.getPlayingTrack().id}
+      />
 
-        <ViewExclusiveModal />
+      <ViewExclusiveModal />
 
-        <ShareModal />
+      <ShareModal />
 
-        <AudioControl audioPlayer={audioPlayer} onListView={onListView} />
-      </div>
-    </Layout>
+      <AudioControl audioPlayer={audioPlayer} onListView={onListView} />
+    </div>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

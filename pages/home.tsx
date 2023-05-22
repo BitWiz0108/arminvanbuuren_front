@@ -8,6 +8,7 @@ import DonationModal from "@/components/DonationModal";
 import SubscriptionModal from "@/components/SubscriptionModal";
 import HomepageButton from "@/components/HomepageButton";
 import RoundPlay from "@/components/Icons/RoundPlay";
+import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -71,8 +72,8 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div className="relative w-full h-screen min-h-[640px] pb-24 lg:pb-36 flex flex-col justify-center items-center">
           <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center z-10">
@@ -155,7 +156,13 @@ export default function Home() {
         onListView={() => router.push("/music")}
       />
 
-      {isLoading && <div className="loading"></div>}
-    </Layout>
+      {isLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

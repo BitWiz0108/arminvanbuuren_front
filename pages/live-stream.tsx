@@ -82,6 +82,7 @@ export default function LiveStream() {
   const [hours, setHours] = useState<number>(0);
   const [artist, setArtist] = useState<IArtist>(DEFAULT_ARTIST);
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.CATEGORY);
+  const [emptyText, setEmptyText] = useState<string>("");
 
   const videoPlayer = useVideoPlayer(videoRef);
 
@@ -329,6 +330,12 @@ export default function LiveStream() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setEmptyText("No Livestreams");
+    }, 3000);
+  }, []);
+
   const listView = (
     <div className="relative w-full min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
       <div className="relative w-full h-auto max-h-[50%] flex-grow flex flex-col justify-start items-center z-0">
@@ -452,13 +459,28 @@ export default function LiveStream() {
             key={index}
             className="w-full flex flex-col justify-start items-start px-5"
           >
-            <h1 className="text-primary text-base md:text-xl text-center">
+            <h1
+              className={twMerge(
+                "text-primary text-base md:text-xl text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               <span className="font-semibold">{category.name}</span>
             </h1>
-            <p className="text-secondary text-xs md:text-sm text-center">
+            <p
+              className={twMerge(
+                "text-secondary text-xs md:text-sm text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               {category.description}
             </p>
-            <p className="text-secondary text-sm md:text-base font-semibold text-center">
+            <p
+              className={twMerge(
+                "text-secondary text-sm md:text-base font-semibold text-center",
+                isSidebarVisible ? "md:pl-0" : "md:pl-16"
+              )}
+            >
               {category.size} Video{category.size > 1 ? "s" : ""}
             </p>
             <div
@@ -624,15 +646,15 @@ export default function LiveStream() {
   );
 
   const nullContent = (
-    <div className="relative w-full h-screen bg-gradient-to-b from-activeSecondary to-activePrimary flex justify-center items-center">
+    <div className="relative w-full h-screen flex justify-center items-center">
       <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : "No Live Streams"}
+        {isLoading ? <Loading width={40} height={40} /> : emptyText}
       </p>
     </div>
   );
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       {livestreams.length > 0 ? pageContent : nullContent}
 
       <LiveStreamMetadataModal />
@@ -660,6 +682,8 @@ export default function LiveStream() {
         onFullScreenViewOff={onFullScreenViewOff}
         isFullScreenView={isFullScreenView}
       />
-    </Layout>
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

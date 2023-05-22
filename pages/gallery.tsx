@@ -8,13 +8,15 @@ import DonationModal from "@/components/DonationModal";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import { ASSET_TYPE } from "@/libs/constants";
+import { useAuthValues } from "@/contexts/contextAuth";
 
 export default function Gallery() {
   const router = useRouter();
+  const { isSignedIn } = useAuthValues();
   const { audioPlayer } = useShareValues();
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="relative w-full h-screen min-h-[640px] pb-24 lg:pb-32 flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto">
         <GalleryView />
       </div>
@@ -28,6 +30,8 @@ export default function Gallery() {
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}
       />
-    </Layout>
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

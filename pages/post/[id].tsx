@@ -39,7 +39,7 @@ export default function Post() {
   const { isSignedIn } = useAuthValues();
   const { audioPlayer } = useShareValues();
   const {
-    isLoading,
+    isLoading: isFanclubWorking,
     fetchPost,
     createReply,
     togglePostFavorite,
@@ -102,8 +102,8 @@ export default function Post() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isSignedIn]);
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="w-full h-screen flex justify-center items-start pb-24 lg:pb-32 overflow-x-hidden overflow-y-auto">
         <div className="relative w-full lg:w-2/3 min-h-screen flex justify-center items-start bg-background pt-16">
           <div className="w-full flex flex-col justify-start items-start p-3">
@@ -198,7 +198,7 @@ export default function Post() {
                   );
                 })}
                 <div className="w-full flex justify-center items-center">
-                  {isLoading ? (
+                  {isFanclubWorking ? (
                     <Loading width={30} height={30} />
                   ) : (
                     repliesPageCount > repliesPage && (
@@ -275,18 +275,16 @@ export default function Post() {
         </div>
       </div>
 
-      {isSignedIn && (
-        <>
-          <DonationModal
-            assetType={ASSET_TYPE.MUSIC}
-            musicId={audioPlayer.getPlayingTrack().id}
-          />
-          <AudioControl
-            audioPlayer={audioPlayer}
-            onListView={() => router.push("/music")}
-          />
-        </>
-      )}
-    </Layout>
+      <DonationModal
+        assetType={ASSET_TYPE.MUSIC}
+        musicId={audioPlayer.getPlayingTrack().id}
+      />
+      <AudioControl
+        audioPlayer={audioPlayer}
+        onListView={() => router.push("/music")}
+      />
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

@@ -145,8 +145,8 @@ export default function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMembership, isSubscriptionModalVisible]);
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div className="relative px-5 pt-16 pb-36 bg-background w-full min-h-screen flex justify-center items-center">
           <div className="relative w-full flex flex-col md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg justify-center items-center">
@@ -396,6 +396,8 @@ export default function Settings() {
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}
       />
-    </Layout>
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

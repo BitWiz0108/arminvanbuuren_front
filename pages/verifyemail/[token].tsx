@@ -8,6 +8,7 @@ import PoweredBy from "@/components/PoweredBy";
 import ButtonOutline from "@/components/ButtonOutline";
 import Input from "@/components/Input";
 import Email from "@/components/Icons/Email";
+import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
@@ -147,7 +148,11 @@ export default function VerifyEmail() {
         </div>
       </div>
 
-      {isLoading && <div className="loading"></div>}
+      {isLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
     </Layout>
   );
 }

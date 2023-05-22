@@ -19,6 +19,7 @@ import Youtube from "@/components/Icons/Youtube";
 import SoundCloud from "@/components/Icons/SoundCloud";
 import Facebook from "@/components/Icons/Facebook";
 import DonationModal from "@/components/DonationModal";
+import Loading from "@/components/Loading";
 
 import { useShareValues } from "@/contexts/contextShareData";
 
@@ -97,8 +98,8 @@ export default function About() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
 
-  return (
-    <Layout>
+  const fullContent = (
+    <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div className="relative w-full pb-24 lg:pb-32 overflow-y-auto">
           <div className="relative w-full flex flex-col xl:flex-row justify-center items-center">
@@ -234,7 +235,13 @@ export default function About() {
         onListView={() => router.push("/music")}
       />
 
-      {(isLoadingAbout || isLoadingArtist) && <div className="loading"></div>}
-    </Layout>
+      {(isLoadingAbout || isLoadingArtist) && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
+    </>
   );
+
+  return <Layout>{isSignedIn ? fullContent : null}</Layout>;
 }

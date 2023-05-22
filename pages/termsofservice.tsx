@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import Layout from "@/components/Layout";
 import AudioControl from "@/components/AudioControl";
 import DonationModal from "@/components/DonationModal";
+import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -67,7 +68,11 @@ export default function TermsOfService() {
         </>
       )}
 
-      {isLoading && <div className="loading"></div>}
+      {isLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
     </Layout>
   );
 }

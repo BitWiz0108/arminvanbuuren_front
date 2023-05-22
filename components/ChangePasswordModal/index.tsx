@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 import X from "@/components/Icons/X";
 import TextInput from "@/components/TextInput";
 import ButtonSettings from "@/components/ButtonSettings";
+import Loading from "@/components/Loading";
 
 import useProfile from "@/hooks/useProfile";
 
@@ -103,7 +104,11 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
             </div>
           </div>
 
-          {isLoading && <div className="loading"></div>}
+          {isLoading && (
+            <div className="loading">
+              <Loading width={64} height={64} />
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
