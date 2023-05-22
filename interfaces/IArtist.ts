@@ -13,7 +13,7 @@ export interface IArtist {
   dob: string;
   email: string;
   website: string;
-  numberOfFans: number;
+  numberOfPosts: number;
   numberOfMusics: number;
   numberOfLivestreams: number;
   description: string;
@@ -42,7 +42,7 @@ export const DEFAULT_ARTIST = {
   dob: "",
   email: "",
   website: "",
-  numberOfFans: 0,
+  numberOfPosts: 0,
   numberOfMusics: 0,
   numberOfLivestreams: 0,
   description: "",

@@ -33,45 +33,25 @@ type Props = {
   visible: boolean;
   setVisible: Function;
   favorite: Function;
+  onPrev: Function;
+  onNext: Function;
 };
 
-const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
+const PostModal = ({
+  post,
+  setPost,
+  visible,
+  setVisible,
+  favorite,
+  onPrev,
+  onNext,
+}: Props) => {
   const { isSignedIn } = useAuthValues();
   const { isLoading, fetchPost, createReply, fetchReplies } = useFanclub();
 
   const [replyContent, setReplyContent] = useState<string>("");
   const [repliesPage, setRepliesPage] = useState<number>(1);
   const [repliesPageCount, setRepliesPageCount] = useState<number>(1);
-
-  const onPrevArticleClick = () => {
-    if (post && post.id && isSignedIn && visible) {
-      const postId = Number(post.id.toString());
-      fetchPost(postId + 1).then((value) => {
-        if (value) {
-          setPost(value);
-          setRepliesPageCount(1);
-          setRepliesPage(1);
-        } else {
-          setVisible(false);
-        }
-      });
-    }
-  };
-
-  const onNextArticleClick = () => {
-    if (post && post.id && isSignedIn && visible) {
-      const postId = Number(post.id.toString());
-      fetchPost(postId - 1).then((value) => {
-        if (value) {
-          setPost(value);
-          setRepliesPageCount(1);
-          setRepliesPage(1);
-        } else {
-          setVisible(false);
-        }
-      });
-    }
-  };
 
   const reply = () => {
     createReply(post.id, replyContent).then((value) => {
@@ -179,7 +159,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                     return (
                       <div
                         key={index}
-                        className="w-full flex justify-start items-start space-x-2 p-2 bg-third rounded-md"
+                        className="w-full flex justify-start items-start space-x-2 p-2 bg-background rounded-md"
                       >
                         <div className="w-24 min-w-[96px] flex flex-col justify-start items-center">
                           <Image
@@ -187,8 +167,8 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                             src={
                               reply.replier?.avatarImage ?? DEFAULT_AVATAR_IMAGE
                             }
-                            width={40}
-                            height={40}
+                            width={333}
+                            height={333}
                             alt=""
                             placeholder="blur"
                             blurDataURL={IMAGE_BLUR_DATA_URL}
@@ -217,7 +197,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                 ) : (
                   repliesPageCount > repliesPage && (
                     <button
-                      className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-third rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                      className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-background rounded-full border border-secondary cursor-pointer transition-all duration-300"
                       onClick={() => fetchMoreReplies()}
                     >
                       + More
@@ -261,11 +241,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
             <div className="w-full flex justify-center items-center space-x-5 border-t border-dashed border-[#3e454d] px-5 pt-2">
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
                 {post.id && post.id > 1 && (
-                  <ArrowLeft
-                    width={28}
-                    height={28}
-                    onClick={onPrevArticleClick}
-                  />
+                  <ArrowLeft width={28} height={28} onClick={() => onPrev()} />
                 )}
               </div>
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
@@ -276,11 +252,7 @@ const PostModal = ({ post, setPost, visible, setVisible, favorite }: Props) => {
                 />
               </div>
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
-                <ArrowRight
-                  width={28}
-                  height={28}
-                  onClick={onNextArticleClick}
-                />
+                <ArrowRight width={28} height={28} onClick={() => onNext()} />
               </div>
             </div>
           </div>

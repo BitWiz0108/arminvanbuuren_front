@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { PLACEHOLDER_IMAGE } from "@/libs/constants";
+import { LOADING_GIF } from "@/libs/constants";
 
 const VideoPlayer = (props: any) => {
   const [loading, setLoading] = useState(true);
@@ -10,6 +10,10 @@ const VideoPlayer = (props: any) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    setLoading(true);
+  }, [props.src]);
+
   return (
     <>
       {loading && (
@@ -17,7 +21,7 @@ const VideoPlayer = (props: any) => {
           className="absolute left-0 top-0 w-full h-full object-cover z-10"
           width={800}
           height={800}
-          src={PLACEHOLDER_IMAGE}
+          src={LOADING_GIF}
           alt=""
         />
       )}

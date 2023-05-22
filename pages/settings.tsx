@@ -192,8 +192,8 @@ export default function Settings() {
                 <Image
                   className="w-full h-full object-cover"
                   src={avatarImagePreview ?? DEFAULT_AVATAR_IMAGE}
-                  width={200}
-                  height={200}
+                  width={333}
+                  height={333}
                   alt=""
                   placeholder="blur"
                   blurDataURL={IMAGE_BLUR_DATA_URL}

@@ -61,8 +61,8 @@ const Topbar = ({ visible, setVisible }: Props) => {
         <Image
           className="w-7 h-7 rounded-md overflow-hidden object-cover"
           src={user.avatarImage ?? DEFAULT_AVATAR_IMAGE}
-          width={60}
-          height={60}
+          width={333}
+          height={333}
           alt=""
           placeholder="blur"
           blurDataURL={IMAGE_BLUR_DATA_URL}

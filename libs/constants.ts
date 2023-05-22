@@ -34,6 +34,7 @@ export const US_DATETIME_FORMAT = "MMM dd, yyyy";
 export const DEFAULT_AVATAR_IMAGE = "/images/fanclub/fan.svg";
 export const DEFAULT_LOGO_IMAGE = "/images/logo.png";
 export const PLACEHOLDER_IMAGE = "/images/placeholder.jpg";
+export const LOADING_GIF = "/images/loading.gif";
 
 //##########################################################
 //################### System configuration #################

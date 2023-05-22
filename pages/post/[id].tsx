@@ -167,7 +167,7 @@ export default function Post() {
                   return (
                     <div
                       key={index}
-                      className="w-full flex justify-start items-center space-x-2 p-2 bg-third rounded-md"
+                      className="w-full flex justify-start items-center space-x-2 p-2 bg-background rounded-md"
                     >
                       <div className="w-24 min-w-[96px] flex flex-col justify-start items-center">
                         <Image
@@ -175,8 +175,8 @@ export default function Post() {
                           src={
                             reply.replier?.avatarImage ?? DEFAULT_AVATAR_IMAGE
                           }
-                          width={40}
-                          height={40}
+                          width={333}
+                          height={333}
                           alt=""
                           placeholder="blur"
                           blurDataURL={IMAGE_BLUR_DATA_URL}

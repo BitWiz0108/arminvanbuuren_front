@@ -98,8 +98,8 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
                         <Image
                           className="w-8 h-8 object-cover rounded-full overflow-hidden"
                           src={reply.author.avatarImage ?? DEFAULT_AVATAR_IMAGE}
-                          width={40}
-                          height={40}
+                          width={333}
+                          height={333}
                           alt=""
                           placeholder="blur"
                           blurDataURL={IMAGE_BLUR_DATA_URL}

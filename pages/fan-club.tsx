@@ -14,6 +14,8 @@ import ShareModal from "@/components/ShareModal";
 import AudioControl from "@/components/AudioControl";
 import DonationModal from "@/components/DonationModal";
 import ButtonCircle from "@/components/ButtonCircle";
+import ArrowLeft from "@/components/Icons/ArrowLeft";
+import ArrowRight from "@/components/Icons/ArrowRight";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -122,6 +124,32 @@ export default function FanClub() {
     });
   };
 
+  const onPrevPost = () => {
+    const index = posts.findIndex((post) => {
+      return post.id == selectedPost.id;
+    });
+    if (index >= 0 && index < posts.length) {
+      if (index == 0) {
+        setSelectedPost(posts[posts.length - 1]);
+      } else {
+        setSelectedPost(posts[index - 1]);
+      }
+    }
+  };
+
+  const onNextPost = () => {
+    const index = posts.findIndex((post) => {
+      return post.id == selectedPost.id;
+    });
+    if (index >= 0 && index < posts.length) {
+      if (index == posts.length - 1) {
+        setSelectedPost(posts[0]);
+      } else {
+        setSelectedPost(posts[index + 1]);
+      }
+    }
+  };
+
   useEffect(() => {
     if (isSignedIn) {
       fetchLivestreams(1, true, LIVESTREAMS_PAGE_SIZE).then((value) => {
@@ -146,12 +174,14 @@ export default function FanClub() {
 
   const leftSideView = (
     <div className="w-full lg:w-[260px] flex flex-col space-y-[10px] lg:space-y-[15px]">
-      <div className="w-full flex flex-row justify-around items-start space-x-10 bg-third rounded-lg p-5 lg:p-10">
+      <div className="w-full flex flex-row justify-around items-start space-x-10 bg-background rounded-lg p-5 lg:p-10">
         <div className="flex flex-col space-y-5">
           <p className="text-primary text-base text-center font-semibold">
-            {bigNumberFormat(artist.numberOfFans)}
+            {bigNumberFormat(artist.numberOfPosts)}
           </p>
-          <p className="text-primary text-sm text-center font-semibold">Fans</p>
+          <p className="text-primary text-sm text-center font-semibold">
+            Posts
+          </p>
         </div>
         <div className="flex flex-col space-y-5">
           <p className="text-primary text-base text-center font-semibold">
@@ -168,7 +198,7 @@ export default function FanClub() {
       </div>
 
       {latestLivestreams?.length > 0 && (
-        <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+        <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
           <p className="text-primary text-sm font-medium">Latest Livestream</p>
           <Link href="/live-stream">
             <Image
@@ -190,7 +220,7 @@ export default function FanClub() {
         </div>
       )}
 
-      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
         <p className="text-primary text-sm font-medium">Livestreams</p>
         <div className="w-full grid grid-cols-4 md:grid-cols-3 gap-2">
           {latestLivestreams?.map((value, index) => {
@@ -231,7 +261,7 @@ export default function FanClub() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
         <p className="text-primary text-sm font-medium text-center">Music</p>
         <div className="w-full flex flex-col justify-start items-center space-y-3">
           <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
@@ -274,7 +304,7 @@ export default function FanClub() {
         </div>
       </div>
 
-      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-third rounded-lg p-3 lg:p-5">
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
         <p className="text-primary text-sm font-medium">Latest Posts</p>
         <div className="w-full grid grid-cols-4 md:grid-cols-3 gap-2">
           {posts.slice(0, 12)?.map((post, index) => {
@@ -296,7 +326,6 @@ export default function FanClub() {
                     onClick={() => {
                       setSelectedPost(post);
                       setIsPostFullScreenView(true);
-                      // setIsPostModalOpened(true);
                     }}
                   />
                 ) : (
@@ -310,7 +339,6 @@ export default function FanClub() {
                     onClick={() => {
                       setSelectedPost(post);
                       setIsPostFullScreenView(true);
-                      // setIsPostModalOpened(true);
                       audioPlayer.pause();
                     }}
                   />
@@ -318,20 +346,6 @@ export default function FanClub() {
               </div>
             );
           })}
-          <div className="col-span-4 md:col-span-3 flex justify-center items-center">
-            {isWorkingLivestreams ? (
-              <Loading width={30} height={30} />
-            ) : (
-              livestreamPageCount > livestreamPage && (
-                <button
-                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
-                  onClick={() => fetchMoreLivestreams()}
-                >
-                  + More
-                </button>
-              )
-            )}
-          </div>
         </div>
       </div>
     </div>
@@ -391,7 +405,7 @@ export default function FanClub() {
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-36">
-          <div className="relative w-full flex flex-col justify-start items-center bg-third mb-5 lg:mb-10">
+          <div className="relative w-full flex flex-col justify-start items-center bg-background mb-5 lg:mb-10">
             <div
               className="relative w-full h-auto flex flex-col justify-start items-center overflow-hidden z-0"
               style={{
@@ -435,8 +449,8 @@ export default function FanClub() {
                   <Image
                     className="w-full h-full object-cover"
                     src={artist.avatarImage ?? DEFAULT_AVATAR_IMAGE}
-                    width={200}
-                    height={200}
+                    width={333}
+                    height={333}
                     alt=""
                     placeholder="blur"
                     blurDataURL={IMAGE_BLUR_DATA_URL}
@@ -515,6 +529,8 @@ export default function FanClub() {
                 }
               });
             }}
+            onPrev={() => onPrevPost()}
+            onNext={() => onNextPost()}
           />
         </div>
       </div>
@@ -541,6 +557,22 @@ export default function FanClub() {
               setIsPostFullScreenView(false);
               audioPlayer.play();
             }}
+          />
+        </div>
+        <div className="absolute top-1/2 left-5 cursor-pointer z-10">
+          <ButtonCircle
+            dark={false}
+            icon={<ArrowLeft />}
+            size="small"
+            onClick={() => onPrevPost()}
+          />
+        </div>
+        <div className="absolute top-1/2 right-5 cursor-pointer z-10">
+          <ButtonCircle
+            dark={false}
+            icon={<ArrowRight />}
+            size="small"
+            onClick={() => onNextPost()}
           />
         </div>
         <div className="relative w-full h-full z-0">

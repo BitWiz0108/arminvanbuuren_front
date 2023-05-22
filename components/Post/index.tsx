@@ -48,7 +48,7 @@ const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-third">
+    <div className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-background">
       <p
         className={twMerge(
           "w-full text-left text-base lg:text-lg font-medium transition-all duration-300 hover:cursor-pointer",
@@ -74,14 +74,14 @@ const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
         ></div>
         {isSeenMore ? (
           <div
-            className="absolute bottom-0 right-0 text-secondary text-sm pl-1 bg-third hover:text-primary transition-all duration-300 cursor-pointer select-none"
+            className="absolute bottom-0 right-0 text-secondary text-sm pl-1 bg-background hover:text-primary transition-all duration-300 cursor-pointer select-none"
             onClick={() => setIsSeenMore(false)}
           >
             <b>Less</b>...
           </div>
         ) : (
           <div
-            className="absolute top-0 right-0 text-secondary text-sm pl-1 bg-third hover:text-primary transition-all duration-300 cursor-pointer select-none"
+            className="absolute top-0 right-0 text-secondary text-sm pl-1 bg-background hover:text-primary transition-all duration-300 cursor-pointer select-none"
             onClick={() => setIsSeenMore(true)}
           >
             ...<b>See more</b>
