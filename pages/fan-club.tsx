@@ -556,6 +556,13 @@ export default function FanClub() {
             onClick={() => {
               setIsPostFullScreenView(false);
               audioPlayer.play();
+              const videos = document.getElementsByClassName(
+                "fullscreen-video-player"
+              );
+              for (let i = 0; i < videos.length; i++) {
+                // @ts-ignore
+                videos[i].pause();
+              }
             }}
           />
         </div>
@@ -596,7 +603,7 @@ export default function FanClub() {
                   autoPlay={true}
                   disablePictureInPicture
                   controlsList="nodownload nopictureinpicture noplaybackrate"
-                  className="absolute inset-0 object-center w-full h-full rounded-md"
+                  className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
                   src={selectedPost.video}
                   onPlay={(event) => {
                     audioPlayer.pause();

@@ -9,7 +9,8 @@ const useVideoPlayer = (videoRef: any) => {
   const [currentPercentage, setCurrentPercentage] = useState<number>(0);
   const [trackProgress, setTrackProgress] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [track, setTrack] = useState<IStream>(DEFAULT_STREAM);
+  const [videos, setVideos] = useState<Array<IStream>>([DEFAULT_STREAM]);
+  const [playingIndex, setPlayingIndex] = useState<number>(0);
   const [playingQuality, setPlayingQuality] = useState<LIVESTREAM_QUALITY>(
     LIVESTREAM_QUALITY.AUTO
   );
@@ -26,7 +27,7 @@ const useVideoPlayer = (videoRef: any) => {
     intervalRef.current = setInterval(() => {
       if (videoRef.current) {
         if (videoRef.current.ended) {
-          setIsPlaying(false);
+          playNextVideo();
         } else {
           setTrackProgress(videoRef.current.currentTime);
         }
@@ -52,6 +53,28 @@ const useVideoPlayer = (videoRef: any) => {
       setIsPlaying(true);
     }
     startTimer();
+  };
+
+  const getPlayingTrack = () => {
+    return videos[playingIndex] ? videos[playingIndex] : DEFAULT_STREAM;
+  };
+
+  const playNextVideo = () => {
+    setPlayingIndex((prev) => {
+      if (prev < videos.length - 1) {
+        return prev + 1;
+      }
+      return 0;
+    });
+  };
+
+  const playPreviousVideo = () => {
+    setPlayingIndex((prev) => {
+      if (prev > 0) {
+        return prev - 1;
+      }
+      return videos.length - 1;
+    });
   };
 
   const play = () => {
@@ -99,14 +122,24 @@ const useVideoPlayer = (videoRef: any) => {
 
       let myVideo = videoRef.current;
       if (playingQuality == LIVESTREAM_QUALITY.LOW) {
-        myVideo.src = track.fullVideoCompressed;
+        myVideo.src = videos[playingIndex].fullVideoCompressed;
       } else {
-        myVideo.src = track.fullVideo;
+        myVideo.src = videos[playingIndex].fullVideo;
       }
 
       videoRef.current.currentTime = 0;
       setTrackProgress(0);
       if (isReady.current) {
+        videoRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+            startTimer();
+          })
+          .catch((e: any) => {
+            console.log(e);
+            setIsPlaying(false);
+          });
         videoRef.current.volume = volume / 100;
       } else {
         // Set the isReady ref as true for the next pass
@@ -118,7 +151,7 @@ const useVideoPlayer = (videoRef: any) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [track, videoRef, playingQuality]);
+  }, [playingIndex, videoRef, playingQuality]);
 
   useEffect(() => {
     // Pause and clean up on unmount
@@ -139,7 +172,12 @@ const useVideoPlayer = (videoRef: any) => {
     trackProgress,
     play,
     pause,
-    setTrack,
+    playingIndex,
+    setPlayingIndex,
+    getPlayingTrack,
+    playNextVideo,
+    playPreviousVideo,
+    setVideos,
     playingQuality,
     setPlayingQuality,
     setVolume,

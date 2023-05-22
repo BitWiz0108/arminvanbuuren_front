@@ -36,7 +36,7 @@ import {
   VIEW_MODE,
 } from "@/libs/constants";
 
-import { IStream, DEFAULT_STREAM } from "@/interfaces/IStream";
+import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_CATEGORY, ICategory } from "@/interfaces/ICategory";
 
 export default function LiveStream() {
@@ -69,9 +69,7 @@ export default function LiveStream() {
   const [livestreams, setLivestreams] = useState<Array<IStream>>([]);
   const [activeWidth, setActiveWidth] = useState<number>(0);
   const [isExclusive, setIsExclusive] = useState<boolean>(false);
-  const [playingIndex, setPlayingIndex] = useState<number>(0);
   const [isFullScreenView, setIsFullScreenView] = useState<boolean>(false);
-  const [playingTrack, setPlayingTrack] = useState<IStream>(DEFAULT_STREAM);
   const [totalPageCount, setTotalPageCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(0);
@@ -94,15 +92,15 @@ export default function LiveStream() {
 
           setAllLivestreams(newLivestreams);
           setLivestreams(newLivestreams);
+          videoPlayer.setVideos(newLivestreams);
 
           setTotalPageCount(data.pages);
           setSize(data.size);
           setHours(data.hours);
 
           // For the first loading, to avoid null playing track
-          if (playingIndex == 0 && newLivestreams.length > 0) {
-            setPlayingTrack(newLivestreams[0]);
-            videoPlayer.setTrack(newLivestreams[0]);
+          if (videoPlayer.playingIndex == 0 && newLivestreams.length > 0) {
+            videoPlayer.setPlayingIndex(0);
           }
 
           if (data.livestreams.length > 0 && page < data.pages) {
@@ -130,11 +128,11 @@ export default function LiveStream() {
             tcategories[categoryIndex].livestreams.push(...data);
             setCategories(tcategories);
             setLivestreams(tcategories[categoryIndex].livestreams);
+            videoPlayer.setVideos(tcategories[categoryIndex].livestreams);
 
             // For the first loading, to avoid null playing track
-            if (playingIndex == 0) {
-              setPlayingTrack(tcategories[categoryIndex].livestreams[0]);
-              videoPlayer.setTrack(tcategories[categoryIndex].livestreams[0]);
+            if (videoPlayer.playingIndex == 0) {
+              videoPlayer.setPlayingIndex(0);
             }
 
             if (data.length > 0) {
@@ -157,20 +155,6 @@ export default function LiveStream() {
       return categories[categoryIndex];
     }
     return DEFAULT_CATEGORY;
-  };
-
-  const onPrevLivestream = () => {
-    setPlayingIndex((prev) => {
-      if (prev > 0) return prev - 1;
-      return prev;
-    });
-  };
-
-  const onNextLivestream = () => {
-    setPlayingIndex((prev) => {
-      if (prev < livestreams.length - 1) return prev + 1;
-      return prev;
-    });
   };
 
   const onFullScreenViewOn = () => {
@@ -244,16 +228,6 @@ export default function LiveStream() {
   };
 
   useEffect(() => {
-    const playingTrack = livestreams[playingIndex];
-    if (playingTrack) {
-      setPlayingTrack(playingTrack);
-      videoPlayer.setTrack(playingTrack);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playingIndex, categoryId]);
-
-  useEffect(() => {
     if (isSignedIn) {
       setPage(1);
 
@@ -297,7 +271,7 @@ export default function LiveStream() {
     // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playingIndex, scrollRef, activeWidth, viewMode]);
+  }, [videoPlayer.playingIndex, scrollRef, activeWidth, viewMode]);
 
   useEffect(() => {
     switch (viewMode) {
@@ -343,26 +317,26 @@ export default function LiveStream() {
           </h5>
         </div>
 
-        <LiveStreamPreview track={playingTrack} />
+        <LiveStreamPreview track={videoPlayer.getPlayingTrack()} />
 
         <div className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center py-8 sm:py -8 lg:py-8 w-4/5 z-10 filter">
           <div className="w-full flex-col justify-end md:justify-center items-center text-primary pb-5">
             <p className="text-center text-primary text-xl md:text-2xl tracking-widest mb-2">
               {artist.artistName}
             </p>
-            {livestreams[playingIndex] && (
+            {videoPlayer.getPlayingTrack() && (
               <h1 className="text-center text-primary text-xl md:text-2xl mb-2 tracking-widest">
-                {livestreams[playingIndex].title}
+                {videoPlayer.getPlayingTrack().title}
               </h1>
             )}
-            {livestreams[playingIndex] && (
+            {videoPlayer.getPlayingTrack() && (
               <p className="text-center text-primary text-base md:text-lg mb-2 tracking-widest">
-                {livestreams[playingIndex].shortDescription}
+                {videoPlayer.getPlayingTrack().shortDescription}
               </p>
             )}
-            {livestreams[playingIndex] && (
+            {videoPlayer.getPlayingTrack() && (
               <p className="text-center text-primary text-sm md:text-base mb-2 tracking-widest">
-                {moment(livestreams[playingIndex].releaseDate).format(
+                {moment(videoPlayer.getPlayingTrack().releaseDate).format(
                   DATE_FORMAT
                 )}
               </p>
@@ -389,9 +363,9 @@ export default function LiveStream() {
               {livestreams.map((livestream, index) => {
                 return (
                   <LiveStreamListCard
-                    playing={livestream.id == playingTrack.id}
+                    playing={livestream.id == videoPlayer.getPlayingTrack().id}
                     soundStatus={
-                      livestream.id == playingTrack.id
+                      livestream.id == videoPlayer.getPlayingTrack().id
                         ? videoPlayer.isPlaying
                           ? "playing"
                           : "paused"
@@ -400,7 +374,7 @@ export default function LiveStream() {
                     livestream={livestream}
                     togglePlay={onPlayLivestream}
                     play={() => {
-                      setPlayingIndex(index);
+                      videoPlayer.setPlayingIndex(index);
                     }}
                     key={index}
                   />
@@ -473,11 +447,11 @@ export default function LiveStream() {
                   return (
                     <LiveStreamListCard
                       playing={
-                        livestream.id == playingTrack.id &&
+                        livestream.id == videoPlayer.getPlayingTrack().id &&
                         categoryId == category.id
                       }
                       soundStatus={
-                        livestream.id == playingTrack.id &&
+                        livestream.id == videoPlayer.getPlayingTrack().id &&
                         categoryId == category.id
                           ? videoPlayer.isPlaying
                             ? "playing"
@@ -496,21 +470,23 @@ export default function LiveStream() {
 
                         setCategoryId(category.id);
                         setLivestreams(category.livestreams);
+                        videoPlayer.setVideos(category.livestreams);
                         setPage(
                           Math.floor(category.livestreams.length / PAGE_LIMIT) +
                             1
                         );
-                        setPlayingIndex(index);
+                        videoPlayer.setPlayingIndex(index);
                         setViewMode(VIEW_MODE.VIDEO);
                       }}
                       play={() => {
                         setCategoryId(category.id);
                         setLivestreams(category.livestreams);
+                        videoPlayer.setVideos(category.livestreams);
                         setPage(
                           Math.floor(category.livestreams.length / PAGE_LIMIT) +
                             1
                         );
-                        setPlayingIndex(index);
+                        videoPlayer.setPlayingIndex(index);
                         setViewMode(VIEW_MODE.LIST);
                       }}
                       key={index}
@@ -567,10 +543,12 @@ export default function LiveStream() {
               return (
                 <LiveStreamListCard
                   playing={
-                    livestream.id == playingTrack.id && categoryId == null
+                    livestream.id == videoPlayer.getPlayingTrack().id &&
+                    categoryId == null
                   }
                   soundStatus={
-                    livestream.id == playingTrack.id && categoryId == null
+                    livestream.id == videoPlayer.getPlayingTrack().id &&
+                    categoryId == null
                       ? videoPlayer.isPlaying
                         ? "playing"
                         : "paused"
@@ -588,15 +566,17 @@ export default function LiveStream() {
 
                     setCategoryId(null);
                     setLivestreams(allLivestreams);
+                    videoPlayer.setVideos(allLivestreams);
                     setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
-                    setPlayingIndex(index);
+                    videoPlayer.setPlayingIndex(index);
                     setViewMode(VIEW_MODE.VIDEO);
                   }}
                   play={() => {
                     setCategoryId(null);
                     setLivestreams(allLivestreams);
+                    videoPlayer.setVideos(allLivestreams);
                     setPage(Math.floor(allLivestreams.length / PAGE_LIMIT) + 1);
-                    setPlayingIndex(index);
+                    videoPlayer.setPlayingIndex(index);
                     setViewMode(VIEW_MODE.LIST);
                   }}
                   key={index}
@@ -616,13 +596,10 @@ export default function LiveStream() {
     >
       <video
         ref={videoRef}
-        loop
-        autoPlay
-        playsInline
         src={
           videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
-            ? livestreams[playingIndex]?.fullVideoCompressed
-            : livestreams[playingIndex]?.fullVideo
+            ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
+            : videoPlayer.getPlayingTrack()?.fullVideo
         }
         className="absolute w-full h-full object-cover"
       ></video>
@@ -671,11 +648,11 @@ export default function LiveStream() {
 
       <LiveStreamMetadataModal />
 
-      <LiveStreamCommentModal livestreamId={playingTrack.id} />
+      <LiveStreamCommentModal livestreamId={videoPlayer.getPlayingTrack().id} />
 
       <DonationModal
         assetType={ASSET_TYPE.LIVESTREAM}
-        livestreamId={playingTrack.id}
+        livestreamId={videoPlayer.getPlayingTrack().id}
       />
 
       <ViewExclusiveModal />
@@ -683,13 +660,10 @@ export default function LiveStream() {
       <ShareModal />
 
       <VideoControl
-        track={playingTrack}
         videoPlayer={videoPlayer}
         viewMode={viewMode}
         onListView={onListView}
-        onNextLivestream={onNextLivestream}
         onPlayLivestream={onPlayLivestream}
-        onPrevLivestream={onPrevLivestream}
         onFullScreenViewOn={onFullScreenViewOn}
         onFullScreenViewOff={onFullScreenViewOff}
         isFullScreenView={isFullScreenView}

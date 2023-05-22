@@ -31,29 +31,23 @@ import {
   VIEW_MODE,
 } from "@/libs/constants";
 
-import { IStream } from "@/interfaces/IStream";
+import { IVideoPlayer } from "@/interfaces/IVideoPlayer";
 
 type Props = {
-  track: IStream;
-  videoPlayer: any;
+  videoPlayer: IVideoPlayer;
   viewMode: VIEW_MODE;
   onListView: Function;
-  onPrevLivestream: Function;
   onPlayLivestream: Function;
-  onNextLivestream: Function;
   onFullScreenViewOn: Function;
   onFullScreenViewOff: Function;
   isFullScreenView: boolean;
 };
 
 const VideoControl = ({
-  track,
   videoPlayer,
   viewMode,
   onListView,
-  onPrevLivestream,
   onPlayLivestream,
-  onNextLivestream,
   isFullScreenView,
   onFullScreenViewOn,
   onFullScreenViewOff,
@@ -117,7 +111,10 @@ const VideoControl = ({
               <div className="h-32 w-[128px] hidden md:flex">
                 <Image
                   className="object-cover h-full"
-                  src={track.coverImage ?? PLACEHOLDER_IMAGE}
+                  src={
+                    videoPlayer.getPlayingTrack().coverImage ??
+                    PLACEHOLDER_IMAGE
+                  }
                   width={1500}
                   height={1500}
                   alt=""
@@ -159,13 +156,16 @@ const VideoControl = ({
                     />
                     <div className="hidden lg:flex flex-col w-2/3 justify-center items-start space-y-1 truncate">
                       <h2 className="w-full text-primary text-left text-lg md:text-xl font-semibold truncate">
-                        {track.title}
+                        {videoPlayer.getPlayingTrack().title}
                       </h2>
                       <p className="text-secondary text-left text-sm truncate">
-                        {track.singer?.artistName}
+                        {videoPlayer.getPlayingTrack().singer?.artistName}
                       </p>
                       <p className="text-[red] text-left text-sm truncate">
-                        *LIVE {moment(track.releaseDate).format(DATE_FORMAT)}
+                        *LIVE{" "}
+                        {moment(
+                          videoPlayer.getPlayingTrack().releaseDate
+                        ).format(DATE_FORMAT)}
                       </p>
                     </div>
                   </div>
@@ -174,7 +174,7 @@ const VideoControl = ({
                       dark
                       size="small"
                       icon={<PlayPrev />}
-                      onClick={() => onPrevLivestream()}
+                      onClick={() => videoPlayer.playPreviousVideo()}
                     />
                     <ButtonCircle
                       dark={false}
@@ -192,7 +192,7 @@ const VideoControl = ({
                       dark
                       size="small"
                       icon={<PlayNext />}
-                      onClick={() => onNextLivestream()}
+                      onClick={() => videoPlayer.playNextVideo()}
                     />
                   </div>
 
@@ -338,7 +338,10 @@ const VideoControl = ({
                 <div className="w-[75px] h-[75px]">
                   <Image
                     className="w-full object-cover h-full"
-                    src={track.coverImage ?? PLACEHOLDER_IMAGE}
+                    src={
+                      videoPlayer.getPlayingTrack().coverImage ??
+                      PLACEHOLDER_IMAGE
+                    }
                     width={1500}
                     height={1500}
                     alt=""
@@ -354,7 +357,7 @@ const VideoControl = ({
                         dark
                         size="small"
                         icon={<PlayPrev />}
-                        onClick={onPrevLivestream}
+                        onClick={() => videoPlayer.playPreviousVideo()}
                       />
                       <ButtonCircle
                         dark={false}
@@ -372,7 +375,7 @@ const VideoControl = ({
                         dark
                         size="small"
                         icon={<PlayNext />}
-                        onClick={onNextLivestream}
+                        onClick={() => videoPlayer.playNextVideo()}
                       />
                     </div>
 
