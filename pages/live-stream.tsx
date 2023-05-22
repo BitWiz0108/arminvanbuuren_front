@@ -477,11 +477,15 @@ export default function LiveStream() {
             </p>
             <p
               className={twMerge(
-                "text-secondary text-sm md:text-base font-semibold text-center",
+                "text-secondary text-sm md:text-base text-center",
                 isSidebarVisible ? "md:pl-0" : "md:pl-16"
               )}
             >
-              {category.size} Video{category.size > 1 ? "s" : ""}
+              <span className="font-semibold">
+                {category.size} Video{category.size > 1 ? "s" : ""}
+              </span>
+              &nbsp;
+              <span className="">{category.hours.toFixed(2)} Hours</span>
             </p>
             <div
               // @ts-ignore
@@ -549,7 +553,7 @@ export default function LiveStream() {
       <div className="relative w-full flex flex-col justify-start items-start px-5">
         <h1
           className={twMerge(
-            "text-primary text-xl md:text-2xl text-center pl-16",
+            "text-primary text-base md:text-xl text-center pl-16",
             isSidebarVisible ? "md:pl-0" : "md:pl-16"
           )}
         >
@@ -557,12 +561,16 @@ export default function LiveStream() {
         </h1>
         <p
           className={twMerge(
-            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
+            "text-secondary text-xs md:text-sm text-center pl-16",
             isSidebarVisible ? "md:pl-0" : "md:pl-16"
           )}
         >
-          {artist.numberOfLivestreams} Video
-          {artist.numberOfLivestreams > 1 ? "s" : ""}
+          <span className="font-semibold">
+            {artist.numberOfLivestreams} Video
+            {artist.numberOfLivestreams > 1 ? "s" : ""}
+          </span>
+          &ngsp;
+          <span>{hours.toFixed(2)} Hours</span>
         </p>
         <div
           ref={livestreamScrollRef}

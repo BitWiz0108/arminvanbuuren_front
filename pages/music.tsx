@@ -562,16 +562,15 @@ export default function Music() {
       <div className="relative w-full flex flex-col justify-start items-start px-5">
         <h1
           className={twMerge(
-            "text-primary text-xl md:text-2xl text-center pl-16",
+            "text-primary text-base md:text-xl text-center",
             isSidebarVisible ? "md:pl-0" : "md:pl-16"
           )}
         >
-          {/* {artist.firstName} <span className="font-semibold">Music</span> */}
           <span className="font-semibold">All Music</span>
         </h1>
         <p
           className={twMerge(
-            "text-secondary text-sm md:text-base font-semibold text-center pl-16",
+            "text-secondary text-xs md:text-sm font-semibold text-center",
             isSidebarVisible ? "md:pl-0" : "md:pl-16"
           )}
         >
