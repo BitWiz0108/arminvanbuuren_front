@@ -545,7 +545,7 @@ export default function Music() {
           )}
         >
           {/* {artist.firstName} <span className="font-semibold">Music</span> */}
-          <span className="font-semibold">All Musics</span>
+          <span className="font-semibold">All Music</span>
         </h1>
         <p
           className={twMerge(
