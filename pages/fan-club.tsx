@@ -340,6 +340,16 @@ export default function FanClub() {
                       setSelectedPost(post);
                       setIsPostFullScreenView(true);
                       audioPlayer.pause();
+
+                      setTimeout(() => {
+                        const videos = document.getElementsByClassName(
+                          "fullscreen-video-player"
+                        );
+                        for (let i = 0; i < videos.length; i++) {
+                          // @ts-ignore
+                          videos[i].play();
+                        }
+                      }, 1000);
                     }}
                   />
                 )}
@@ -373,6 +383,18 @@ export default function FanClub() {
             fullscreenView={() => {
               setSelectedPost(post);
               setIsPostFullScreenView(true);
+
+              if (post.type == FILE_TYPE.VIDEO) {
+                setTimeout(() => {
+                  const videos = document.getElementsByClassName(
+                    "fullscreen-video-player"
+                  );
+                  for (let i = 0; i < videos.length; i++) {
+                    // @ts-ignore
+                    videos[i].play();
+                  }
+                }, 1000);
+              }
             }}
             comment={() => {
               setSelectedPost(post);
