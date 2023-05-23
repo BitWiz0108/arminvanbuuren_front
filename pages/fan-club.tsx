@@ -510,7 +510,7 @@ export default function FanClub() {
             </div>
           </div>
 
-          <div className="w-full xl:w-5/6 flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-10 lg:space-y-0 px-5 lg:px-10">
+          <div className="w-full xl:w-5/6 flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-10 space-y-10 lg:space-y-0 px-5 lg:px-10">
             {leftSideView}
 
             {postsView}
