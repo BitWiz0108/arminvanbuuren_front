@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
@@ -6,6 +7,7 @@ import moment from "moment";
 import Layout from "@/components/Layout";
 import Play from "@/components/Icons/Play";
 import ButtonCircle from "@/components/ButtonCircle/index";
+import AudioControl from "@/components/AudioControl";
 import VideoControl from "@/components/VideoControl";
 import LiveStreamListCard from "@/components/LiveStreamListCard";
 import LiveStreamPreview from "@/components/LiveStreamPreview";
@@ -43,6 +45,7 @@ export default function LiveStream() {
   const videoRef = useRef(null);
   const scrollRef = useRef(null);
   const livestreamScrollRef = useRef(null);
+  const router = useRouter();
 
   const {
     isMobile,
@@ -52,7 +55,8 @@ export default function LiveStream() {
     isTopbarVisible,
     setIsTopbarVisible,
   } = useSizeValues();
-  const { artist, setIsViewExclusiveModalVisible } = useShareValues();
+  const { artist, setIsViewExclusiveModalVisible, audioPlayer } =
+    useShareValues();
   const { isSignedIn, isMembership } = useAuthValues();
   const {
     isLoading,
@@ -278,14 +282,17 @@ export default function LiveStream() {
       case VIEW_MODE.CATEGORY:
         setIsSidebarVisible(true);
         setIsTopbarVisible(true);
+        audioPlayer.play();
         break;
       case VIEW_MODE.LIST:
         setIsSidebarVisible(true);
         setIsTopbarVisible(true);
+        audioPlayer.play();
         break;
       case VIEW_MODE.VIDEO:
         setIsSidebarVisible(false);
         setIsTopbarVisible(false);
+        audioPlayer.pause();
         break;
     }
 
@@ -659,15 +666,22 @@ export default function LiveStream() {
 
       <ShareModal />
 
-      <VideoControl
-        videoPlayer={videoPlayer}
-        viewMode={viewMode}
-        onListView={onListView}
-        onPlayLivestream={onPlayLivestream}
-        onFullScreenViewOn={onFullScreenViewOn}
-        onFullScreenViewOff={onFullScreenViewOff}
-        isFullScreenView={isFullScreenView}
-      />
+      {viewMode == VIEW_MODE.VIDEO ? (
+        <VideoControl
+          videoPlayer={videoPlayer}
+          viewMode={viewMode}
+          onListView={onListView}
+          onPlayLivestream={onPlayLivestream}
+          onFullScreenViewOn={onFullScreenViewOn}
+          onFullScreenViewOff={onFullScreenViewOff}
+          isFullScreenView={isFullScreenView}
+        />
+      ) : (
+        <AudioControl
+          audioPlayer={audioPlayer}
+          onListView={() => router.push("/music")}
+        />
+      )}
     </>
   );
 

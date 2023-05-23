@@ -35,22 +35,18 @@ const GalleryView = () => {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
       items: 1,
-      slideIndex: activeSlide,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1368 },
       items: 1,
-      slideIndex: activeSlide,
     },
     tablet: {
       breakpoint: { max: 1368, min: 925 },
       items: 1,
-      slideIndex: activeSlide,
     },
     mobile: {
       breakpoint: { max: 925, min: 0 },
       items: 1,
-      slideIndex: activeSlide,
     },
   };
 
@@ -136,6 +132,8 @@ const GalleryView = () => {
               }
             }}
             afterChange={(prevSlide, state) => {
+              setActiveSlide(state.currentSlide);
+
               const videos = document.getElementsByClassName(
                 "carousel-video-player"
               );
@@ -188,22 +186,13 @@ const GalleryView = () => {
                     <div className="relative max-h-screen w-full h-full z-10">
                       <video
                         controls
-                        autoPlay={false}
+                        autoPlay={index == activeSlide - 2}
                         disablePictureInPicture
                         controlsList="nodownload nopictureinpicture noplaybackrate"
                         className="absolute inset-0 object-center w-full h-full rounded-md carousel-video-player"
                         src={image.video}
                         onPlay={(event) => {
                           audioPlayer.pause();
-                          const videos = document.getElementsByClassName(
-                            "carousel-video-player"
-                          );
-                          for (let i = 0; i < videos.length; i++) {
-                            if (event.target != videos[i]) {
-                              // @ts-ignore
-                              videos[i].pause();
-                            }
-                          }
                         }}
                       />
                     </div>

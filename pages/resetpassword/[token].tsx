@@ -11,9 +11,9 @@ import Lock from "@/components/Icons/Lock";
 import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
 
 import useHomepage from "@/hooks/useHomepage";
-import { useShareValues } from "@/contexts/contextShareData";
 
 export default function ResetPassword() {
   const router = useRouter();

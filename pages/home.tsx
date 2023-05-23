@@ -77,10 +77,11 @@ export default function Home() {
               priority
             />
             <h3 className="px-5 text-md text-center mb-10">
-              Welcome To {artist.artistName} Official Fan Club. Watch private
+              {background.homePageDescription}
+              {/* Welcome To {artist.artistName} Official Fan Club. Watch private
               live streams, listen to his latest music and engage with{" "}
               {artist.artistName}
-              &nbsp;fans.
+              &nbsp;fans. */}
             </h3>
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0 mb-10">
               <HomepageButton

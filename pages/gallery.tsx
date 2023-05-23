@@ -5,10 +5,10 @@ import AudioControl from "@/components/AudioControl";
 import GalleryView from "@/components/Gallery";
 import DonationModal from "@/components/DonationModal";
 
+import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import { ASSET_TYPE } from "@/libs/constants";
-import { useAuthValues } from "@/contexts/contextAuth";
 
 export default function Gallery() {
   const router = useRouter();
