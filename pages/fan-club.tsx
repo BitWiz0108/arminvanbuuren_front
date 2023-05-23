@@ -37,7 +37,6 @@ import {
 } from "@/libs/constants";
 
 import { IStream } from "@/interfaces/IStream";
-import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 import { IAlbum } from "@/interfaces/IAlbum";

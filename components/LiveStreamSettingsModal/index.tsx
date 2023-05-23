@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 
 import Check from "@/components/Icons/Check";
+
 import { LIVESTREAM_QUALITY } from "@/libs/constants";
 
 type Props = {
@@ -9,7 +10,6 @@ type Props = {
 };
 
 const LiveStreamSettingsModal = ({ close, videoPlayer }: Props) => {
-
   const onAutoQuality = () => {
     videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.AUTO);
     close();
@@ -30,7 +30,9 @@ const LiveStreamSettingsModal = ({ close, videoPlayer }: Props) => {
       <div
         className={twMerge(
           "w-full h-[40px] min-h-[40px] pl-5 text-white tracking-[1px] bg-background hover:bg-activeSecondary inline-flex justify-start items-center rounded-md space-x-3 cursor-pointer",
-          videoPlayer.playingQuality == LIVESTREAM_QUALITY.AUTO ? "pl-5" : "pl-12"
+          videoPlayer.playingQuality == LIVESTREAM_QUALITY.AUTO
+            ? "pl-5"
+            : "pl-12"
         )}
         onClick={() => onAutoQuality()}
       >
@@ -41,7 +43,9 @@ const LiveStreamSettingsModal = ({ close, videoPlayer }: Props) => {
       <div
         className={twMerge(
           "w-full h-[40px] min-h-[40px] pl-5 text-white tracking-[1px] bg-background hover:bg-activeSecondary inline-flex justify-start items-center rounded-md space-x-3 cursor-pointer",
-          videoPlayer.playingQuality == LIVESTREAM_QUALITY.HIGH ? "pl-5" : "pl-12"
+          videoPlayer.playingQuality == LIVESTREAM_QUALITY.HIGH
+            ? "pl-5"
+            : "pl-12"
         )}
         onClick={() => onHighQuality()}
       >
@@ -51,7 +55,9 @@ const LiveStreamSettingsModal = ({ close, videoPlayer }: Props) => {
       <div
         className={twMerge(
           "w-full h-[40px] min-h-[40px] pl-5 text-white tracking-[1px] bg-background hover:bg-activeSecondary inline-flex justify-start items-center rounded-md space-x-3 cursor-pointer",
-          videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW ? "pl-5" : "pl-12"
+          videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
+            ? "pl-5"
+            : "pl-12"
         )}
         onClick={() => onLowQuality()}
       >

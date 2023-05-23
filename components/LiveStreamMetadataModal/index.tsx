@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-import X from "@/components/Icons/X";
-
 import { useShareValues } from "@/contexts/contextShareData";
+
+import X from "@/components/Icons/X";
 
 const LiveStreamMetadataModal = () => {
   const { isMetaVisible, setIsMetaVisible, metaData } = useShareValues();
