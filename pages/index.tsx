@@ -43,6 +43,7 @@ export default function Signin() {
   const [password, setPassword] = useState<string>("");
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
+  const [siginInDescription, setSignInDescription] = useState<string>("");
 
   const onSignin = () => {
     if (isLoading) return;
@@ -146,6 +147,7 @@ export default function Signin() {
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);
+        setSignInDescription(value?.signInDescription);
       }
     });
 
@@ -168,7 +170,7 @@ export default function Signin() {
               />
             </h3>
             <p className="text-center text-primary text-sm sm:text-lg md:text-xl font-medium mb-5 whitespace-nowrap">
-              Exclusive Music, Live Concerts & {artist.artistName} Fan Community
+              {siginInDescription}
             </p>
             <div className="w-80 mb-5">
               <Input
