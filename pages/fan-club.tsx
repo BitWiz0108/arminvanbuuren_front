@@ -40,6 +40,7 @@ import { IStream } from "@/interfaces/IStream";
 import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
+import { IAlbum } from "@/interfaces/IAlbum";
 
 const POSTS_PAGE_SIZE = 30;
 const MUSICS_PAGE_SIZE = 8;
@@ -53,7 +54,11 @@ export default function FanClub() {
     fetchPosts,
     togglePostFavorite,
   } = useFanclub();
-  const { isLoading: isWorkingMusics, fetchMusics } = useMusic();
+  const {
+    isLoading: isWorkingMusics,
+    fetchAllAlbums,
+    fetchAlbumMusics,
+  } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
   const { height } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
@@ -64,9 +69,9 @@ export default function FanClub() {
   );
   const [livestreamPage, setLivestreamPage] = useState<number>(1);
   const [livestreamPageCount, setLivestreamPageCount] = useState<number>(1);
-  const [latestMusics, setLatestMusics] = useState<Array<IMusic>>([]);
-  const [musicPage, setMusicPage] = useState<number>(1);
-  const [musicPageCount, setMusicPageCount] = useState<number>(1);
+  const [musicAlbums, setMusicAlbums] = useState<Array<IAlbum>>([]);
+  const [musicPages, setMusicPages] = useState<Array<number>>([]);
+  const [musicPageCounts, setMusicPageCounts] = useState<Array<number>>([]);
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [postsPage, setPostsPage] = useState<number>(1);
   const [postsPageCount, setPostsPageCount] = useState<number>(1);
@@ -102,16 +107,24 @@ export default function FanClub() {
     );
   };
 
-  const fetchMoreMusics = () => {
-    fetchMusics(musicPage + 1, true, MUSICS_PAGE_SIZE).then((result) => {
-      setLatestMusics([...latestMusics, ...result.musics]);
-      setMusicPageCount(result.pages);
+  // const fetchMoreMusics = (albumIndex: number) => {
+  //   fetchAlbumMusics(
+  //     musicAlbums[albumIndex].id,
+  //     musicPages[albumIndex] + 1,
+  //     true,
+  //     MUSICS_PAGE_SIZE
+  //   ).then((result) => {
+  //     const tmusicAlbums = musicAlbums.slice();
+  //     tmusicAlbums[albumIndex].musics.push(...result);
+  //     setMusicAlbums(tmusicAlbums);
 
-      if (musicPage < result.pages) {
-        setMusicPage((prev) => prev + 1);
-      }
-    });
-  };
+  //     if (musicPages[albumIndex] < musicPageCounts[albumIndex]) {
+  //       const tmusicPages = musicPages.slice();
+  //       tmusicPages[albumIndex]++;
+  //       setMusicPages(tmusicPages);
+  //     }
+  //   });
+  // };
 
   const fetchMorePosts = () => {
     fetchPosts(postsPage + 1, POSTS_PAGE_SIZE).then((result) => {
@@ -157,10 +170,16 @@ export default function FanClub() {
         setLivestreamPageCount(value.pages);
         setLivestreamPage(1);
       });
-      fetchMusics(1, true, MUSICS_PAGE_SIZE).then((result) => {
-        setLatestMusics(result.musics);
-        setMusicPageCount(result.pages);
-        setMusicPage(1);
+      fetchAllAlbums(1, true, MUSICS_PAGE_SIZE).then((result) => {
+        const musicPages = result.map((album) => {
+          return 1;
+        });
+        const musicPageCounts = result.map((album) => {
+          return album.size / MUSICS_PAGE_SIZE + 1;
+        });
+        setMusicAlbums(result);
+        setMusicPages(musicPages);
+        setMusicPageCounts(musicPageCounts);
       });
       fetchPosts(1, POSTS_PAGE_SIZE).then((value) => {
         setPosts(value.posts);
@@ -263,45 +282,60 @@ export default function FanClub() {
 
       <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
         <p className="text-primary text-sm font-medium text-center">Music</p>
-        <div className="w-full flex flex-col justify-start items-center space-y-3">
-          <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
-            {latestMusics.map((value, index) => {
-              return (
-                <div
-                  key={index}
-                  className="col-span-1 flex justify-center items-center"
-                >
-                  <Link href="/music">
-                    <Image
-                      className="w-20 h-20 object-cover rounded-md"
-                      width={200}
-                      height={200}
-                      src={value.coverImage ?? PLACEHOLDER_IMAGE}
-                      alt=""
-                      placeholder="blur"
-                      blurDataURL={IMAGE_BLUR_DATA_URL}
-                      priority
-                    />
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-          <div className="w-full flex justify-center items-center">
-            {isWorkingMusics ? (
-              <Loading width={30} height={30} />
-            ) : (
-              musicPageCount > musicPage && (
-                <button
-                  className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
-                  onClick={() => fetchMoreMusics()}
-                >
-                  + More
-                </button>
-              )
-            )}
-          </div>
-        </div>
+        {musicAlbums.map((album, albumIndex) => {
+          return (
+            <div
+              key={albumIndex}
+              className="w-full flex flex-col justify-start items-center space-y-3"
+            >
+              <p className="text-secondary text-xs text-center">{album.name}</p>
+              <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
+                {album.musics
+                  .slice(0, musicPages[albumIndex] * MUSICS_PAGE_SIZE)
+                  .map((value, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="col-span-1 flex justify-center items-center"
+                      >
+                        <Link href="/music">
+                          <Image
+                            className="w-20 h-20 object-cover rounded-md"
+                            width={200}
+                            height={200}
+                            src={value.coverImage ?? PLACEHOLDER_IMAGE}
+                            alt=""
+                            placeholder="blur"
+                            blurDataURL={IMAGE_BLUR_DATA_URL}
+                            priority
+                          />
+                        </Link>
+                      </div>
+                    );
+                  })}
+              </div>
+              <div className="w-full flex justify-center items-center">
+                {isWorkingMusics ? (
+                  <Loading width={30} height={30} />
+                ) : (
+                  musicPageCounts[albumIndex] > musicPages[albumIndex] && (
+                    <button
+                      className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
+                      // onClick={() => fetchMoreMusics(albumIndex)}
+                      onClick={() => {
+                        const tmusicPages = musicPages.slice();
+                        tmusicPages[albumIndex]++;
+                        setMusicPages(tmusicPages);
+                      }}
+                    >
+                      + More
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
