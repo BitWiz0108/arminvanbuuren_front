@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import getConfig from "next/config";
 import { Elements } from "@stripe/react-stripe-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -16,17 +15,11 @@ import { useShareValues } from "@/contexts/contextShareData";
 
 import { DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
-const { publicRuntimeConfig } = getConfig();
-
 type LayoutProps = {
-  title?: string;
-  description?: string;
-  date?: string;
-  socialPreview?: string;
   children: React.ReactNode;
 };
 
-const Layout = ({ children, ...customMeta }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const { asPath } = router;
 
@@ -43,18 +36,6 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
   } = useSizeValues();
 
   const stripePromise = loadStripe(stripePublicApiKey);
-
-  const { name, url, title, description, socialPreview } =
-    publicRuntimeConfig.site;
-
-  const meta = {
-    name,
-    url,
-    title,
-    description,
-    socialPreview,
-    ...customMeta,
-  };
 
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
 
@@ -104,7 +85,11 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
             href={artist.logoImage ?? DEFAULT_LOGO_IMAGE}
             key="favicon"
           />
-          <link rel="canonical" href={`${url}${asPath}`} key="canonical" />
+          <link
+            rel="canonical"
+            href={`${artist.siteUrl}${asPath}`}
+            key="canonical"
+          />
 
           {/* Twitter */}
           <meta
@@ -112,34 +97,42 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
             content="summary_large_image"
             key="twitter_card"
           />
-          <meta name="twitter:title" content={meta.title} key="twitter_title" />
+          <meta
+            name="twitter:title"
+            content={artist.siteTitle}
+            key="twitter_title"
+          />
           <meta
             name="twitter:description"
-            content={meta.description}
+            content={artist.siteDescription}
             key="twitter_description"
           />
           <meta
             name="twitter:image"
-            content={`${url}${socialPreview}`}
+            content={artist.siteSocialPreviewImage}
             key="twitter_image"
           />
 
           {/* Open Graph */}
-          <meta property="og:url" content={`${url}${asPath}`} key="og_url" />
+          <meta
+            property="og:url"
+            content={`${artist.siteUrl}${asPath}`}
+            key="og_url"
+          />
           <meta
             property="og:site_name"
-            content={meta.name}
+            content={artist.siteName}
             key="og_site_name"
           />
-          <meta property="og:title" content={meta.title} key="og_title" />
+          <meta property="og:title" content={artist.siteTitle} key="og_title" />
           <meta
             property="og:description"
-            content={meta.description}
+            content={artist.siteDescription}
             key="og_description"
           />
           <meta
             property="og:image"
-            content={`${url}${socialPreview}`}
+            content={artist.siteSocialPreviewImage}
             key="og_image"
           />
           <meta
@@ -154,13 +147,10 @@ const Layout = ({ children, ...customMeta }: LayoutProps) => {
           />
           <meta
             name="description"
-            content={meta.description}
+            content={artist.siteDescription}
             key="description"
           />
-          {meta.date && (
-            <meta property="article:published_time" content={meta.date} />
-          )}
-          <title key="title">{meta.title}</title>
+          <title key="title">{artist.siteTitle}</title>
         </Head>
 
         <main className="relative w-full flex flex-row justify-start items-start">
