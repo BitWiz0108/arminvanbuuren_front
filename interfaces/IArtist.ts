@@ -1,8 +1,10 @@
 import {
+  APP_NAME,
   DEFAULT_AVATAR_IMAGE,
   DEFAULT_LOGO_IMAGE,
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
+  SITE_BASE_URL,
 } from "@/libs/constants";
 
 export interface IArtist {
@@ -32,6 +34,11 @@ export interface IArtist {
   youtube: string;
   soundcloud: string;
   logoImage: string;
+  siteName: string;
+  siteUrl: string;
+  siteTitle: string;
+  siteDescription: string;
+  siteSocialPreviewImage: string;
 }
 
 export const DEFAULT_ARTIST = {
@@ -61,4 +68,9 @@ export const DEFAULT_ARTIST = {
   youtube: "",
   soundcloud: "",
   logoImage: DEFAULT_LOGO_IMAGE,
+  siteName: APP_NAME,
+  siteUrl: SITE_BASE_URL,
+  siteTitle: APP_NAME,
+  siteDescription: APP_NAME,
+  siteSocialPreviewImage: DEFAULT_LOGO_IMAGE,
 } as IArtist;
