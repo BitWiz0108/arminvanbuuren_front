@@ -79,6 +79,7 @@ export default function LiveStream() {
   const [size, setSize] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.CATEGORY);
+  const [isPreviewVideoLoading, setIsPreviewVideoLoading] = useState(true);
 
   const videoPlayer = useVideoPlayer(videoRef);
 
@@ -299,6 +300,12 @@ export default function LiveStream() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode]);
 
+  useEffect(() => {
+    if (isPreviewVideoLoading) {
+      setTimeout(() => setIsPreviewVideoLoading(false), 5000);
+    }
+  }, [isPreviewVideoLoading]);
+
   const listView = (
     <div className="relative w-full min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
       <div className="relative w-full h-auto max-h-[50%] flex-grow flex flex-col justify-start items-center z-0">
@@ -324,7 +331,16 @@ export default function LiveStream() {
           </h5>
         </div>
 
-        <LiveStreamPreview track={videoPlayer.getPlayingTrack()} />
+        <video
+          loop
+          muted
+          autoPlay
+          playsInline
+          className="relative w-full h-full object-cover z-0"
+          src={videoPlayer.getPlayingTrack().previewVideo}
+          onLoadStart={() => setIsPreviewVideoLoading(true)}
+          onLoadedData={() => setIsPreviewVideoLoading(false)}
+        />
 
         <div className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center py-8 sm:py -8 lg:py-8 w-4/5 z-10 filter">
           <div className="w-full flex-col justify-end md:justify-center items-center text-primary pb-5">
@@ -681,6 +697,12 @@ export default function LiveStream() {
           audioPlayer={audioPlayer}
           onListView={() => router.push("/music")}
         />
+      )}
+
+      {isPreviewVideoLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
       )}
     </>
   );
