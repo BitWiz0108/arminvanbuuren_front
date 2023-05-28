@@ -1,25 +1,38 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 
-import { LOADING_GIF } from "@/libs/constants";
+import Loading from "@/components/Loading";
+
+import { PLACEHOLDER_IMAGE } from "@/libs/constants";
 
 const VideoPlayer = (props: any) => {
-  const [loading, setLoading] = useState(true);
+  const [isGlobalLoading, setIsGlobalLoading] = useState(true);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
 
   const handleVideoLoaded = () => {
-    setLoading(false);
+    setIsGlobalLoading(false);
+    setIsVideoLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
+    setIsGlobalLoading(true);
+    setIsVideoLoading(true);
+    setTimeout(() => {
+      setIsGlobalLoading(false);
+    }, 5000);
   }, [props.src]);
 
   return (
     <>
-      {loading && (
+      {isGlobalLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
+      {isVideoLoading && (
         <img
-          className="absolute left-0 top-0 w-full h-full object-cover opacity-20 z-10"
-          src={LOADING_GIF}
+          className="absolute left-0 top-0 w-full h-full object-cover opacity-60 z-10"
+          src={PLACEHOLDER_IMAGE}
           alt=""
         />
       )}

@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 import X from "@/components/Icons/X";
 import ButtonCircle from "@/components/ButtonCircle";
 import GalleryItem from "@/components/GalleryItem";
+import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -23,7 +24,7 @@ import { IImage } from "@/interfaces/IGallery";
 const GalleryView = () => {
   const carouselRef = useRef(null);
   const { isSignedIn } = useAuthValues();
-  const { fetchPageContent } = useGallery();
+  const { isLoading, fetchPageContent } = useGallery();
   const { audioPlayer } = useShareValues();
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -203,6 +204,12 @@ const GalleryView = () => {
           </Carousel>
         </div>
       </div>
+
+      {isLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
     </div>
   );
 };

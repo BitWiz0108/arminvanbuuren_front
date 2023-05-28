@@ -40,6 +40,7 @@ import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 import { IAlbum } from "@/interfaces/IAlbum";
+import VideoPlayer from "@/components/VideoPlayer";
 
 const POSTS_PAGE_SIZE = 30;
 const MUSICS_PAGE_SIZE = 8;
@@ -53,11 +54,7 @@ export default function FanClub() {
     fetchPosts,
     togglePostFavorite,
   } = useFanclub();
-  const {
-    isLoading: isWorkingMusics,
-    fetchAllAlbums,
-    fetchAlbumMusics,
-  } = useMusic();
+  const { isLoading: isWorkingMusics, fetchAllAlbums } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
   const { height } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
@@ -469,7 +466,7 @@ export default function FanClub() {
               }}
             >
               {artist.bannerType == FILE_TYPE.VIDEO ? (
-                <video
+                <VideoPlayer
                   loop
                   muted
                   autoPlay
