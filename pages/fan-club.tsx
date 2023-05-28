@@ -215,7 +215,7 @@ export default function FanClub() {
       {latestLivestreams?.length > 0 && (
         <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
           <p className="text-primary text-sm font-medium">Latest Livestream</p>
-          <Link href="/live-stream">
+          <Link href="/livestreams">
             <Image
               className="w-full h-28 object-cover rounded-md"
               src={latestLivestreams[0].coverImage ?? PLACEHOLDER_IMAGE}
@@ -227,7 +227,7 @@ export default function FanClub() {
               priority
             />
           </Link>
-          <Link href="/live-stream">
+          <Link href="/livestreams">
             <p className="text-primary text-sm font-medium">
               {latestLivestreams[0].title}
             </p>
@@ -244,7 +244,7 @@ export default function FanClub() {
                 key={index}
                 className="col-span-1 flex justify-center items-center cursor-pointer"
               >
-                <Link href="/live-stream" className="w-full">
+                <Link href="/livestreams" className="w-full">
                   <Image
                     className="w-full h-10 object-cover rounded-md"
                     src={value.coverImage ?? PLACEHOLDER_IMAGE}
@@ -294,7 +294,7 @@ export default function FanClub() {
                         key={index}
                         className="col-span-1 flex justify-center items-center"
                       >
-                        <Link href="/music">
+                        <Link href="/musics">
                           <Image
                             className="w-20 h-20 object-cover rounded-md"
                             width={200}
@@ -669,7 +669,7 @@ export default function FanClub() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() => router.push("/musics")}
       />
     </>
   );

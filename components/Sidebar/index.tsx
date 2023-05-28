@@ -37,7 +37,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
     useSizeValues();
 
   const checkFullScreenPage = () => {
-    return router.pathname == "/music" || router.pathname == "/live-stream";
+    return router.pathname == "/musics" || router.pathname == "/livestreams";
   };
 
   const goToLink = (link: string) => {
@@ -124,18 +124,18 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             onClick={() => goToLink("/about")}
           />
           <ButtonSidebar
-            active={router.pathname == "/music"}
+            active={router.pathname == "/musics"}
             collapsed={isSidebarCollapsed}
             icon={<Music width={26} height={26} />}
-            label="Music"
-            onClick={() => goToLink("/music")}
+            label="Musics"
+            onClick={() => goToLink("/musics")}
           />
           <ButtonSidebar
-            active={router.pathname == "/live-stream"}
+            active={router.pathname == "/livestreams"}
             collapsed={isSidebarCollapsed}
             icon={<Mic width={24} height={24} />}
             label="Live Streams"
-            onClick={() => goToLink("/live-stream")}
+            onClick={() => goToLink("/livestreams")}
           />
           <ButtonSidebar
             active={router.pathname == "/gallery"}

@@ -86,17 +86,17 @@ export default function Home() {
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0 mb-10">
               <HomepageButton
                 label="LIVE STREAMS"
-                onClick={() => router.push("/live-stream")}
+                onClick={() => router.push("/livestreams")}
               />
               <HomepageButton
                 label="PLAY MUSIC"
-                onClick={() => router.push("/music")}
+                onClick={() => router.push("/musics")}
               />
             </div>
             <div
               className="flex flex-row justify-center items-center space-x-5 cursor-pointer"
               onClick={() => {
-                router.push("/live-stream");
+                router.push("/livestreams");
               }}
             >
               <div className="relative">
@@ -146,7 +146,7 @@ export default function Home() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() => router.push("/musics")}
       />
 
       {isLoading && (

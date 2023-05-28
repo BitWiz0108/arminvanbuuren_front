@@ -93,7 +93,7 @@ const useAudioPlayer = () => {
   };
 
   useEffect(() => {
-    if (router.pathname == "/live-stream") {
+    if (router.pathname == "/livestreams") {
       pause();
     }
 

@@ -41,7 +41,7 @@ import {
 import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_CATEGORY, ICategory } from "@/interfaces/ICategory";
 
-export default function LiveStream() {
+export default function LiveStreams() {
   const videoRef = useRef(null);
   const scrollRef = useRef(null);
   const livestreamScrollRef = useRef(null);
@@ -695,7 +695,7 @@ export default function LiveStream() {
       ) : (
         <AudioControl
           audioPlayer={audioPlayer}
-          onListView={() => router.push("/music")}
+          onListView={() => router.push("/musics")}
         />
       )}
 

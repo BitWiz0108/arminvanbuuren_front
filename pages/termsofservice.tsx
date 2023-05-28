@@ -63,7 +63,7 @@ export default function TermsOfService() {
           />
           <AudioControl
             audioPlayer={audioPlayer}
-            onListView={() => router.push("/music")}
+            onListView={() => router.push("/musics")}
           />
         </>
       )}

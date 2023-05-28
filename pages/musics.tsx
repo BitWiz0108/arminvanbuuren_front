@@ -37,7 +37,7 @@ import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
-export default function Music() {
+export default function Musics() {
   const scrollRef = useRef(null);
   const musicsScrollRef = useRef(null);
 

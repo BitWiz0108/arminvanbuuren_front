@@ -281,7 +281,7 @@ export default function Post() {
       />
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() => router.push("/musics")}
       />
     </>
   );
