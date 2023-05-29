@@ -45,7 +45,7 @@ export default function TermsOfService() {
           "relative w-full px-5 lg:px-10 xl:px-20 h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
           isSignedIn
             ? isMobile
-              ? "pb-40"
+              ? "pb-44"
               : "pb-28 lg:pb-36"
             : isMobile
             ? "pb-16"

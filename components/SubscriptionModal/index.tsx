@@ -239,7 +239,7 @@ const SubscriptionModal = () => {
         <motion.div
           className={twMerge(
             "fixed left-0 top-0 w-screen h-screen px-5 pt-5 bg-[#000000aa] flex justify-center items-center z-50",
-            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+            isMobile ? "pb-44" : "pb-28 lg:pb-36"
           )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

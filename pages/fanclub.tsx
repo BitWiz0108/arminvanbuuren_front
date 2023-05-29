@@ -597,7 +597,7 @@ export default function FanClub() {
         <div
           className={twMerge(
             "relative w-full min-h-screen flex flex-col justify-start items-center",
-            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+            isMobile ? "pb-44" : "pb-28 lg:pb-36"
           )}
         >
           <div

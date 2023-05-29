@@ -418,7 +418,7 @@ export default function Musics() {
           </div>
         </div>
 
-        <div className="relative w-full flex flex-row justify-center items-center px-5 pb-48 space-x-2 z-10">
+        <div className="relative w-full flex flex-row justify-center items-center px-5 pb-44 space-x-2 z-10">
           <div className="w-auto flex-grow md:flex-grow-0 md:w-80 lg:w-96 flex flex-col justify-start items-start">
             <h2 className="text-primary text-left text-xl md:text-2xl font-semibold mb-1">
               {audioPlayer.musics[activeIndex]?.title}

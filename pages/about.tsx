@@ -89,7 +89,7 @@ export default function About() {
         <div
           className={twMerge(
             "relative w-full overflow-y-auto",
-            isMobile ? "pb-40" : "pb-24 lg:pb-32"
+            isMobile ? "pb-44" : "pb-24 lg:pb-32"
           )}
         >
           <div className="relative w-full flex flex-col xl:flex-row justify-center items-center">

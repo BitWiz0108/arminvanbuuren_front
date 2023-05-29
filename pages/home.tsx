@@ -72,7 +72,7 @@ export default function Home() {
         <div
           className={twMerge(
             "relative w-full h-screen min-h-[640px] flex flex-col justify-center items-center",
-            isMobile ? "pb-40" : "pb-24 lg:pb-32"
+            isMobile ? "pb-44" : "pb-24 lg:pb-32"
           )}
         >
           <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center z-10">

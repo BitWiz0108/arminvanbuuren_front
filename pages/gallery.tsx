@@ -23,7 +23,7 @@ export default function Gallery() {
       <div
         className={twMerge(
           "relative w-full h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
-          isMobile ? "pb-40" : "pb-24 lg:pb-32"
+          isMobile ? "pb-44" : "pb-24 lg:pb-32"
         )}
       >
         <GalleryView />

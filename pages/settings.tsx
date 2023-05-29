@@ -154,7 +154,7 @@ export default function Settings() {
         <div
           className={twMerge(
             "relative px-5 pt-16 bg-background w-full min-h-screen flex justify-center items-center",
-            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+            isMobile ? "pb-44" : "pb-28 lg:pb-36"
           )}
         >
           <div className="relative w-full flex flex-col md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg justify-center items-center">
