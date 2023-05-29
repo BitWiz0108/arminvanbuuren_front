@@ -2,6 +2,7 @@ import { KeyboardEvent, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 
 import Input from "@/components/Input";
 import Layout from "@/components/Layout";
@@ -13,6 +14,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useHomepage from "@/hooks/useHomepage";
 
@@ -22,6 +24,7 @@ export default function Signup() {
   const router = useRouter();
   const { isLoading, signUp } = useAuthValues();
   const { artist } = useShareValues();
+  const { isMobile } = useSizeValues();
   const { fetchPageContent } = useHomepage();
 
   const [username, setUsername] = useState<string>("");
@@ -82,7 +85,12 @@ export default function Signup() {
 
   return (
     <Layout>
-      <div className="relative w-full min-h-screen flex flex-col justify-end md:justify-center items-center">
+      <div
+        className={twMerge(
+          "relative w-full min-h-screen flex flex-col justify-end md:justify-center items-center",
+          isMobile ? "pb-14" : "pb-2"
+        )}
+      >
         <div className="w-full h-full flex flex-col justify-end md:justify-center items-center z-10">
           <div className="w-full h-fit flex flex-col justify-end md:justify-center items-center text-primary pb-5">
             <h3 className="text-center text-primary text-2xl mb-2">

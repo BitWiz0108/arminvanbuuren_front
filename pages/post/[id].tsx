@@ -110,7 +110,7 @@ export default function Post() {
       <div
         className={twMerge(
           "w-full h-screen flex justify-center items-start overflow-x-hidden overflow-y-auto",
-          isMobile ? "pb-44" : "pb-28 lg:pb-36"
+          isMobile ? "pb-[180px]" : "pb-28 lg:pb-36"
         )}
       >
         <div className="relative w-full lg:w-2/3 min-h-screen flex justify-center items-start bg-background pt-16">

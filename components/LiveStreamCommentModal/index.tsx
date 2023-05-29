@@ -76,8 +76,8 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
       {isLivestreamCommentVisible && (
         <motion.div
           className={twMerge(
-            "fixed right-0 top-0 w-screen md:w-[340px] h-screen flex justify-end items-center border-l border-third z-30",
-            isMobile ? "pb-44" : "pb-24 lg:pb-32"
+            "fixed right-0 top-0 w-screen md:w-[340px] h-screen bg-background flex justify-end items-center border-l border-third z-30",
+            isMobile ? "pb-[180px]" : "pb-24 lg:pb-32"
           )}
           initial={{ x: 340 }}
           animate={{ x: 0 }}

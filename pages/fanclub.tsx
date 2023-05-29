@@ -597,7 +597,7 @@ export default function FanClub() {
         <div
           className={twMerge(
             "relative w-full min-h-screen flex flex-col justify-start items-center",
-            isMobile ? "pb-44" : "pb-28 lg:pb-36"
+            isMobile ? "pb-[180px]" : "pb-28 lg:pb-36"
           )}
         >
           <div
@@ -667,18 +667,21 @@ export default function FanClub() {
                 </div>
                 <div className="flex flex-col justify-start items-center">
                   <p className="text-primary text-center text-base">
-                    {artist?.email}
+                    {artist?.email}&nbsp;
                   </p>
-                  {artist?.website && (
-                    <Link
-                      href={artist.website}
-                      className="text-secondary text-center text-sm"
-                    >
-                      {artist.website
-                        .replaceAll("https://", "")
-                        .replaceAll("/", "")}
-                    </Link>
-                  )}
+                  <p>
+                    {artist?.website && (
+                      <Link
+                        href={artist.website}
+                        className="text-secondary text-center text-sm"
+                      >
+                        {artist.website
+                          .replaceAll("https://", "")
+                          .replaceAll("/", "")}
+                      </Link>
+                    )}
+                    &nbsp;
+                  </p>
                 </div>
 
                 <div className="absolute right-5 bottom-5 w-10 h-10 rounded-md flex justify-center items-center text-white bg-bluePrimary hover:bg-blueSecondary transition-all duration-300 cursor-pointer z-10">
