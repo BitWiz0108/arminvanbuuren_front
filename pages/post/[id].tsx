@@ -94,7 +94,7 @@ export default function Post() {
           setRepliesPageCount(1);
           setRepliesPage(1);
         } else {
-          router.push("/fan-club");
+          router.push("/fanclub");
         }
       });
     }
@@ -260,7 +260,7 @@ export default function Post() {
                 <Home
                   width={24}
                   height={24}
-                  onClick={() => router.push("/fan-club")}
+                  onClick={() => router.push("/fanclub")}
                 />
               </div>
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">

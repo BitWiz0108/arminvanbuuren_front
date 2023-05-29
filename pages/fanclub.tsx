@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @next/next/no-img-element */
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,13 +41,15 @@ import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 import { IAlbum } from "@/interfaces/IAlbum";
-import VideoPlayer from "@/components/VideoPlayer";
+import F10sVideoPlayer from "@/components/F10sVideoPlayer";
 
 const POSTS_PAGE_SIZE = 30;
 const MUSICS_PAGE_SIZE = 8;
 const LIVESTREAMS_PAGE_SIZE = 6;
 
 export default function FanClub() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { isSignedIn } = useAuthValues();
   const {
@@ -56,7 +59,7 @@ export default function FanClub() {
   } = useFanclub();
   const { isLoading: isWorkingMusics, fetchAllAlbums } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
-  const { height } = useSizeValues();
+  const { width, height } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
     useShareValues();
 
@@ -75,6 +78,11 @@ export default function FanClub() {
   const [selectedPost, setSelectedPost] = useState<IPost>(DEFAULT_POST);
   const [isPostFullScreenView, setIsPostFullScreenView] =
     useState<boolean>(false);
+  const [isBannerVideoLoading, setIsBannerVideoLoading] =
+    useState<boolean>(false);
+  const [bannerHeight, setBannerHeight] = useState<number>(0);
+  const [postHeight, setPostHeight] = useState<number>(0);
+  const [postRef, setPostRef] = useState<HTMLDivElement | null>(null);
 
   const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShareData({
@@ -160,6 +168,57 @@ export default function FanClub() {
   };
 
   useEffect(() => {
+    if (!scrollRef || !scrollRef.current) return;
+
+    scrollRef.current.addEventListener(
+      "scroll",
+      () => {
+        if (!scrollRef || !scrollRef.current) return;
+
+        const position = scrollRef.current.scrollTop;
+
+        const videos = document.getElementsByClassName("post-video");
+        for (let i = 0; i < videos.length; i++) {
+          (videos[i] as HTMLVideoElement).pause();
+        }
+
+        console.log(bannerHeight, postHeight);
+
+        posts.forEach((post, index) => {
+          if (post.type == FILE_TYPE.VIDEO) {
+            if (
+              position > bannerHeight + postHeight * index &&
+              position < bannerHeight + postHeight * (index + 1)
+            ) {
+              const videos = document.getElementsByClassName(
+                `post-video-${index}`
+              );
+              for (let i = 0; i < videos.length; i++) {
+                (videos[i] as HTMLVideoElement).play();
+              }
+            }
+          }
+        });
+      },
+      {
+        passive: true,
+      }
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollRef, bannerHeight, postHeight]);
+
+  useEffect(() => {
+    if (!window) return;
+    if (!bannerRef || !bannerRef.current || !postRef) return;
+
+    setBannerHeight(bannerRef.current.offsetHeight);
+    setPostHeight(postRef.offsetHeight);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, bannerRef, postRef]);
+
+  useEffect(() => {
     if (isSignedIn) {
       fetchLivestreams(1, true, LIVESTREAMS_PAGE_SIZE).then((value) => {
         setLatestLiveStreams(value.livestreams);
@@ -167,7 +226,7 @@ export default function FanClub() {
         setLivestreamPage(1);
       });
       fetchAllAlbums(1, true, MUSICS_PAGE_SIZE).then((result) => {
-        const musicPages = result.map((album) => {
+        const musicPages = result.map(() => {
           return 1;
         });
         const musicPageCounts = result.map((album) => {
@@ -359,7 +418,7 @@ export default function FanClub() {
                     }}
                   />
                 ) : (
-                  <video
+                  <F10sVideoPlayer
                     loop
                     muted
                     autoPlay
@@ -376,8 +435,7 @@ export default function FanClub() {
                           "fullscreen-video-player"
                         );
                         for (let i = 0; i < videos.length; i++) {
-                          // @ts-ignore
-                          videos[i].play();
+                          (videos[i] as HTMLVideoElement).play();
                         }
                       }, 1000);
                     }}
@@ -396,7 +454,11 @@ export default function FanClub() {
       {posts.map((post, index) => {
         return (
           <Post
+            setRef={
+              index == 0 ? (ref: HTMLDivElement) => setPostRef(ref) : null
+            }
             key={index}
+            index={index}
             post={post}
             favorite={() => {
               togglePostFavorite(post.id, !post.isFavorite).then((value) => {
@@ -420,8 +482,7 @@ export default function FanClub() {
                     "fullscreen-video-player"
                   );
                   for (let i = 0; i < videos.length; i++) {
-                    // @ts-ignore
-                    videos[i].play();
+                    (videos[i] as HTMLVideoElement).play();
                   }
                 }, 1000);
               }
@@ -455,9 +516,15 @@ export default function FanClub() {
 
   const fullContent = (
     <>
-      <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
+      <div
+        ref={scrollRef}
+        className="w-full h-screen overflow-x-hidden overflow-y-auto"
+      >
         <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-36">
-          <div className="relative w-full flex flex-col justify-start items-center bg-background mb-5 lg:mb-10">
+          <div
+            ref={bannerRef}
+            className="relative w-full flex flex-col justify-start items-center bg-background mb-5 lg:mb-10"
+          >
             <div
               className="relative w-full h-auto flex flex-col justify-start items-center overflow-hidden z-0"
               style={{
@@ -466,7 +533,7 @@ export default function FanClub() {
               }}
             >
               {artist.bannerType == FILE_TYPE.VIDEO ? (
-                <VideoPlayer
+                <video
                   loop
                   muted
                   autoPlay
@@ -477,6 +544,8 @@ export default function FanClub() {
                     minHeight: `320px`,
                   }}
                   src={artist.bannerVideo}
+                  onLoadStart={() => setIsBannerVideoLoading(true)}
+                  onLoadedData={() => setIsBannerVideoLoading(false)}
                 />
               ) : (
                 <Image
@@ -612,8 +681,7 @@ export default function FanClub() {
                 "fullscreen-video-player"
               );
               for (let i = 0; i < videos.length; i++) {
-                // @ts-ignore
-                videos[i].pause();
+                (videos[i] as HTMLVideoElement).pause();
               }
             }}
           />
@@ -652,12 +720,12 @@ export default function FanClub() {
               <div className="relative max-h-screen w-full h-full z-10">
                 <video
                   controls
-                  autoPlay={true}
+                  autoPlay
                   disablePictureInPicture
                   controlsList="nodownload nopictureinpicture noplaybackrate"
                   className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
                   src={selectedPost.video}
-                  onPlay={(event) => {
+                  onPlay={() => {
                     audioPlayer.pause();
                   }}
                 />
@@ -671,6 +739,12 @@ export default function FanClub() {
         audioPlayer={audioPlayer}
         onListView={() => router.push("/musics")}
       />
+
+      {isBannerVideoLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
     </>
   );
 

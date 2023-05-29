@@ -38,8 +38,8 @@ import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function Musics() {
-  const scrollRef = useRef(null);
-  const musicsScrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const musicsScrollRef = useRef<HTMLDivElement>(null);
 
   const { isSignedIn, isMembership } = useAuthValues();
   const { isMobile, height, contentWidth, isSidebarVisible, isTopbarVisible } =
@@ -81,15 +81,13 @@ export default function Musics() {
   };
 
   const releaseMouse = (clientX: number) => {
-    if (!scrollRef) return;
+    if (!scrollRef || !scrollRef.current) return;
 
     const deltaOrigin = originalX - clientX;
     if (Math.abs(deltaOrigin) > 10) {
       const delta = clientX - clientX;
-      // @ts-ignore
       scrollRef.current.scrollLeft += delta;
       setClientX(clientX);
-      // @ts-ignore
       checkActiveIndex(scrollRef.current.scrollLeft, delta > 0);
     }
   };
@@ -103,16 +101,12 @@ export default function Musics() {
     e.preventDefault();
 
     if (element) {
-      // @ts-ignore
       ref.scrollTo({
-        // @ts-ignore
         left: ref.current?.scrollLeft + e.deltaY,
         behavior: "smooth",
       });
     } else {
-      // @ts-ignore
       ref.current.scrollTo({
-        // @ts-ignore
         left: ref.current.scrollLeft + e.deltaY,
         behavior: "smooth",
       });
@@ -132,9 +126,8 @@ export default function Musics() {
   };
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isScrolling) {
+    if (isScrolling && scrollRef && scrollRef.current) {
       const delta = clientX - e.clientX;
-      // @ts-ignore
       scrollRef.current.scrollLeft += delta;
       setClientX(e.clientX);
     }
@@ -287,7 +280,6 @@ export default function Musics() {
 
   useEffect(() => {
     if (scrollRef && scrollRef.current && !isListView) {
-      // @ts-ignore
       scrollRef.current.scrollLeft = activeIndex * activeWidth;
     }
 
@@ -651,6 +643,12 @@ export default function Musics() {
 
         {isListView ? listView : sliderView}
       </div>
+
+      {isLoading && (
+        <div className="loading">
+          <Loading width={64} height={64} />
+        </div>
+      )}
     </div>
   );
 

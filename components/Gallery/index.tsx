@@ -22,7 +22,7 @@ import {
 import { IImage } from "@/interfaces/IGallery";
 
 const GalleryView = () => {
-  const carouselRef = useRef(null);
+  const carouselRef = useRef<Carousel>(null);
   const { isSignedIn } = useAuthValues();
   const { isLoading, fetchPageContent } = useGallery();
   const { audioPlayer } = useShareValues();
@@ -74,7 +74,6 @@ const GalleryView = () => {
               setActiveSlide(index + 2);
               setIsCarouselVisible(true);
               if (carouselRef && carouselRef.current) {
-                // @ts-ignore
                 carouselRef.current.goToSlide(index + 2);
               }
               if (image.type == FILE_TYPE.VIDEO) {
@@ -84,8 +83,7 @@ const GalleryView = () => {
                 );
                 for (let i = 0; i < videos.length; i++) {
                   if (image.video == videos[i].getAttribute("src")) {
-                    // @ts-ignore
-                    videos[i].play();
+                    (videos[i] as HTMLVideoElement).play();
                   }
                 }
               }
@@ -123,13 +121,12 @@ const GalleryView = () => {
             swipeable
             draggable
             arrows
-            beforeChange={(nextSlide, state) => {
+            beforeChange={() => {
               const videos = document.getElementsByClassName(
                 "carousel-video-player"
               );
               for (let i = 0; i < videos.length; i++) {
-                // @ts-ignore
-                videos[i].pause();
+                (videos[i] as HTMLVideoElement).pause();
               }
             }}
             afterChange={(prevSlide, state) => {
@@ -139,8 +136,7 @@ const GalleryView = () => {
                 "carousel-video-player"
               );
               for (let i = 0; i < videos.length; i++) {
-                // @ts-ignore
-                videos[i].pause();
+                (videos[i] as HTMLVideoElement).pause();
               }
               if (
                 images[state.currentSlide - 2] &&
@@ -151,8 +147,7 @@ const GalleryView = () => {
                     images[state.currentSlide - 2].video ==
                     videos[i].getAttribute("src")
                   ) {
-                    // @ts-ignore
-                    videos[i].play();
+                    (videos[i] as HTMLVideoElement).play();
                   }
                 }
               }

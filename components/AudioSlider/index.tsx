@@ -33,8 +33,7 @@ const AudioSlider: FC<Props> = ({ min, max, value, step, onChange }) => {
     <div
       className="slider-container"
       onMouseDown={(event) => {
-        const slider = event.target;
-        // @ts-ignore
+        const slider = event.target as HTMLDivElement;
         const rect = slider.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
         const sliderWidth = rect.width;

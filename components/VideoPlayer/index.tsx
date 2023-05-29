@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import Loading from "@/components/Loading";
 
-import { PLACEHOLDER_IMAGE } from "@/libs/constants";
+import { LOADING_GIF } from "@/libs/constants";
 
 const VideoPlayer = (props: any) => {
   const [isGlobalLoading, setIsGlobalLoading] = useState(true);
@@ -30,11 +30,13 @@ const VideoPlayer = (props: any) => {
         </div>
       )}
       {isVideoLoading && (
-        <img
-          className="absolute left-0 top-0 w-full h-full object-cover opacity-60 z-10"
-          src={PLACEHOLDER_IMAGE}
-          alt=""
-        />
+        <div className="absolute left-0 top-0 w-full h-full flex justify-center items-center bg-black z-10">
+          <img
+            className="w-16 h-16 object-cover"
+            src={LOADING_GIF}
+            alt="Loading"
+          />
+        </div>
       )}
       <video {...props} onLoadedData={handleVideoLoaded} />
     </>

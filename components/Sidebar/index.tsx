@@ -145,11 +145,11 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             onClick={() => goToLink("/gallery")}
           />
           <ButtonSidebar
-            active={router.pathname == "/fan-club"}
+            active={router.pathname == "/fanclub"}
             collapsed={isSidebarCollapsed}
             icon={<ThumbUp width={24} height={24} />}
             label="Fan Club"
-            onClick={() => goToLink("/fan-club")}
+            onClick={() => goToLink("/fanclub")}
           />
           <ButtonSidebar
             active={router.pathname == "/settings"}

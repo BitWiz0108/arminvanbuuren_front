@@ -36,7 +36,7 @@ import { DEFAULT_PROFILE } from "@/interfaces/IProfile";
 
 export default function Settings() {
   const router = useRouter();
-  const avatarImageRef = useRef(null);
+  const avatarImageRef = useRef<HTMLInputElement>(null);
 
   const { fetchProfile, updateProfile, fetchLocation, subscribe } =
     useProfile();
@@ -163,8 +163,7 @@ export default function Settings() {
                 onMouseEnter={() => setIsAvatarImageHover(true)}
                 onMouseLeave={() => setIsAvatarImageHover(false)}
                 onClick={() => {
-                  if (avatarImageRef) {
-                    // @ts-ignore
+                  if (avatarImageRef && avatarImageRef.current) {
                     avatarImageRef.current.click();
                   }
                 }}

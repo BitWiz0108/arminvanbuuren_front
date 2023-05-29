@@ -38,7 +38,6 @@ const useVideoPlayer = (videoRef: any) => {
   const onScrub = (value: number) => {
     // Clear any timers already running
     clearInterval(intervalRef.current);
-    // @ts-ignore
     if (videoRef.current) {
       videoRef.current.currentTime = value;
       setTrackProgress(videoRef.current?.currentTime ?? 0);

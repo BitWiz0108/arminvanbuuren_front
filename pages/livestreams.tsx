@@ -10,7 +10,6 @@ import ButtonCircle from "@/components/ButtonCircle/index";
 import AudioControl from "@/components/AudioControl";
 import VideoControl from "@/components/VideoControl";
 import LiveStreamListCard from "@/components/LiveStreamListCard";
-import LiveStreamPreview from "@/components/LiveStreamPreview";
 import LiveStreamMetadataModal from "@/components/LiveStreamMetadataModal";
 import Switch from "@/components/Switch";
 import DonationModal from "@/components/DonationModal";
@@ -43,7 +42,7 @@ import { DEFAULT_CATEGORY, ICategory } from "@/interfaces/ICategory";
 
 export default function LiveStreams() {
   const videoRef = useRef(null);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const livestreamScrollRef = useRef(null);
   const router = useRouter();
 
@@ -216,16 +215,12 @@ export default function LiveStreams() {
     e.preventDefault();
 
     if (element) {
-      // @ts-ignore
       ref.scrollTo({
-        // @ts-ignore
         left: ref.current.scrollLeft + e.deltaY,
         behavior: "smooth",
       });
     } else {
-      // @ts-ignore
       ref.current.scrollTo({
-        // @ts-ignore
         left: ref.current.scrollLeft + e.deltaY,
         behavior: "smooth",
       });
@@ -262,8 +257,7 @@ export default function LiveStreams() {
 
   useEffect(() => {
     if (scrollRef && scrollRef.current && viewMode == VIEW_MODE.LIST) {
-      // @ts-ignore
-      scrollRef.current.scrollLeft = activeIndex * activeWidth;
+      scrollRef.current.scrollLeft = videoPlayer.playingIndex * activeWidth;
     }
 
     // Check scroll reach the end

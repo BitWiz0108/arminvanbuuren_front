@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -6,7 +6,6 @@ import Heart from "@/components/Icons/Heart";
 import HeartFill from "@/components/Icons/HeartFill";
 import Comment from "@/components/Icons/Comment";
 import Share from "@/components/Icons/Share";
-import VideoPlayer from "@/components/VideoPlayer";
 
 import { useShareValues } from "@/contexts/contextShareData";
 
@@ -20,15 +19,26 @@ import {
 
 import { IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
+import VideoPlayer from "../VideoPlayer";
 
 type Props = {
+  setRef?: Function | null;
+  index: number;
   post: IPost;
   favorite: Function;
   comment: Function;
   fullscreenView: Function;
 };
 
-const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
+const Post = ({
+  setRef = null,
+  index,
+  post,
+  favorite,
+  comment,
+  fullscreenView,
+}: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
   const { setIsShareModalVisible, setShareData } = useShareValues();
 
   const [isSeenMore, setIsSeenMore] = useState<boolean>(false);
@@ -47,8 +57,17 @@ const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
     setIsShareModalVisible(true);
   };
 
+  useEffect(() => {
+    if (ref && ref.current && setRef) {
+      setRef(ref.current);
+    }
+  }, [ref, setRef]);
+
   return (
-    <div className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-background">
+    <div
+      ref={ref}
+      className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-background"
+    >
       <p
         className={twMerge(
           "w-full text-left text-base lg:text-lg font-medium transition-all duration-300 hover:cursor-pointer",
@@ -108,9 +127,9 @@ const Post = ({ post, favorite, comment, fullscreenView }: Props) => {
             <VideoPlayer
               loop
               muted
-              autoPlay
+              autoPlay={false}
               playsInline
-              className="absolute inset-0 object-cover object-center w-full h-full rounded-md"
+              className={`absolute inset-0 object-cover object-center w-full h-full rounded-md post-video post-video-${index}`}
               src={post.videoCompressed}
             />
           )}
