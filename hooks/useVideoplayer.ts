@@ -120,7 +120,10 @@ const useVideoPlayer = (videoRef: any) => {
       videoRef.current?.pause();
 
       let myVideo = videoRef.current;
-      if (playingQuality == LIVESTREAM_QUALITY.LOW) {
+      if (
+        playingQuality == LIVESTREAM_QUALITY.LOW &&
+        videos[playingIndex].fullVideoCompressed
+      ) {
         myVideo.src = videos[playingIndex].fullVideoCompressed;
       } else {
         myVideo.src = videos[playingIndex].fullVideo;

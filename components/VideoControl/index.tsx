@@ -27,6 +27,7 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import {
   DATE_FORMAT,
   IMAGE_BLUR_DATA_URL,
+  LIVESTREAM_QUALITY,
   PLACEHOLDER_IMAGE,
   VIEW_MODE,
 } from "@/libs/constants";
@@ -53,8 +54,7 @@ const VideoControl = ({
   onFullScreenViewOff,
 }: Props) => {
   const livestreamsettingsmodalRefMd = useRef(null);
-  const livestreamsettingsmodalRefSm = useRef(null);
-  const { contentWidth, sidebarWidth } = useSizeValues();
+  const { isMobile, contentWidth, sidebarWidth } = useSizeValues();
   const {
     setIsDonationModalVisible,
     isLivestreamCommentVisible,
@@ -63,18 +63,12 @@ const VideoControl = ({
 
   const [isSettingsModalMdVisible, setIsSettingsModalMdVisible] =
     useState<boolean>(false);
-  const [isSettingsModalSmVisible, setIsSettingsModalSmVisible] =
-    useState<boolean>(false);
 
   const [isMinimumButtonVisible, setIsMinimumButtonVisible] =
     useState<boolean>(false);
 
   useOutsideClick(livestreamsettingsmodalRefMd, () => {
     setIsSettingsModalMdVisible(false);
-  });
-
-  useOutsideClick(livestreamsettingsmodalRefSm, () => {
-    setIsSettingsModalSmVisible(false);
   });
 
   useEffect(() => {
@@ -94,6 +88,16 @@ const VideoControl = ({
 
     return () => window.removeEventListener("mousemove", hasMouseCheck, false);
   }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.LOW);
+    } else {
+      videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.AUTO);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile, videoPlayer]);
 
   return (
     <>

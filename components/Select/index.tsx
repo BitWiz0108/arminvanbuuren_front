@@ -15,7 +15,7 @@ const Select = ({ label, value, setValue, options }: Props) => {
         id={label}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full flex flex-row bg-background justify-start items-center py-3.5 font-semibold px-4 border-[0.0625rem] border-[#3e454d] rounded-lg outline-none focus:outline-none transition-all duration-300"
+        className="w-full flex flex-row bg-background justify-start items-center h-14 py-3.5 font-semibold px-4 border-[0.0625rem] border-[#3e454d] rounded-lg outline-none focus:outline-none transition-all duration-300"
       >
         {options.map((option, index) => {
           return (

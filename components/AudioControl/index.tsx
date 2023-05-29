@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -19,7 +19,11 @@ import { useSizeValues } from "@/contexts/contextSize";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-import { IMAGE_BLUR_DATA_URL, PLACEHOLDER_IMAGE } from "@/libs/constants";
+import {
+  IMAGE_BLUR_DATA_URL,
+  MUSIC_QUALITY,
+  PLACEHOLDER_IMAGE,
+} from "@/libs/constants";
 
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
 import { DEFAULT_MUSIC } from "@/interfaces/IMusic";
@@ -31,24 +35,27 @@ type Props = {
 
 const AudioControl = ({ audioPlayer, onListView }: Props) => {
   const musicsettingsmodalRefMd = useRef(null);
-  const musicsettingsmodalRefSm = useRef(null);
-  const { contentWidth, sidebarWidth } = useSizeValues();
+  const { isMobile, contentWidth, sidebarWidth } = useSizeValues();
   const { setIsDonationModalVisible } = useShareValues();
 
   const [isMusicSettingsModalMdVisible, setIsMusicSettingsModalMdVisible] =
-    useState<boolean>(false);
-  const [isMusicSettingsModalSmVisible, setisMusicSettingsModalSmVisible] =
     useState<boolean>(false);
 
   useOutsideClick(musicsettingsmodalRefMd, () => {
     setIsMusicSettingsModalMdVisible(false);
   });
 
-  useOutsideClick(musicsettingsmodalRefSm, () => {
-    setisMusicSettingsModalSmVisible(false);
-  });
-
   const track = audioPlayer.getPlayingTrack();
+
+  useEffect(() => {
+    if (isMobile) {
+      audioPlayer.setPlayingQuality(MUSIC_QUALITY.LOW);
+    } else {
+      audioPlayer.setPlayingQuality(MUSIC_QUALITY.AUTO);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile, audioPlayer]);
 
   return (
     <div
