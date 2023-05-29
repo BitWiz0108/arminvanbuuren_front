@@ -67,7 +67,7 @@ export default function ResetPassword() {
       <div
         className={twMerge(
           "relative w-full min-h-screen flex flex-col justify-end md:justify-center items-center",
-          isMobile ? "pb-14" : "pb-2"
+          isMobile ? "pb-20" : "pb-2"
         )}
       >
         <div className="w-full h-full flex flex-col justify-end md:justify-center items-center z-10">

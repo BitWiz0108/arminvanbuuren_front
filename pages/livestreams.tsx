@@ -617,7 +617,7 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className="relative w-full h-screen max-h-screen z-10"
+      className="relative w-full h-screen max-h-screen bg-black z-10"
     >
       <video
         controls={false}
