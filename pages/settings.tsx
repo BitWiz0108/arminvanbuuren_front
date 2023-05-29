@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
 import ButtonSettings from "@/components/ButtonSettings";
@@ -20,6 +21,7 @@ import ShieldLock from "@/components/Icons/ShieldLock";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useProfile from "@/hooks/useProfile";
 
@@ -47,6 +49,7 @@ export default function Settings() {
     isSubscriptionModalVisible,
     setIsSubscriptionModalVisible,
   } = useShareValues();
+  const { isMobile } = useSizeValues();
 
   const [username, setUsername] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -148,7 +151,12 @@ export default function Settings() {
   const fullContent = (
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
-        <div className="relative px-5 pt-16 pb-28 lg:pb-36 bg-background w-full min-h-screen flex justify-center items-center">
+        <div
+          className={twMerge(
+            "relative px-5 pt-16 bg-background w-full min-h-screen flex justify-center items-center",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
+        >
           <div className="relative w-full flex flex-col md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg justify-center items-center">
             <div
               className="absolute p-3 rounded-full top-5 right-5 cursor-pointer text-primary bg-bluePrimary  hover:bg-blueSecondary transition-all duration-300"

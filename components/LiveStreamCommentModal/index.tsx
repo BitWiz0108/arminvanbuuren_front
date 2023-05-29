@@ -3,13 +3,15 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { twMerge } from "tailwind-merge";
 
 import X from "@/components/Icons/X";
 import Reply from "@/components/Icons/Reply";
 import Loading from "@/components/Loading";
 
-import { useShareValues } from "@/contexts/contextShareData";
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useLivestream from "@/hooks/useLivestream";
 
@@ -29,6 +31,7 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
   const { isSignedIn } = useAuthValues();
   const { isLivestreamCommentVisible, setIsLivestreamCommentVisible } =
     useShareValues();
+  const { isMobile } = useSizeValues();
   const { isLoading, fetchComments, writeComment } = useLivestream();
 
   const [comments, setComments] = useState<Array<IComment>>([]);
@@ -72,7 +75,10 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
     <AnimatePresence>
       {isLivestreamCommentVisible && (
         <motion.div
-          className="fixed right-0 top-0 w-screen md:w-[340px] h-screen pb-24 flex justify-end items-center border-l border-third z-30"
+          className={twMerge(
+            "fixed right-0 top-0 w-screen md:w-[340px] h-screen flex justify-end items-center border-l border-third z-30",
+            isMobile ? "pb-40" : "pb-24 lg:pb-32"
+          )}
           initial={{ x: 340 }}
           animate={{ x: 0 }}
           exit={{ x: 340 }}

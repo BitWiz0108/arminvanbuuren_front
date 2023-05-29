@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
 import Reply from "@/components/Icons/Reply";
@@ -17,6 +18,7 @@ import VideoPlayer from "@/components/VideoPlayer";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useFanclub from "@/hooks/useFanclub";
 
@@ -38,6 +40,7 @@ export default function Post() {
 
   const { isSignedIn } = useAuthValues();
   const { audioPlayer } = useShareValues();
+  const { isMobile } = useSizeValues();
   const {
     isLoading: isFanclubWorking,
     fetchPost,
@@ -104,7 +107,12 @@ export default function Post() {
 
   const fullContent = (
     <>
-      <div className="w-full h-screen flex justify-center items-start pb-24 lg:pb-32 overflow-x-hidden overflow-y-auto">
+      <div
+        className={twMerge(
+          "w-full h-screen flex justify-center items-start overflow-x-hidden overflow-y-auto",
+          isMobile ? "pb-40" : "pb-28 lg:pb-36"
+        )}
+      >
         <div className="relative w-full lg:w-2/3 min-h-screen flex justify-center items-start bg-background pt-16">
           <div className="w-full flex flex-col justify-start items-start p-3">
             <p className="w-full text-center text-2xl lg:text-4xl text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-5">

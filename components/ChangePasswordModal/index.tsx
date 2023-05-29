@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 
 import X from "@/components/Icons/X";
 import TextInput from "@/components/TextInput";
 import ButtonSettings from "@/components/ButtonSettings";
 import Loading from "@/components/Loading";
+
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useProfile from "@/hooks/useProfile";
 
@@ -15,6 +18,7 @@ type Props = {
 };
 
 const ChangePasswordModal = ({ visible, setVisible }: Props) => {
+  const { isMobile } = useSizeValues();
   const { isLoading, changePassword } = useProfile();
 
   const [oldPassword, setOldPassword] = useState<string>("");
@@ -50,7 +54,10 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-28 lg:pb-36 bg-[#000000aa] flex justify-center items-center z-50"
+          className={twMerge(
+            "fixed left-0 top-0 w-screen h-screen px-5 pt-5 bg-[#000000aa] flex justify-center items-center z-50",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

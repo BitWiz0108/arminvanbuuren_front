@@ -59,7 +59,7 @@ export default function FanClub() {
   } = useFanclub();
   const { isLoading: isWorkingMusics, fetchAllAlbums } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
-  const { width, height } = useSizeValues();
+  const { isMobile, width, height } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
     useShareValues();
 
@@ -514,13 +514,92 @@ export default function FanClub() {
     </div>
   );
 
+  const fullScreenView = (
+    <div
+      className={twMerge(
+        "left-0 top-0 w-screen h-screen flex justify-center items-center bg-[#000000aa] z-top",
+        isPostFullScreenView ? "fixed" : "hidden"
+      )}
+    >
+      <div className="absolute top-5 left-5 cursor-pointer z-10">
+        <ButtonCircle
+          dark={false}
+          icon={<X />}
+          size="small"
+          onClick={() => {
+            setIsPostFullScreenView(false);
+            audioPlayer.play();
+            const videos = document.getElementsByClassName(
+              "fullscreen-video-player"
+            );
+            for (let i = 0; i < videos.length; i++) {
+              (videos[i] as HTMLVideoElement).pause();
+            }
+          }}
+        />
+      </div>
+      <div className="absolute top-1/2 left-5 cursor-pointer z-10">
+        <ButtonCircle
+          dark={false}
+          icon={<ArrowLeft />}
+          size="small"
+          onClick={() => onPrevPost()}
+        />
+      </div>
+      <div className="absolute top-1/2 right-5 cursor-pointer z-10">
+        <ButtonCircle
+          dark={false}
+          icon={<ArrowRight />}
+          size="small"
+          onClick={() => onNextPost()}
+        />
+      </div>
+      <div className="relative w-full h-full z-0">
+        <div className="relative w-full h-full flex justify-center items-center z-0">
+          {selectedPost.type == FILE_TYPE.IMAGE ? (
+            <Image
+              className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
+              width={1600}
+              height={1600}
+              src={selectedPost.image ?? PLACEHOLDER_IMAGE}
+              loading="eager"
+              alt=""
+              placeholder="blur"
+              blurDataURL={IMAGE_BLUR_DATA_URL}
+              priority
+            />
+          ) : (
+            <div className="relative max-h-screen w-full h-full z-10">
+              <video
+                controls
+                autoPlay
+                disablePictureInPicture
+                controlsList="nodownload nopictureinpicture noplaybackrate"
+                className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
+                src={selectedPost.video}
+                onPlay={() => {
+                  audioPlayer.pause();
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   const fullContent = (
     <>
       <div
         ref={scrollRef}
         className="w-full h-screen overflow-x-hidden overflow-y-auto"
       >
-        <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-28 lg:pb-36">
+        <div
+          className={twMerge(
+            "relative w-full min-h-screen flex flex-col justify-start items-center",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
+        >
           <div
             ref={bannerRef}
             className="relative w-full flex flex-col justify-start items-center bg-background mb-5 lg:mb-10"
@@ -656,84 +735,14 @@ export default function FanClub() {
         </div>
       </div>
 
+      {fullScreenView}
+
       <DonationModal
         assetType={ASSET_TYPE.MUSIC}
         musicId={audioPlayer.getPlayingTrack().id}
       />
 
       <ShareModal />
-
-      <div
-        className={twMerge(
-          "left-0 top-0 w-screen h-screen flex justify-center items-center bg-[#000000aa] z-top",
-          isPostFullScreenView ? "fixed" : "hidden"
-        )}
-      >
-        <div className="absolute top-5 left-5 cursor-pointer z-10">
-          <ButtonCircle
-            dark={false}
-            icon={<X />}
-            size="small"
-            onClick={() => {
-              setIsPostFullScreenView(false);
-              audioPlayer.play();
-              const videos = document.getElementsByClassName(
-                "fullscreen-video-player"
-              );
-              for (let i = 0; i < videos.length; i++) {
-                (videos[i] as HTMLVideoElement).pause();
-              }
-            }}
-          />
-        </div>
-        <div className="absolute top-1/2 left-5 cursor-pointer z-10">
-          <ButtonCircle
-            dark={false}
-            icon={<ArrowLeft />}
-            size="small"
-            onClick={() => onPrevPost()}
-          />
-        </div>
-        <div className="absolute top-1/2 right-5 cursor-pointer z-10">
-          <ButtonCircle
-            dark={false}
-            icon={<ArrowRight />}
-            size="small"
-            onClick={() => onNextPost()}
-          />
-        </div>
-        <div className="relative w-full h-full z-0">
-          <div className="relative w-full h-full flex justify-center items-center z-0">
-            {selectedPost.type == FILE_TYPE.IMAGE ? (
-              <Image
-                className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
-                width={1600}
-                height={1600}
-                src={selectedPost.image ?? PLACEHOLDER_IMAGE}
-                loading="eager"
-                alt=""
-                placeholder="blur"
-                blurDataURL={IMAGE_BLUR_DATA_URL}
-                priority
-              />
-            ) : (
-              <div className="relative max-h-screen w-full h-full z-10">
-                <video
-                  controls
-                  autoPlay
-                  disablePictureInPicture
-                  controlsList="nodownload nopictureinpicture noplaybackrate"
-                  className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
-                  src={selectedPost.video}
-                  onPlay={() => {
-                    audioPlayer.pause();
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
 
       <AudioControl
         audioPlayer={audioPlayer}

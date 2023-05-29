@@ -1,17 +1,23 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { twMerge } from "tailwind-merge";
 
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import X from "@/components/Icons/X";
 
 const LiveStreamMetadataModal = () => {
   const { isMetaVisible, setIsMetaVisible, metaData } = useShareValues();
+  const { isMobile } = useSizeValues();
 
   return (
     <AnimatePresence>
       {isMetaVisible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen pb-24 lg:pb-32 bg-[#000000aa] flex justify-center items-center z-40"
+          className={twMerge(
+            "fixed left-0 top-0 w-screen h-screen bg-[#000000aa] flex justify-center items-center z-40",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

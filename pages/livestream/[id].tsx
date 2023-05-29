@@ -142,7 +142,7 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className="relative w-full min-h-[768px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
+      className="relative w-full h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
     >
       <video
         ref={videoRef}
@@ -152,7 +152,7 @@ export default function LiveStreams() {
             : videoPlayer.getPlayingTrack()?.fullVideo
         }
         className="absolute w-full h-full object-cover"
-      ></video>
+      />
     </div>
   );
 

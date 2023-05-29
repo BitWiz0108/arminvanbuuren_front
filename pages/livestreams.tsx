@@ -616,9 +616,10 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className="relative w-full min-h-[768px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
+      className="relative w-full h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
     >
       <video
+        controls={false}
         ref={videoRef}
         src={
           videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW

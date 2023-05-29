@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { twMerge } from "tailwind-merge";
 
 import X from "@/components/Icons/X";
 import Loading from "@/components/Loading";
@@ -13,6 +14,7 @@ import ArrowLeft from "@/components/Icons/ArrowLeft";
 import ArrowRight from "@/components/Icons/ArrowRight";
 
 import { useAuthValues } from "@/contexts/contextAuth";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useFanclub from "@/hooks/useFanclub";
 
@@ -47,6 +49,7 @@ const PostModal = ({
   onNext,
 }: Props) => {
   const { isSignedIn } = useAuthValues();
+  const { isMobile } = useSizeValues();
   const { isLoading, fetchPost, createReply, fetchReplies } = useFanclub();
 
   const [replyContent, setReplyContent] = useState<string>("");
@@ -92,7 +95,10 @@ const PostModal = ({
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-28 lg:pb-36 bg-[#000000aa] flex justify-center items-center z-50"
+          className={twMerge(
+            "fixed left-0 top-0 w-screen h-screen px-5 pt-5 bg-[#000000aa] flex justify-center items-center z-50",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

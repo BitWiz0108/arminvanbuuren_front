@@ -9,6 +9,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useTermsOfService from "@/hooks/useTermsOfService";
 
@@ -20,6 +21,7 @@ export default function TermsOfService() {
   const router = useRouter();
   const { isSignedIn } = useAuthValues();
   const { audioPlayer } = useShareValues();
+  const { isMobile } = useSizeValues();
   const { isLoading, fetchPageContent } = useTermsOfService();
 
   const [content, setContent] = useState<string>(
@@ -41,7 +43,13 @@ export default function TermsOfService() {
       <div
         className={twMerge(
           "relative w-full px-5 lg:px-10 xl:px-20 h-screen min-h-[640px] flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto",
-          isSignedIn ? "pb-28 lg:pb-36" : "pb-5"
+          isSignedIn
+            ? isMobile
+              ? "pb-40"
+              : "pb-28 lg:pb-36"
+            : isMobile
+            ? "pb-16"
+            : "pb-5 lg:pb-5"
         )}
       >
         <h1 className="text-center text-primary text-xl md:text-3xl p-5 mb-5">

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import {
   usePayPalScriptReducer,
@@ -21,6 +22,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useTransaction from "@/hooks/useTransaction";
 
@@ -50,6 +52,7 @@ const DonationModal = ({
     paypalClientSecret,
     stripeSecretKey,
   } = useShareValues();
+  const { isMobile } = useSizeValues();
 
   const [provider, setProvider] = useState<PROVIDER>(PROVIDER.STRIPE);
   const [currencies, setCurrencies] = useState<Array<ICurrency>>([]);
@@ -228,7 +231,10 @@ const DonationModal = ({
     <AnimatePresence>
       {isDonationModalVisible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-28 lg:pb-36 bg-[#000000aa] flex justify-center items-center z-50"
+          className={twMerge(
+            "fixed left-0 top-0 w-screen h-screen px-5 pt-5 bg-[#000000aa] flex justify-center items-center z-50",
+            isMobile ? "pb-40" : "pb-28 lg:pb-36"
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

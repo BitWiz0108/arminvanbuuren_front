@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
 import Input from "@/components/Input";
@@ -23,6 +24,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useAbout from "@/hooks/useAbout";
 
@@ -38,6 +40,7 @@ export default function About() {
   const { isSignedIn } = useAuthValues();
   const { isLoading, fetchAboutContent, sendEmail } = useAbout();
   const { artist, audioPlayer } = useShareValues();
+  const { isMobile } = useSizeValues();
 
   const [coverImage1, setCoverImage1] = useState<string>(PLACEHOLDER_IMAGE);
   const [coverImage2, setCoverImage2] = useState<string>(PLACEHOLDER_IMAGE);
@@ -83,7 +86,12 @@ export default function About() {
   const fullContent = (
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
-        <div className="relative w-full pb-24 lg:pb-32 overflow-y-auto">
+        <div
+          className={twMerge(
+            "relative w-full overflow-y-auto",
+            isMobile ? "pb-40" : "pb-24 lg:pb-32"
+          )}
+        >
           <div className="relative w-full flex flex-col xl:flex-row justify-center items-center">
             <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-gradient-to-br from-blue-900 to-cyan-500">
               <div className="w-3/4 flex flex-col justify-center items-center">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
 import AudioControl from "@/components/AudioControl";
@@ -12,6 +13,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useHomepage from "@/hooks/useHomepage";
 import useLivestream from "@/hooks/useLivestream";
@@ -30,6 +32,7 @@ export default function Home() {
   const { isSignedIn, isMembership } = useAuthValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
     useShareValues();
+  const { isMobile } = useSizeValues();
   const { isLoading, fetchPageContent } = useHomepage();
   const { fetchLivestreams } = useLivestream();
 
@@ -66,7 +69,12 @@ export default function Home() {
   const fullContent = (
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
-        <div className="relative w-full h-screen min-h-[640px] pb-28 lg:pb-36 flex flex-col justify-center items-center">
+        <div
+          className={twMerge(
+            "relative w-full h-screen min-h-[640px] flex flex-col justify-center items-center",
+            isMobile ? "pb-40" : "pb-24 lg:pb-32"
+          )}
+        >
           <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center z-10">
             <Image
               className="w-56 object-cover mb-5"
