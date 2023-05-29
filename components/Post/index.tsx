@@ -129,6 +129,7 @@ const Post = ({
               muted
               autoPlay={false}
               playsInline
+              disablePictureInPicture
               className={`absolute inset-0 object-cover object-center w-full h-full rounded-md post-video post-video-${index}`}
               src={post.videoCompressed}
             />

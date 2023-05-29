@@ -160,6 +160,7 @@ export default function Post() {
                         muted
                         autoPlay
                         playsInline
+                        disablePictureInPicture
                         className="absolute inset-0 object-center w-full h-full rounded-md"
                         src={post.video}
                       />

@@ -147,8 +147,8 @@ const PostModal = ({
                         controls
                         autoPlay
                         playsInline
-                        controlsList="nodownload nopictureinpicture noplaybackrate"
                         disablePictureInPicture
+                        controlsList="nodownload nopictureinpicture noplaybackrate"
                         className="absolute inset-0 object-center w-full h-full rounded-md"
                         src={post.video}
                       />

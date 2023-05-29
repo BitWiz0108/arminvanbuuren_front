@@ -137,6 +137,7 @@ export default function VerifyEmail() {
               muted
               autoPlay
               playsInline
+              disablePictureInPicture
               className="w-full h-full object-cover"
               src={vidoeUrl}
             >

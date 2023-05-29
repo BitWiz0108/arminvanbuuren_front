@@ -112,6 +112,7 @@ export default function ForgotPassword() {
               muted
               autoPlay
               playsInline
+              disablePictureInPicture
               className="w-full h-full object-cover"
               src={vidoeUrl}
             >

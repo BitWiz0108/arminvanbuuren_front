@@ -143,6 +143,7 @@ export default function ResetPassword() {
               muted
               autoPlay
               playsInline
+              disablePictureInPicture
               className="w-full h-full object-cover"
               src={vidoeUrl}
             >

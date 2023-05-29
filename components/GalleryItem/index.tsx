@@ -83,6 +83,7 @@ const GalleryItem = ({ image, onClick }: Props) => {
           muted
           autoPlay
           playsInline
+          disablePictureInPicture
           controls={false}
           className={imageClass}
           src={image.videoCompressed}

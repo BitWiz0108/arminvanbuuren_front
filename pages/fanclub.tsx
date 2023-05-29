@@ -573,6 +573,7 @@ export default function FanClub() {
               <video
                 controls
                 autoPlay
+                playsInline
                 disablePictureInPicture
                 controlsList="nodownload nopictureinpicture noplaybackrate"
                 className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
@@ -617,6 +618,7 @@ export default function FanClub() {
                   muted
                   autoPlay
                   playsInline
+                  disablePictureInPicture
                   className="w-full h-full object-cover object-center"
                   style={{
                     maxHeight: `${height / 2}px`,

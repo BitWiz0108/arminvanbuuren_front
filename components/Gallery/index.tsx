@@ -183,6 +183,7 @@ const GalleryView = () => {
                       <video
                         controls
                         autoPlay={index == activeSlide - 2}
+                        playsInline
                         disablePictureInPicture
                         controlsList="nodownload nopictureinpicture noplaybackrate"
                         className="absolute inset-0 object-center w-full h-full rounded-md carousel-video-player"

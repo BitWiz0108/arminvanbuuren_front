@@ -176,6 +176,7 @@ export default function Signup() {
               muted
               autoPlay
               playsInline
+              disablePictureInPicture
               className="w-full h-full object-cover"
               src={vidoeUrl}
             >

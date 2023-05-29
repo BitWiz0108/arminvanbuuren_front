@@ -142,16 +142,19 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className="relative w-full h-screen flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto z-10"
+      className="relative w-full h-screen max-h-screen z-10"
     >
       <video
+        controls={false}
+        playsInline
+        disablePictureInPicture
         ref={videoRef}
         src={
           videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
             ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
             : videoPlayer.getPlayingTrack()?.fullVideo
         }
-        className="absolute w-full h-full object-cover"
+        className="absolute left-0 top-0 object-center md:object-cover w-full h-full"
       />
     </div>
   );
