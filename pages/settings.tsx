@@ -148,7 +148,7 @@ export default function Settings() {
   const fullContent = (
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
-        <div className="relative px-5 pt-16 pb-36 bg-background w-full min-h-screen flex justify-center items-center">
+        <div className="relative px-5 pt-16 pb-28 lg:pb-36 bg-background w-full min-h-screen flex justify-center items-center">
           <div className="relative w-full flex flex-col md:w-4/5 xl:w-2/3 p-5 bg-third rounded-lg justify-center items-center">
             <div
               className="absolute p-3 rounded-full top-5 right-5 cursor-pointer text-primary bg-bluePrimary  hover:bg-blueSecondary transition-all duration-300"

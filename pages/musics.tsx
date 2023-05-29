@@ -98,7 +98,6 @@ export default function Musics() {
     element: boolean = false
   ) => {
     if (e.deltaY == 0) return;
-    e.preventDefault();
 
     if (element) {
       ref.scrollTo({

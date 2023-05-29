@@ -520,7 +520,7 @@ export default function FanClub() {
         ref={scrollRef}
         className="w-full h-screen overflow-x-hidden overflow-y-auto"
       >
-        <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-36">
+        <div className="relative w-full min-h-screen flex flex-col justify-start items-center pb-28 lg:pb-36">
           <div
             ref={bannerRef}
             className="relative w-full flex flex-col justify-start items-center bg-background mb-5 lg:mb-10"

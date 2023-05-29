@@ -50,7 +50,7 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-36 bg-[#000000aa] flex justify-center items-center z-50"
+          className="fixed left-0 top-0 w-screen h-screen px-5 pt-5 pb-28 lg:pb-36 bg-[#000000aa] flex justify-center items-center z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

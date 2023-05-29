@@ -11,7 +11,7 @@ const LiveStreamMetadataModal = () => {
     <AnimatePresence>
       {isMetaVisible && (
         <motion.div
-          className="fixed left-0 top-0 w-screen h-screen pb-32 bg-[#000000aa] flex justify-center items-center z-40"
+          className="fixed left-0 top-0 w-screen h-screen pb-24 lg:pb-32 bg-[#000000aa] flex justify-center items-center z-40"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

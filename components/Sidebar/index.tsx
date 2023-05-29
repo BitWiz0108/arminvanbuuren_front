@@ -65,7 +65,8 @@ const Sidebar = ({ visible, setVisible }: Props) => {
           exit={{ width: 0 }}
           transition={{ duration: 0.3 }}
           className={twMerge(
-            "fixed left-0 top-0 bg-background h-fit md:h-screen rounded-br-3xl md:rounded-br-none pt-5 pb-0 md:py-5 overflow-x-hidden overflow-y-auto z-30"
+            "fixed left-0 top-0 bg-background h-fit md:h-screen rounded-br-3xl md:rounded-br-none pt-5 pb-0 md:py-5 overflow-x-hidden overflow-y-auto z-30",
+            isMobile ? "shadow-lg shadow-black" : "shadow-none"
           )}
           style={{ width: `${isMobile ? SIDEBARWIDTH_SM : sidebarWidth}px` }}
         >

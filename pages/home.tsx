@@ -66,7 +66,7 @@ export default function Home() {
   const fullContent = (
     <>
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
-        <div className="relative w-full h-screen min-h-[640px] pb-24 lg:pb-36 flex flex-col justify-center items-center">
+        <div className="relative w-full h-screen min-h-[640px] pb-28 lg:pb-36 flex flex-col justify-center items-center">
           <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center z-10">
             <Image
               className="w-56 object-cover mb-5"

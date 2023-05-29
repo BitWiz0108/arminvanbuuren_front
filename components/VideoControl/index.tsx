@@ -100,230 +100,31 @@ const VideoControl = ({
       <AnimatePresence>
         {!isFullScreenView && (
           <motion.div
-            className="fixed bottom-0 flex flex-col justify-start items-start bg-background border-l border-[#464646] ml-[1px] z-50"
+            className="fixed bottom-0 flex flex-row justify-start items-start w-full h-24 lg:h-32 bg-background border-l border-[#464646] ml-[1px] z-50"
             initial={{ y: 100 }}
             animate={{ y: 1 }}
             exit={{ y: 100 }}
             transition={{ duration: 0.3 }}
             style={{ left: `${sidebarWidth}px`, width: `${contentWidth}px` }}
           >
-            <div className="hidden w-full h-32 xs:flex flex-row justify-start items-start">
-              <div className="h-32 w-[128px] hidden md:flex">
-                <Image
-                  className="object-cover h-full"
-                  src={
-                    videoPlayer.getPlayingTrack().coverImage ??
-                    PLACEHOLDER_IMAGE
-                  }
-                  width={1500}
-                  height={1500}
-                  alt=""
-                  placeholder="blur"
-                  blurDataURL={IMAGE_BLUR_DATA_URL}
-                  priority
-                />
-              </div>
-              <div className="relative flex flex-grow h-full flex-col justify-start items-center">
-                <div className="relative w-full h-1 bg-[#363636] z-0">
-                  {viewMode == VIEW_MODE.VIDEO && (
-                    <div className="absolute left-0 top-0 w-full h-full z-0">
-                      <AudioSlider
-                        min={0}
-                        max={videoPlayer.duration}
-                        value={videoPlayer.trackProgress}
-                        step={1}
-                        onChange={(value: number) => videoPlayer.onScrub(value)}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="relative w-full h-full flex flex-row px-2 lg:px-10 justify-between items-center space-x-2 z-10">
-                  <div className="flex flex-row justify-start items-center space-x-5 w-1/4">
-                    <ButtonCircle
-                      dark
-                      size="small"
-                      icon={
-                        viewMode == VIEW_MODE.LIST ? (
-                          <Album width={24} height={24} />
-                        ) : (
-                          <List width={24} height={24} />
-                        )
-                      }
-                      onClick={() => {
-                        onListView();
-                      }}
-                    />
-                    <div className="hidden lg:flex flex-col w-2/3 justify-center items-start space-y-1 truncate">
-                      <h2 className="w-full text-primary text-left text-lg md:text-xl font-semibold truncate">
-                        {videoPlayer.getPlayingTrack().title}
-                      </h2>
-                      <p className="text-secondary text-left text-sm truncate">
-                        {videoPlayer.getPlayingTrack().singer?.artistName}
-                      </p>
-                      <p className="text-[red] text-left text-sm truncate">
-                        *LIVE{" "}
-                        {moment(
-                          videoPlayer.getPlayingTrack().releaseDate
-                        ).format(DATE_FORMAT)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-grow flex-row justify-center items-center space-x-5">
-                    <ButtonCircle
-                      dark
-                      size="small"
-                      icon={<PlayPrev />}
-                      onClick={() => videoPlayer.playPreviousVideo()}
-                    />
-                    <ButtonCircle
-                      dark={false}
-                      size="big"
-                      icon={
-                        videoPlayer.isPlaying ? (
-                          <Pause width={40} height={40} />
-                        ) : (
-                          <Play width={34} height={34} />
-                        )
-                      }
-                      onClick={() => onPlayLivestream()}
-                    />
-                    <ButtonCircle
-                      dark
-                      size="small"
-                      icon={<PlayNext />}
-                      onClick={() => videoPlayer.playNextVideo()}
-                    />
-                  </div>
-
-                  <div className="flex flex-row justify-end items-center space-x-2 xl:space-x-5 lg:w-2/5">
-                    <ButtonCircle
-                      dark
-                      size="small"
-                      icon={<Setting width={24} height={24} />}
-                      onClick={() => setIsSettingsModalMdVisible(true)}
-                    />
-                    <ButtonCircle
-                      dark={false}
-                      size="small"
-                      icon={<Donate width={20} height={20} />}
-                      onClick={() => setIsDonationModalVisible(true)}
-                    />
-
-                    <ButtonCircle
-                      dark={isLivestreamCommentVisible}
-                      size="small"
-                      icon={<Comment width={20} height={20} />}
-                      onClick={() =>
-                        setIsLivestreamCommentVisible(
-                          !isLivestreamCommentVisible
-                        )
-                      }
-                    />
-
-                    <ButtonCircle
-                      dark={false}
-                      size="small"
-                      icon={
-                        <FullScreen
-                          width={24}
-                          height={24}
-                          className="text-background"
-                        />
-                      }
-                      onClick={() => onFullScreenViewOn()}
-                    />
-
-                    <div className="hidden lg:flex">
-                      <ButtonVolume
-                        size="small"
-                        iconSize={20}
-                        volume={videoPlayer.volume}
-                        setVolume={videoPlayer.setVolume}
-                      />
-                    </div>
-
-                    <AnimatePresence>
-                      {isSettingsModalMdVisible && (
-                        <motion.div
-                          key={"settingsModalMD"}
-                          ref={livestreamsettingsmodalRefMd}
-                          className="absolute bottom-24 right-0 lg:right-32 w-60"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <LiveStreamSettingsModal
-                            close={() => setIsSettingsModalMdVisible(false)}
-                            videoPlayer={videoPlayer}
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </div>
+            <div className="hidden xs:flex w-24 h-24 lg:w-32 lg:h-32 min-w-[96px]">
+              <Image
+                className="object-cover h-full"
+                src={
+                  videoPlayer.getPlayingTrack().coverImage ?? PLACEHOLDER_IMAGE
+                }
+                width={1500}
+                height={1500}
+                alt=""
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
+                priority
+              />
             </div>
-
-            <div className="flex w-full xs:hidden flex-col justify-start items-start">
-              <div className="w-full flex flex-row justify-between items-center px-2 py-3">
-                <ButtonCircle
-                  dark
-                  size="small"
-                  icon={<List width={20} height={20} />}
-                  onClick={onListView}
-                />
-                <div className="flex flex-row justify-center items-center space-x-3">
-                  <ButtonCircle
-                    dark
-                    size="small"
-                    icon={<Setting width={20} height={20} />}
-                    onClick={() => setIsSettingsModalSmVisible(true)}
-                  />
-                  <ButtonCircle
-                    dark={false}
-                    size="small"
-                    icon={<Donate width={18} height={18} />}
-                    onClick={() => setIsDonationModalVisible(true)}
-                  />
-                  <ButtonCircle
-                    dark={false}
-                    size="small"
-                    icon={<Comment width={20} height={20} />}
-                    onClick={() =>
-                      setIsLivestreamCommentVisible(!isLivestreamCommentVisible)
-                    }
-                  />
-                  <ButtonCircle
-                    dark={false}
-                    size="small"
-                    icon={<FullScreen width={24} height={24} />}
-                    onClick={() => onFullScreenViewOn()}
-                  />
-                  <AnimatePresence>
-                    {isSettingsModalSmVisible && (
-                      <motion.div
-                        key={"settingsModalSM"}
-                        ref={livestreamsettingsmodalRefSm}
-                        className="absolute bottom-16 right-0 w-60"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <LiveStreamSettingsModal
-                          close={() => setIsSettingsModalSmVisible(false)}
-                          videoPlayer={videoPlayer}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-              <div className="relative w-full h-1 bg-[#363636]">
+            <div className="relative flex flex-grow h-full flex-col justify-start items-center">
+              <div className="relative w-full h-1 bg-[#363636] z-0">
                 {viewMode == VIEW_MODE.VIDEO && (
-                  <div className="absolute left-0 top-0 w-full h-full">
+                  <div className="absolute left-0 top-0 w-full h-full z-0">
                     <AudioSlider
                       min={0}
                       max={videoPlayer.duration}
@@ -334,51 +135,105 @@ const VideoControl = ({
                   </div>
                 )}
               </div>
-              <div className="w-full h-[75px] flex justify-center items-center">
-                <div className="w-[75px] h-[75px]">
-                  <Image
-                    className="w-full object-cover h-full"
-                    src={
-                      videoPlayer.getPlayingTrack().coverImage ??
-                      PLACEHOLDER_IMAGE
+
+              <div className="relative w-full h-full flex flex-row px-2 lg:px-10 justify-between items-center space-x-2 z-10">
+                <div className="flex flex-row justify-start items-center space-x-5 w-1/4">
+                  <ButtonCircle
+                    dark
+                    size="small"
+                    icon={
+                      viewMode == VIEW_MODE.LIST ? (
+                        <Album width={24} height={24} />
+                      ) : (
+                        <List width={24} height={24} />
+                      )
                     }
-                    width={1500}
-                    height={1500}
-                    alt=""
-                    placeholder="blur"
-                    blurDataURL={IMAGE_BLUR_DATA_URL}
-                    priority
+                    onClick={() => {
+                      onListView();
+                    }}
+                  />
+                  <div className="hidden lg:flex flex-col w-2/3 justify-center items-start space-y-1 truncate">
+                    <h2 className="w-full text-primary text-left text-lg md:text-xl font-semibold truncate">
+                      {videoPlayer.getPlayingTrack().title}
+                    </h2>
+                    <p className="text-secondary text-left text-sm truncate">
+                      {videoPlayer.getPlayingTrack().singer?.artistName}
+                    </p>
+                    <p className="text-[red] text-left text-sm truncate">
+                      *LIVE{" "}
+                      {moment(videoPlayer.getPlayingTrack().releaseDate).format(
+                        DATE_FORMAT
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-grow flex-row justify-center items-center space-x-1 lg:space-x-5">
+                  <ButtonCircle
+                    dark
+                    size="small"
+                    icon={<PlayPrev />}
+                    onClick={() => videoPlayer.playPreviousVideo()}
+                  />
+                  <ButtonCircle
+                    dark={false}
+                    size="big"
+                    icon={
+                      videoPlayer.isPlaying ? (
+                        <Pause width={40} height={40} />
+                      ) : (
+                        <Play width={34} height={34} />
+                      )
+                    }
+                    onClick={() => onPlayLivestream()}
+                  />
+                  <ButtonCircle
+                    dark
+                    size="small"
+                    icon={<PlayNext />}
+                    onClick={() => videoPlayer.playNextVideo()}
                   />
                 </div>
-                <div className="flex flex-grow justify-center items-center">
-                  <div className="flex flex-grow flex-row justify-center items-center space-x-5">
-                    <div className="flex flex-row justify-center items-center space-x-3">
-                      <ButtonCircle
-                        dark
-                        size="small"
-                        icon={<PlayPrev />}
-                        onClick={() => videoPlayer.playPreviousVideo()}
-                      />
-                      <ButtonCircle
-                        dark={false}
-                        size="big"
-                        icon={
-                          videoPlayer.isPlaying ? (
-                            <Pause width={34} height={34} />
-                          ) : (
-                            <Play width={24} height={24} />
-                          )
-                        }
-                        onClick={onPlayLivestream}
-                      />
-                      <ButtonCircle
-                        dark
-                        size="small"
-                        icon={<PlayNext />}
-                        onClick={() => videoPlayer.playNextVideo()}
-                      />
-                    </div>
 
+                <div className="flex flex-row justify-end items-center space-x-2 xl:space-x-5 lg:w-2/5">
+                  <ButtonCircle
+                    dark
+                    size="small"
+                    icon={<Setting width={24} height={24} />}
+                    onClick={() => setIsSettingsModalMdVisible(true)}
+                  />
+                  <ButtonCircle
+                    dark={false}
+                    size="small"
+                    icon={<Donate width={20} height={20} />}
+                    onClick={() => setIsDonationModalVisible(true)}
+                  />
+
+                  <ButtonCircle
+                    dark={isLivestreamCommentVisible}
+                    size="small"
+                    icon={<Comment width={20} height={20} />}
+                    onClick={() =>
+                      setIsLivestreamCommentVisible(!isLivestreamCommentVisible)
+                    }
+                  />
+
+                  <ButtonCircle
+                    dark={false}
+                    size="small"
+                    icon={
+                      <FullScreen
+                        width={24}
+                        height={24}
+                        className="text-background"
+                      />
+                    }
+                    onClick={() => {
+                      setIsLivestreamCommentVisible(false);
+                      onFullScreenViewOn();
+                    }}
+                  />
+
+                  <div className="hidden lg:flex">
                     <ButtonVolume
                       size="small"
                       iconSize={20}
@@ -386,6 +241,25 @@ const VideoControl = ({
                       setVolume={videoPlayer.setVolume}
                     />
                   </div>
+
+                  <AnimatePresence>
+                    {isSettingsModalMdVisible && (
+                      <motion.div
+                        key={"settingsModalMD"}
+                        ref={livestreamsettingsmodalRefMd}
+                        className="absolute bottom-24 right-0 lg:right-32 w-60"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <LiveStreamSettingsModal
+                          close={() => setIsSettingsModalMdVisible(false)}
+                          videoPlayer={videoPlayer}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>

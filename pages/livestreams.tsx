@@ -54,8 +54,13 @@ export default function LiveStreams() {
     isTopbarVisible,
     setIsTopbarVisible,
   } = useSizeValues();
-  const { artist, setIsViewExclusiveModalVisible, audioPlayer } =
-    useShareValues();
+  const {
+    artist,
+    setIsViewExclusiveModalVisible,
+    setIsLivestreamCommentVisible,
+    setIsMetaVisible,
+    audioPlayer,
+  } = useShareValues();
   const { isSignedIn, isMembership } = useAuthValues();
   const {
     isLoading,
@@ -212,7 +217,6 @@ export default function LiveStreams() {
   ) => {
     if (!ref || !ref.current) return;
     if (e.deltaY == 0) return;
-    e.preventDefault();
 
     if (element) {
       ref.scrollTo({
@@ -273,6 +277,9 @@ export default function LiveStreams() {
   }, [videoPlayer.playingIndex, scrollRef, activeWidth, viewMode]);
 
   useEffect(() => {
+    setIsMetaVisible(false);
+    setIsLivestreamCommentVisible(false);
+
     switch (viewMode) {
       case VIEW_MODE.CATEGORY:
         setIsSidebarVisible(true);
@@ -689,7 +696,13 @@ export default function LiveStreams() {
       ) : (
         <AudioControl
           audioPlayer={audioPlayer}
-          onListView={() => router.push("/musics")}
+          onListView={() => {
+            if (viewMode == VIEW_MODE.LIST) {
+              setViewMode(VIEW_MODE.CATEGORY);
+            } else {
+              router.push("/musics");
+            }
+          }}
         />
       )}
 

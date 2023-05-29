@@ -72,13 +72,13 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
     <AnimatePresence>
       {isLivestreamCommentVisible && (
         <motion.div
-          className="fixed right-0 top-0 w-screen md:w-[340px] h-screen pb-28 flex justify-end items-center border-l border-third z-30"
+          className="fixed right-0 top-0 w-screen md:w-[340px] h-screen pb-24 flex justify-end items-center border-l border-third z-30"
           initial={{ x: 340 }}
           animate={{ x: 0 }}
           exit={{ x: 340 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="relative w-full h-full px-2 pt-10 pb-8 xs:pb-6 bg-background">
+          <div className="relative w-full h-full px-2 pt-10 pb-8 bg-background">
             <div className="absolute top-2 left-2 text-primary cursor-pointer">
               <X
                 width={24}
