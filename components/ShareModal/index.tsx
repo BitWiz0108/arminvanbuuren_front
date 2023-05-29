@@ -3,7 +3,6 @@ import {
   TwitterShareButton,
   LinkedinShareButton,
   EmailShareButton,
-  InstapaperShareButton,
   FacebookIcon,
   TwitterIcon,
   LinkedinIcon,
@@ -85,9 +84,19 @@ const ShareModal = () => {
                 <EmailIcon borderRadius={8} size={36} />
               </EmailShareButton>
             </div>
-            <div className="w-4/5 flex flex-row bg-white mt-4 rounded-xl">
-              <p className="relative p-1 text-sm bg-white text-bluePrimary underline rounded-xl" >{currentUrl}</p>
-              <p className="absolute p-1 right-14 bg-bluePrimary text-sm text-white cursor-pointer rounded-xl" onClick={() => { navigator.clipboard.writeText(currentUrl); toast.success("Link copied to the clipboard.") }}> Copy Link </p>
+            <div className="relative w-full flex flex-row bg-white mt-4 rounded-xl">
+              <p className="w-full relative p-1 text-sm bg-white text-bluePrimary underline rounded-xl truncate">
+                {shareData.url ? shareData.url : currentUrl}
+              </p>
+              <p
+                className="absolute p-1 -right-1 bg-bluePrimary text-sm text-white cursor-pointer rounded-xl"
+                onClick={() => {
+                  navigator.clipboard.writeText(currentUrl);
+                  toast.success("Link copied to the clipboard.");
+                }}
+              >
+                Copy Link
+              </p>
             </div>
           </div>
         </motion.div>

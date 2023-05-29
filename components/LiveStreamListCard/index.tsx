@@ -55,7 +55,7 @@ const LiveStreamListCard = ({
   const onShare = () => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/livestreams`,
+      url: `${SITE_BASE_URL}/livestream/${livestream.id}`,
       title: livestream.title,
       subject: livestream.title,
       quote: livestream.title,

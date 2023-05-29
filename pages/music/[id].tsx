@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
@@ -38,6 +39,8 @@ import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function Musics() {
+  const router = useRouter();
+  const { id } = router.query;
   const scrollRef = useRef<HTMLDivElement>(null);
   const musicsScrollRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +73,7 @@ export default function Musics() {
   const [clientX, setClientX] = useState<number>(0);
   const [gapWidth, setGapWidth] = useState<number>(0);
   const [activeWidth, setActiveWidth] = useState<number>(0);
-  const [isListView, setIsListView] = useState<boolean>(true);
+  const [isListView, setIsListView] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
 
   const checkActiveIndex = (scrollPos: number, right: boolean) => {
@@ -139,7 +142,7 @@ export default function Musics() {
   };
 
   const onListView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsListView(!isListView);
+    router.push("/musics");
   };
 
   const onMenuView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -183,7 +186,7 @@ export default function Musics() {
     setIsShareModalVisible(true);
   };
 
-  const getAllMusics = (page: number, fresh: boolean = false) => {
+  const getAllMusics = (id: number, page: number, fresh: boolean = false) => {
     return new Promise<boolean>((resolve, _) => {
       fetchMusics(page, isExclusive)
         .then((result) => {
@@ -198,15 +201,19 @@ export default function Musics() {
           setAllMusics(newMusics);
           audioPlayer.setMusics(newMusics);
 
-          // For the first loading, to avoid null playing track
-          if (audioPlayer.playingIndex == 0 && newMusics.length > 0) {
-            audioPlayer.setPlayingIndex(0);
-          }
+          const index = newMusics.findIndex((music) => {
+            return music.id == id;
+          });
 
-          if (result.musics.length > 0) {
-            resolve(true);
+          if (index >= 0) {
+            audioPlayer.setPlayingIndex(index);
+            if (result.musics.length > 0) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
           } else {
-            resolve(false);
+            router.push("/musics");
           }
         })
         .catch((_) => {
@@ -309,14 +316,10 @@ export default function Musics() {
   }, [isMobile, audioPlayer.playingIndex, audioPlayer.albumId]);
 
   useEffect(() => {
-    if (isSignedIn) {
+    if (isSignedIn && id) {
       setPage(1);
 
-      getAllMusics(1, true);
-
-      fetchAllAlbums(1, isExclusive).then((albums) => {
-        setAlbums(albums);
-      });
+      getAllMusics(Number(id.toString()), 1, true);
 
       if (isExclusive && !isMembership) {
         setIsViewExclusiveModalVisible(true);
@@ -324,7 +327,7 @@ export default function Musics() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSignedIn, isExclusive]);
+  }, [isSignedIn, isExclusive, id]);
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
