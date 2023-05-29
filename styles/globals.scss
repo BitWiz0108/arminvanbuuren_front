@@ -107,7 +107,7 @@ select:-webkit-autofill:focus {
   border-radius: 6px;
   -webkit-text-fill-color: var(--color-primary);
   -webkit-box-shadow: 0 0 0px 1000px var(--color-background) inset;
-  transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 3000s ease-in-out 0s;
 }
 
 div.none-tailwind {

@@ -303,7 +303,7 @@ export default function LiveStreams() {
 
   useEffect(() => {
     if (isPreviewVideoLoading) {
-      setTimeout(() => setIsPreviewVideoLoading(false), 5000);
+      setTimeout(() => setIsPreviewVideoLoading(false), 3000);
     }
   }, [isPreviewVideoLoading]);
 

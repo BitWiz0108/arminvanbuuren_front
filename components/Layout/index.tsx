@@ -42,7 +42,7 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFirstLoading(false);
-    }, 5000);
+    }, 3000);
 
     return () => clearTimeout(timeout);
 

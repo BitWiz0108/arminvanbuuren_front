@@ -19,7 +19,7 @@ const VideoPlayer = (props: any) => {
     setIsVideoLoading(true);
     setTimeout(() => {
       setIsGlobalLoading(false);
-    }, 5000);
+    }, 3000);
   }, [props.src]);
 
   return (
