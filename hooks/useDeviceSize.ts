@@ -36,80 +36,50 @@ const useDeviceSize = () => {
     setTopbarVisible(flag);
   };
 
-  // useEffect(() => {
-  //   const element = document.documentElement;
-
-  //   if (isMobile) {
-  //     if (element.requestFullscreen) {
-  //       element.requestFullscreen();
-  //       // @ts-ignore
-  //     } else if (element.mozRequestFullScreen) {
-  //       // @ts-ignore
-  //       element.mozRequestFullScreen();
-  //       // @ts-ignore
-  //     } else if (element.webkitRequestFullscreen) {
-  //       // @ts-ignore
-  //       element.webkitRequestFullscreen();
-  //       // @ts-ignore
-  //     } else if (element.msRequestFullscreen) {
-  //       // @ts-ignore
-  //       element.msRequestFullscreen();
-  //     }
-  //   } else {
-  //     if (document.exitFullscreen && document.fullscreenElement) {
-  //       document.exitFullscreen();
-  //     } else if (
-  //       // @ts-ignore
-  //       document.mozCancelFullScreen &&
-  //       // @ts-ignore
-  //       document.mozFullScreenElement
-  //     ) {
-  //       // @ts-ignore
-  //       document.mozCancelFullScreen();
-  //     } else if (
-  //       // @ts-ignore
-  //       document.webkitExitFullscreen &&
-  //       // @ts-ignore
-  //       document.webkitFullscreenElement
-  //     ) {
-  //       // @ts-ignore
-  //       document.webkitExitFullscreen();
-  //       // @ts-ignore
-  //     } else if (document.msExitFullscreen && document.msFullscreenElement) {
-  //       // @ts-ignore
-  //       document.msExitFullscreen();
-  //     }
-  //   }
-
-  //   // When the component unmounts, exit full screen
-  //   return () => {
-  //     if (isMobile) {
-  //       if (document.exitFullscreen && document.fullscreenElement) {
-  //         document.exitFullscreen();
-  //       } else if (
-  //         // @ts-ignore
-  //         document.mozCancelFullScreen &&
-  //         // @ts-ignore
-  //         document.mozFullScreenElement
-  //       ) {
-  //         // @ts-ignore
-  //         document.mozCancelFullScreen();
-  //       } else if (
-  //         // @ts-ignore
-  //         document.webkitExitFullscreen &&
-  //         // @ts-ignore
-  //         document.webkitFullscreenElement
-  //       ) {
-  //         // @ts-ignore
-  //         document.webkitExitFullscreen();
-  //         // @ts-ignore
-  //       } else if (document.msExitFullscreen && document.msFullscreenElement) {
-  //         // @ts-ignore
-  //         document.msExitFullscreen();
-  //       }
-  //     }
-  //   };
-  // }, [isMobile]);
+  const toggleFullscreen = (flag: boolean) => {
+    const element = document.documentElement;
+    if (flag) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+        // @ts-ignore
+      } else if (element.mozRequestFullScreen) {
+        // @ts-ignore
+        element.mozRequestFullScreen();
+        // @ts-ignore
+      } else if (element.webkitRequestFullscreen) {
+        // @ts-ignore
+        element.webkitRequestFullscreen();
+        // @ts-ignore
+      } else if (element.msRequestFullscreen) {
+        // @ts-ignore
+        element.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (
+        // @ts-ignore
+        document.mozCancelFullScreen &&
+        // @ts-ignore
+        document.mozFullScreenElement
+      ) {
+        // @ts-ignore
+        document.mozCancelFullScreen();
+      } else if (
+        // @ts-ignore
+        document.webkitExitFullscreen &&
+        // @ts-ignore
+        document.webkitFullscreenElement
+      ) {
+        // @ts-ignore
+        document.webkitExitFullscreen();
+        // @ts-ignore
+      } else if (document.msExitFullscreen && document.msFullscreenElement) {
+        // @ts-ignore
+        document.msExitFullscreen();
+      }
+    }
+  };
 
   useEffect(() => {
     if (!window) return;
@@ -167,6 +137,7 @@ const useDeviceSize = () => {
     setIsSidebarVisible,
     isTopbarVisible,
     setIsTopbarVisible,
+    toggleFullscreen,
   };
 };
 

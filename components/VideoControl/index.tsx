@@ -54,7 +54,8 @@ const VideoControl = ({
   onFullScreenViewOff,
 }: Props) => {
   const livestreamsettingsmodalRefMd = useRef(null);
-  const { isMobile, contentWidth, sidebarWidth } = useSizeValues();
+  const { isMobile, contentWidth, sidebarWidth, toggleFullscreen } =
+    useSizeValues();
   const {
     setIsDonationModalVisible,
     isLivestreamCommentVisible,
@@ -232,6 +233,7 @@ const VideoControl = ({
                       />
                     }
                     onClick={() => {
+                      toggleFullscreen(true);
                       setIsLivestreamCommentVisible(false);
                       onFullScreenViewOn();
                     }}
@@ -282,7 +284,10 @@ const VideoControl = ({
           >
             <div
               className="w-10 h-10 rounded-full bg-[#00000055] hover:bg-[#000000bb] text-secondary hover:text-primary flex justify-center items-center cursor-pointer transition-all duration-300"
-              onClick={() => onFullScreenViewOff()}
+              onClick={() => {
+                toggleFullscreen(false);
+                onFullScreenViewOff();
+              }}
             >
               <FullScreenClose width={18} height={18} />
             </div>

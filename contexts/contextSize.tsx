@@ -16,6 +16,7 @@ export const SizeContext = createContext({
   setIsSidebarVisible: (flag: boolean) => {},
   isTopbarVisible: false,
   setIsTopbarVisible: (flag: boolean) => {},
+  toggleFullscreen: (flag: boolean) => {},
 });
 
 export const SizeProvider = ({ children }: { children: ReactNode }) => {
@@ -32,6 +33,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
     setIsSidebarVisible,
     isTopbarVisible,
     setIsTopbarVisible,
+    toggleFullscreen,
   } = useDeviceSize();
 
   return (
@@ -49,6 +51,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
         setIsSidebarVisible,
         isTopbarVisible,
         setIsTopbarVisible,
+        toggleFullscreen,
       }}
     >
       {children}

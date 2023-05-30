@@ -10,6 +10,7 @@ import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
+import { useSizeValues } from "@/contexts/contextSize";
 
 import useGallery from "@/hooks/useGallery";
 
@@ -26,6 +27,7 @@ const GalleryView = () => {
   const { isSignedIn } = useAuthValues();
   const { isLoading, fetchPageContent } = useGallery();
   const { audioPlayer } = useShareValues();
+  const { toggleFullscreen } = useSizeValues();
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [images, setImages] = useState<Array<IImage>>([]);
@@ -62,6 +64,12 @@ const GalleryView = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
+
+  useEffect(() => {
+    toggleFullscreen(isCarouselVisible);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCarouselVisible]);
 
   return (
     <div className="relative w-full flex flex-col justify-start items-center">
@@ -169,8 +177,8 @@ const GalleryView = () => {
                   {image.type == FILE_TYPE.IMAGE ? (
                     <Image
                       className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
-                      width={800}
-                      height={800}
+                      width={1600}
+                      height={1600}
                       src={image.image ?? PLACEHOLDER_IMAGE}
                       loading="eager"
                       alt=""

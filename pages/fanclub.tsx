@@ -59,7 +59,7 @@ export default function FanClub() {
   } = useFanclub();
   const { isLoading: isWorkingMusics, fetchAllAlbums } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
-  const { isMobile, width, height } = useSizeValues();
+  const { isMobile, width, height, toggleFullscreen } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
     useShareValues();
 
@@ -245,6 +245,12 @@ export default function FanClub() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
+
+  useEffect(() => {
+    toggleFullscreen(isPostFullScreenView);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPostFullScreenView]);
 
   const leftSideView = (
     <div className="w-full lg:w-[260px] flex flex-col space-y-[10px] lg:space-y-[15px]">
