@@ -47,6 +47,7 @@ export default function LiveStreams() {
   const router = useRouter();
 
   const {
+    height,
     isMobile,
     isSidebarVisible,
     contentWidth,
@@ -308,12 +309,17 @@ export default function LiveStreams() {
   }, [isPreviewVideoLoading]);
 
   const listView = (
-    <div className="relative w-full min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
-      <div className="relative w-full h-auto max-h-[50%] flex-grow flex flex-col justify-start items-center z-0">
+    <div className="relative w-full min-h-[768px] md:min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
+      <div
+        className={twMerge(
+          "relative w-full h-auto flex-grow flex flex-col justify-start items-center z-0",
+          height > 768 ? "max-h-[50%]" : "max-h-[40%]"
+        )}
+      >
         <div className="absolute top-0 left-0 py-5 px-7 w-full z-20">
           <h1
             className={twMerge(
-              "text-primary text-xl md:text-2xl font-sans tracking-wider",
+              "text-primary text-sm md:text-2xl font-sans tracking-wider",
               isSidebarVisible ? "pl-16 md:pl-0" : "pl-16"
             )}
           >
@@ -322,7 +328,7 @@ export default function LiveStreams() {
           </h1>
           <h5
             className={twMerge(
-              "font-medium text-gray-500 tracking-widest",
+              "font-medium text-gray-500 tracking-widest text-xs",
               isSidebarVisible ? "pl-16 md:pl-0" : "pl-16"
             )}
           >
@@ -350,17 +356,17 @@ export default function LiveStreams() {
               {artist.artistName}
             </p>
             {videoPlayer.getPlayingTrack() && (
-              <h1 className="text-center text-primary text-xl md:text-2xl mb-2 tracking-widest">
+              <h1 className="text-center text-primary text-base md:text-2xl mb-2 tracking-widest">
                 {videoPlayer.getPlayingTrack().title}
               </h1>
             )}
             {videoPlayer.getPlayingTrack() && (
-              <p className="text-center text-primary text-base md:text-lg mb-2 tracking-widest">
+              <p className="text-center text-primary text-sm md:text-lg mb-1 tracking-widest">
                 {videoPlayer.getPlayingTrack().shortDescription}
               </p>
             )}
             {videoPlayer.getPlayingTrack() && (
-              <p className="text-center text-primary text-sm md:text-base mb-2 tracking-widest">
+              <p className="text-center text-primary text-sm md:text-base mb-1 tracking-widest">
                 {moment(videoPlayer.getPlayingTrack().releaseDate).format(
                   DATE_FORMAT
                 )}
@@ -376,7 +382,12 @@ export default function LiveStreams() {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-start items-start space-y-10 py-5 z-0">
+      <div
+        className={twMerge(
+          "w-full flex flex-col justify-start items-start space-y-10 z-0",
+          height > 768 ? "py-5" : "py-1"
+        )}
+      >
         <div className="w-full flex flex-col justify-start items-start px-5">
           <div
             ref={livestreamScrollRef}
@@ -627,6 +638,8 @@ export default function LiveStreams() {
         src={
           videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
             ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
+              ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
+              : videoPlayer.getPlayingTrack()?.fullVideo
             : videoPlayer.getPlayingTrack()?.fullVideo
         }
         className="absolute left-0 top-0 object-center md:object-cover w-full h-full"
@@ -640,8 +653,14 @@ export default function LiveStreams() {
         {!isMembership && (
           <div
             className={twMerge(
-              "absolute top-2 z-10",
-              isTopbarVisible ? "right-24 md:right-56" : "right-2"
+              "absolute z-10",
+              isMobile
+                ? isTopbarVisible
+                  ? "top-16 right-2"
+                  : "top-2 right-2"
+                : isTopbarVisible
+                ? "top-2 right-24 md:right-56"
+                : "top-2 right-2"
             )}
           >
             <Switch

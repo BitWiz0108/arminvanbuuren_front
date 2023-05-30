@@ -152,6 +152,8 @@ export default function LiveStreams() {
         src={
           videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
             ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
+              ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
+              : videoPlayer.getPlayingTrack()?.fullVideo
             : videoPlayer.getPlayingTrack()?.fullVideo
         }
         className="absolute left-0 top-0 object-center md:object-cover w-full h-full"

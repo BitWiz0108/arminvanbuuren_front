@@ -42,7 +42,7 @@ const LiveStreamListCard = ({
   togglePlay,
   play,
 }: Props) => {
-  const { isTablet } = useSizeValues();
+  const { isTablet, height } = useSizeValues();
   const {
     setIsMetaVisible,
     setMetaData,
@@ -79,7 +79,8 @@ const LiveStreamListCard = ({
     >
       <div
         className={twJoin(
-          "relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer select-none border-4 mb-5",
+          "relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer select-none border-4",
+          height > 768 ? "mb-5" : "mb-2",
           playing ? "border-bluePrimary" : "border-transparent"
         )}
       >
