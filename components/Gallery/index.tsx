@@ -196,7 +196,7 @@ const GalleryView = () => {
                         controlsList="nodownload nopictureinpicture noplaybackrate"
                         className="absolute inset-0 object-center w-full h-full rounded-md carousel-video-player"
                         src={image.video}
-                        onPlay={(event) => {
+                        onPlay={() => {
                           audioPlayer.pause();
                         }}
                       />

@@ -93,14 +93,6 @@ const useAudioPlayer = () => {
   };
 
   useEffect(() => {
-    if (router.pathname == "/livestreams") {
-      pause();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.pathname]);
-
-  useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume / 100;
     }
