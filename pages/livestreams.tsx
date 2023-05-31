@@ -54,6 +54,7 @@ export default function LiveStreams() {
     setIsSidebarVisible,
     isTopbarVisible,
     setIsTopbarVisible,
+    toggleFullscreen,
   } = useSizeValues();
   const {
     artist,
@@ -78,7 +79,6 @@ export default function LiveStreams() {
   const [livestreams, setLivestreams] = useState<Array<IStream>>([]);
   const [activeWidth, setActiveWidth] = useState<number>(0);
   const [isExclusive, setIsExclusive] = useState<boolean>(false);
-  const [isFullScreenView, setIsFullScreenView] = useState<boolean>(false);
   const [totalPageCount, setTotalPageCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(0);
@@ -165,21 +165,6 @@ export default function LiveStreams() {
       return categories[categoryIndex];
     }
     return DEFAULT_CATEGORY;
-  };
-
-  const onFullScreenViewOn = () => {
-    setIsFullScreenView(true);
-    setViewMode(VIEW_MODE.VIDEO);
-
-    if (!videoPlayer.isPlaying) {
-      setTimeout(() => {
-        videoPlayer.play();
-      }, 100);
-    }
-  };
-
-  const onFullScreenViewOff = () => {
-    setIsFullScreenView(false);
   };
 
   const onListView = () => {
@@ -286,11 +271,13 @@ export default function LiveStreams() {
         setIsSidebarVisible(true);
         setIsTopbarVisible(true);
         audioPlayer.play();
+        toggleFullscreen(false);
         break;
       case VIEW_MODE.LIST:
         setIsSidebarVisible(true);
         setIsTopbarVisible(true);
         audioPlayer.play();
+        toggleFullscreen(false);
         break;
       case VIEW_MODE.VIDEO:
         setIsSidebarVisible(false);
@@ -712,9 +699,6 @@ export default function LiveStreams() {
           viewMode={viewMode}
           onListView={onListView}
           onPlayLivestream={onPlayLivestream}
-          onFullScreenViewOn={onFullScreenViewOn}
-          onFullScreenViewOff={onFullScreenViewOff}
-          isFullScreenView={isFullScreenView}
         />
       ) : (
         <AudioControl
