@@ -34,7 +34,6 @@ export default function LiveStreams() {
 
   const [allLivestreams, setAllLivestreams] = useState<Array<IStream>>([]);
   const [livestreams, setLivestreams] = useState<Array<IStream>>([]);
-  const [isFullScreenView, setIsFullScreenView] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.VIDEO);
 
   const videoPlayer = useVideoPlayer(videoRef);
@@ -78,21 +77,6 @@ export default function LiveStreams() {
           resolve(false);
         });
     });
-  };
-
-  const onFullScreenViewOn = () => {
-    setIsFullScreenView(true);
-    setViewMode(VIEW_MODE.VIDEO);
-
-    if (!videoPlayer.isPlaying) {
-      setTimeout(() => {
-        videoPlayer.play();
-      }, 100);
-    }
-  };
-
-  const onFullScreenViewOff = () => {
-    setIsFullScreenView(false);
   };
 
   const onListView = () => {
@@ -191,9 +175,6 @@ export default function LiveStreams() {
         viewMode={viewMode}
         onListView={onListView}
         onPlayLivestream={onPlayLivestream}
-        onFullScreenViewOn={onFullScreenViewOn}
-        onFullScreenViewOff={onFullScreenViewOff}
-        isFullScreenView={isFullScreenView}
       />
 
       {isLoading && (
