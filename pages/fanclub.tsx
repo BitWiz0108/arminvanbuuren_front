@@ -76,6 +76,7 @@ export default function FanClub() {
   const [postsPageCount, setPostsPageCount] = useState<number>(1);
   const [isPostModalOpened, setIsPostModalOpened] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<IPost>(DEFAULT_POST);
+  const [indexAsset, setIndexAsset] = useState<number>(0);
   const [isPostFullScreenView, setIsPostFullScreenView] =
     useState<boolean>(false);
   const [isBannerVideoLoading, setIsBannerVideoLoading] =
@@ -141,6 +142,48 @@ export default function FanClub() {
     });
   };
 
+  const onPrevAsset = () => {
+    setIndexAsset((index) => {
+      let finalIndex = 0;
+      if (index > 0) finalIndex = index - 1;
+      else finalIndex = selectedPost.files.length - 1;
+
+      if (selectedPost.files[finalIndex].type == FILE_TYPE.VIDEO) {
+        setTimeout(() => {
+          const videos = document.getElementsByClassName(
+            "fullscreen-video-player"
+          );
+          for (let i = 0; i < videos.length; i++) {
+            (videos[i] as HTMLVideoElement).play();
+          }
+        }, 1000);
+      }
+
+      return finalIndex;
+    });
+  };
+
+  const onNextAsset = () => {
+    setIndexAsset((index) => {
+      let finalIndex = 0;
+      if (index < selectedPost.files.length - 1) finalIndex = index + 1;
+      else finalIndex = 0;
+
+      if (selectedPost.files[finalIndex].type == FILE_TYPE.VIDEO) {
+        setTimeout(() => {
+          const videos = document.getElementsByClassName(
+            "fullscreen-video-player"
+          );
+          for (let i = 0; i < videos.length; i++) {
+            (videos[i] as HTMLVideoElement).play();
+          }
+        }, 1000);
+      }
+
+      return finalIndex;
+    });
+  };
+
   const onPrevPost = () => {
     const index = posts.findIndex((post) => {
       return post.id == selectedPost.id;
@@ -184,18 +227,16 @@ export default function FanClub() {
 
         console.log(bannerHeight, postHeight);
 
-        posts.forEach((post, index) => {
-          if (post.type == FILE_TYPE.VIDEO) {
-            if (
-              position > bannerHeight + postHeight * index &&
-              position < bannerHeight + postHeight * (index + 1)
-            ) {
-              const videos = document.getElementsByClassName(
-                `post-video-${index}`
-              );
-              for (let i = 0; i < videos.length; i++) {
-                (videos[i] as HTMLVideoElement).play();
-              }
+        posts.forEach((_, index) => {
+          if (
+            position > bannerHeight + postHeight * index &&
+            position < bannerHeight + postHeight * (index + 1)
+          ) {
+            const videos = document.getElementsByClassName(
+              `post-video-${index}`
+            );
+            for (let i = 0; i < videos.length; i++) {
+              (videos[i] as HTMLVideoElement).play();
             }
           }
         });
@@ -408,10 +449,10 @@ export default function FanClub() {
                 key={index}
                 className="col-span-1 flex justify-center items-center cursor-pointer"
               >
-                {post.type == FILE_TYPE.IMAGE ? (
+                {post.files[0]?.type == FILE_TYPE.IMAGE ? (
                   <Image
                     className="w-full h-20 lg:h-10 object-cover rounded-md"
-                    src={post.imageCompressed ?? PLACEHOLDER_IMAGE}
+                    src={post.files[0]?.fileCompressed ?? PLACEHOLDER_IMAGE}
                     width={1600}
                     height={900}
                     alt=""
@@ -420,6 +461,7 @@ export default function FanClub() {
                     priority
                     onClick={() => {
                       setSelectedPost(post);
+                      setIndexAsset(0);
                       setIsPostFullScreenView(true);
                     }}
                   />
@@ -430,20 +472,23 @@ export default function FanClub() {
                     autoPlay
                     playsInline
                     className="w-full h-20 lg:h-10 object-cover rounded-md"
-                    src={post.videoCompressed}
+                    src={post.files[0]?.fileCompressed}
                     onClick={() => {
                       setSelectedPost(post);
+                      setIndexAsset(0);
                       setIsPostFullScreenView(true);
                       audioPlayer.pause();
 
-                      setTimeout(() => {
-                        const videos = document.getElementsByClassName(
-                          "fullscreen-video-player"
-                        );
-                        for (let i = 0; i < videos.length; i++) {
-                          (videos[i] as HTMLVideoElement).play();
-                        }
-                      }, 1000);
+                      if (post.files[0]?.type == FILE_TYPE.VIDEO) {
+                        setTimeout(() => {
+                          const videos = document.getElementsByClassName(
+                            "fullscreen-video-player"
+                          );
+                          for (let i = 0; i < videos.length; i++) {
+                            (videos[i] as HTMLVideoElement).play();
+                          }
+                        }, 1000);
+                      }
                     }}
                   />
                 )}
@@ -456,7 +501,7 @@ export default function FanClub() {
   );
 
   const postsView = (
-    <div className="w-full flex flex-col justify-start items-center space-y-5">
+    <div className="w-80 flex-grow flex flex-col justify-start items-center space-y-5">
       {posts.map((post, index) => {
         return (
           <Post
@@ -478,11 +523,12 @@ export default function FanClub() {
                 }
               });
             }}
-            fullscreenView={() => {
+            fullscreenView={(indexFile: number) => {
               setSelectedPost(post);
+              setIndexAsset(indexFile);
               setIsPostFullScreenView(true);
 
-              if (post.type == FILE_TYPE.VIDEO) {
+              if (post.files[indexFile]?.type == FILE_TYPE.VIDEO) {
                 setTimeout(() => {
                   const videos = document.getElementsByClassName(
                     "fullscreen-video-player"
@@ -496,7 +542,7 @@ export default function FanClub() {
             comment={() => {
               setSelectedPost(post);
               setIsPostModalOpened(true);
-              if (post.type == FILE_TYPE.VIDEO) {
+              if (post.files[0]?.type == FILE_TYPE.VIDEO) {
                 audioPlayer.pause();
               }
             }}
@@ -544,30 +590,34 @@ export default function FanClub() {
           }}
         />
       </div>
-      <div className="absolute top-1/2 left-5 cursor-pointer z-10">
-        <ButtonCircle
-          dark={false}
-          icon={<ArrowLeft />}
-          size="small"
-          onClick={() => onPrevPost()}
-        />
-      </div>
-      <div className="absolute top-1/2 right-5 cursor-pointer z-10">
-        <ButtonCircle
-          dark={false}
-          icon={<ArrowRight />}
-          size="small"
-          onClick={() => onNextPost()}
-        />
-      </div>
+      {selectedPost.files.length > 1 && (
+        <>
+          <div className="absolute top-1/2 left-5 cursor-pointer z-10">
+            <ButtonCircle
+              dark={false}
+              icon={<ArrowLeft />}
+              size="small"
+              onClick={() => onPrevAsset()}
+            />
+          </div>
+          <div className="absolute top-1/2 right-5 cursor-pointer z-10">
+            <ButtonCircle
+              dark={false}
+              icon={<ArrowRight />}
+              size="small"
+              onClick={() => onNextAsset()}
+            />
+          </div>
+        </>
+      )}
       <div className="relative w-full h-full z-0">
         <div className="relative w-full h-full flex justify-center items-center z-0">
-          {selectedPost.type == FILE_TYPE.IMAGE ? (
+          {selectedPost.files[indexAsset]?.type == FILE_TYPE.IMAGE ? (
             <Image
               className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
               width={1600}
               height={1600}
-              src={selectedPost.image ?? PLACEHOLDER_IMAGE}
+              src={selectedPost.files[indexAsset]?.file ?? PLACEHOLDER_IMAGE}
               loading="eager"
               alt=""
               placeholder="blur"
@@ -583,7 +633,7 @@ export default function FanClub() {
                 disablePictureInPicture
                 controlsList="nodownload nopictureinpicture noplaybackrate"
                 className="absolute inset-0 object-center w-full h-full rounded-md fullscreen-video-player"
-                src={selectedPost.video}
+                src={selectedPost.files[indexAsset]?.file}
                 onPlay={() => {
                   audioPlayer.pause();
                 }}
@@ -699,7 +749,7 @@ export default function FanClub() {
             </div>
           </div>
 
-          <div className="w-full xl:w-5/6 flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-10 space-y-10 lg:space-y-0 px-5 lg:px-10">
+          <div className="w-full xl:w-5/6 flex flex-col-reverse lg:flex-row lg:justify-start items-center lg:items-start space-x-0 lg:space-x-10 space-y-10 lg:space-y-0 px-5 lg:px-10">
             {leftSideView}
 
             {postsView}
@@ -742,6 +792,21 @@ export default function FanClub() {
             }}
             onPrev={() => onPrevPost()}
             onNext={() => onNextPost()}
+            fullscreenView={(indexFile: number) => {
+              setIndexAsset(indexFile);
+              setIsPostFullScreenView(true);
+
+              if (selectedPost.files[indexFile]?.type == FILE_TYPE.VIDEO) {
+                setTimeout(() => {
+                  const videos = document.getElementsByClassName(
+                    "fullscreen-video-player"
+                  );
+                  for (let i = 0; i < videos.length; i++) {
+                    (videos[i] as HTMLVideoElement).play();
+                  }
+                }, 1000);
+              }
+            }}
           />
         </div>
       </div>

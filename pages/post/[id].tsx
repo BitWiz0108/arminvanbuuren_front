@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import moment from "moment";
+import Carousel from "react-multi-carousel";
 import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
@@ -35,6 +36,25 @@ import { bigNumberFormat } from "@/libs/utils";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 
 export default function Post() {
+  const SINGLE_RESPONSIVENESS = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1368 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1368, min: 925 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 925, min: 0 },
+      items: 1,
+    },
+  };
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -49,10 +69,20 @@ export default function Post() {
     fetchReplies,
   } = useFanclub();
 
-  const [post, setPost] = useState<IPost>({ ...DEFAULT_POST, image: "" });
+  const [post, setPost] = useState<IPost>({
+    ...DEFAULT_POST,
+    files: [
+      {
+        type: FILE_TYPE.IMAGE,
+        file: PLACEHOLDER_IMAGE,
+        fileCompressed: PLACEHOLDER_IMAGE,
+      },
+    ],
+  });
   const [replyContent, setReplyContent] = useState<string>("");
   const [repliesPage, setRepliesPage] = useState<number>(1);
   const [repliesPageCount, setRepliesPageCount] = useState<number>(1);
+  const [lastPosX, setLastPosX] = useState<number>(0);
 
   const favorite = () => {
     togglePostFavorite(post.id, !post.isFavorite).then((value) => {
@@ -93,7 +123,7 @@ export default function Post() {
       const postId = Number(id.toString());
       fetchPost(postId).then((value) => {
         if (value) {
-          setPost(value);
+          setPost({ ...post, ...value });
           setRepliesPageCount(1);
           setRepliesPage(1);
         } else {
@@ -142,29 +172,56 @@ export default function Post() {
                       {bigNumberFormat(post.numberOfFavorites)}
                     </span>
                   </button>
-                  <div className="w-full relative pb-[56.25%] rounded-md">
-                    {post.type == FILE_TYPE.IMAGE ? (
-                      <Image
-                        className="absolute inset-0 object-cover object-center w-full h-full rounded-md"
-                        src={post.imageCompressed ?? PLACEHOLDER_IMAGE}
-                        width={1600}
-                        height={900}
-                        alt=""
-                        placeholder="blur"
-                        blurDataURL={IMAGE_BLUR_DATA_URL}
-                        priority
-                      />
-                    ) : (
-                      <VideoPlayer
-                        loop
-                        muted
-                        autoPlay
-                        playsInline
-                        disablePictureInPicture
-                        className="absolute inset-0 object-center w-full h-full rounded-md"
-                        src={post.video}
-                      />
-                    )}
+                  <div className="relative w-full">
+                    <Carousel
+                      ssr
+                      partialVisible
+                      autoPlay={false}
+                      responsive={SINGLE_RESPONSIVENESS}
+                      className="w-full"
+                      infinite
+                      swipeable
+                      draggable
+                      arrows={post.files.length > 1}
+                    >
+                      {post.files.map((file, indexFile) => {
+                        return (
+                          <div
+                            key={indexFile}
+                            className="w-full relative pb-[56.25%] hover:cursor-pointer rounded-md overflow-hidden"
+                            onMouseDown={(e) => setLastPosX(e.screenX)}
+                            onMouseUp={(e) => {
+                              if (Math.abs(e.screenX - lastPosX) < 30) {
+                                // fullscreenView(indexFile);
+                              }
+                            }}
+                          >
+                            {file.type == FILE_TYPE.IMAGE ? (
+                              <Image
+                                className="absolute inset-0 object-cover object-center w-full h-full rounded-md pointer-events-none"
+                                src={file.fileCompressed ?? PLACEHOLDER_IMAGE}
+                                width={1600}
+                                height={900}
+                                alt=""
+                                placeholder="blur"
+                                blurDataURL={IMAGE_BLUR_DATA_URL}
+                                priority
+                              />
+                            ) : (
+                              <VideoPlayer
+                                loop
+                                muted
+                                autoPlay
+                                playsInline
+                                disablePictureInPicture
+                                className={`absolute inset-0 object-cover object-center w-full h-full rounded-md pointer-events-none`}
+                                src={file.fileCompressed}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </Carousel>
                   </div>
                 </div>
               </div>

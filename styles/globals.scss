@@ -113,6 +113,7 @@ select:-webkit-autofill:focus {
 div.none-tailwind {
   color: var(--color-primary);
 }
+
 div.none-tailwind * {
   all: revert;
   color: var(--color-primary);
@@ -173,9 +174,11 @@ div.none-tailwind * {
 /* For Chrome browsers */
 .thumb::-webkit-slider-thumb {
   background-color: var(--color-blue-secondary);
+
   &:hover {
     background-color: var(--color-primary);
   }
+
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -190,9 +193,11 @@ div.none-tailwind * {
 /* For Firefox browsers */
 .thumb::-moz-range-thumb {
   background-color: var(--color-blue-secondary);
+
   &:hover {
     background-color: var(--color-primary);
   }
+
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -202,6 +207,10 @@ div.none-tailwind * {
   pointer-events: all;
   position: relative;
   transition: background-color 0.3s ease-in;
+}
+
+.react-multiple-carousel__arrow {
+  z-index: 10 !important;
 }
 
 .loading {

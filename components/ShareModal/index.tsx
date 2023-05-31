@@ -97,7 +97,7 @@ const ShareModal = () => {
               <p
                 className="absolute p-1 -right-1 bg-bluePrimary text-sm text-white cursor-pointer rounded-xl"
                 onClick={() => {
-                  navigator.clipboard.writeText(currentUrl);
+                  navigator.clipboard.writeText(shareData.url ? shareData.url : currentUrl);
                   toast.success("Link copied to the clipboard.");
                 }}
               >
