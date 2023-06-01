@@ -128,7 +128,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             active={router.pathname == "/musics"}
             collapsed={isSidebarCollapsed}
             icon={<Music width={26} height={26} />}
-            label="Musics"
+            label="Music"
             onClick={() => goToLink("/musics")}
           />
           <ButtonSidebar
