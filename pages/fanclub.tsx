@@ -57,7 +57,11 @@ export default function FanClub() {
     fetchPosts,
     togglePostFavorite,
   } = useFanclub();
-  const { isLoading: isWorkingMusics, fetchAllAlbums } = useMusic();
+  const {
+    isLoading: isWorkingMusics,
+    fetchAllAlbums,
+    fetchAlbumMusics,
+  } = useMusic();
   const { isLoading: isWorkingLivestreams, fetchLivestreams } = useLivestream();
   const { isMobile, width, height, toggleFullscreen } = useSizeValues();
   const { artist, audioPlayer, setIsShareModalVisible, setShareData } =
@@ -112,24 +116,24 @@ export default function FanClub() {
     );
   };
 
-  // const fetchMoreMusics = (albumIndex: number) => {
-  //   fetchAlbumMusics(
-  //     musicAlbums[albumIndex].id,
-  //     musicPages[albumIndex] + 1,
-  //     true,
-  //     MUSICS_PAGE_SIZE
-  //   ).then((result) => {
-  //     const tmusicAlbums = musicAlbums.slice();
-  //     tmusicAlbums[albumIndex].musics.push(...result);
-  //     setMusicAlbums(tmusicAlbums);
+  const fetchMoreMusics = (albumIndex: number) => {
+    fetchAlbumMusics(
+      musicAlbums[albumIndex].id,
+      musicPages[albumIndex] + 1,
+      true,
+      MUSICS_PAGE_SIZE
+    ).then((result) => {
+      const tmusicAlbums = musicAlbums.slice();
+      tmusicAlbums[albumIndex].musics.push(...result);
+      setMusicAlbums(tmusicAlbums);
 
-  //     if (musicPages[albumIndex] < musicPageCounts[albumIndex]) {
-  //       const tmusicPages = musicPages.slice();
-  //       tmusicPages[albumIndex]++;
-  //       setMusicPages(tmusicPages);
-  //     }
-  //   });
-  // };
+      if (musicPages[albumIndex] < musicPageCounts[albumIndex]) {
+        const tmusicPages = musicPages.slice();
+        tmusicPages[albumIndex]++;
+        setMusicPages(tmusicPages);
+      }
+    });
+  };
 
   const fetchMorePosts = () => {
     fetchPosts(postsPage + 1, POSTS_PAGE_SIZE).then((result) => {
@@ -417,23 +421,15 @@ export default function FanClub() {
                   })}
               </div>
               <div className="w-full flex justify-center items-center">
-                {isWorkingMusics ? (
-                  <Loading width={30} height={30} />
-                ) : (
-                  musicPageCounts[albumIndex] > musicPages[albumIndex] && (
+                {!isWorkingMusics &&
+                  musicPageCounts[albumIndex] - 1 > musicPages[albumIndex] && (
                     <button
                       className="px-3 py-1 inline-flex justify-center items-center text-center text-sm text-secondary bg-transparent hover:bg-blueSecondary hover:text-white hover:border-blueSecondary rounded-full border border-secondary cursor-pointer transition-all duration-300"
-                      // onClick={() => fetchMoreMusics(albumIndex)}
-                      onClick={() => {
-                        const tmusicPages = musicPages.slice();
-                        tmusicPages[albumIndex]++;
-                        setMusicPages(tmusicPages);
-                      }}
+                      onClick={() => fetchMoreMusics(albumIndex)}
                     >
                       + More
                     </button>
-                  )
-                )}
+                  )}
               </div>
             </div>
           );
