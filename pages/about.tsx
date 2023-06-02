@@ -93,7 +93,7 @@ export default function About() {
           )}
         >
           <div className="relative w-full flex flex-col xl:flex-row justify-center items-center">
-            <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-gradient-to-br from-blue-900 to-cyan-500">
+            <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-[#21292c]">
               <div className="w-3/4 flex flex-col justify-center items-center">
                 <h1 className="text-5xl uppercase font-thin font-[100] text-center tracking-[-6px]">
                   ABOUT THE ARTIST
@@ -162,7 +162,7 @@ export default function About() {
                 priority
               />
             </div>
-            <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-gradient-to-br from-cyan-500 to-blue-900 ">
+            <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-[#21292c]">
               <div className="w-3/4 flex flex-col justify-center items-center">
                 <h1 className="text-5xl uppercase font-thin font-[200] text-center tracking-[-6px]">
                   CONNECT
