@@ -237,15 +237,26 @@ const ViewExclusiveModal = () => {
         >
           <div className="relative w-full md:w-[540px] max-h-full px-5 md:px-10 pt-10 pb-5 md:pb-10 bg-background rounded-lg overflow-x-hidden overflow-y-auto pr-5">
             <div className="mb-4">
-              <h1 className="text-2xl text-center text-primary font-semibold">
-                Subscribe to {artist.artistName ?? ""} Fanclub
-              </h1>
-              <p className="text-sm text-center text-secondary">
-                Hey, in order to view this you need to be subscribed for $5 per
-                month.
-                <br />
-                You can cancel at anytime, thank you for your support.
-              </p>
+              {artist.subscriptionDescription ? (
+                <div
+                  className="none-tailwind"
+                  dangerouslySetInnerHTML={{
+                    __html: artist.subscriptionDescription,
+                  }}
+                ></div>
+              ) : (
+                <>
+                  <h1 className="text-2xl text-center text-primary font-semibold">
+                    Join The {artist.artistName} Fan Club
+                  </h1>
+                  <p className="text-sm text-center text-secondary">
+                    In order to access exclusive content like this please pay $5
+                    Per month.
+                    <br />
+                    You can cancel at anytime, thank you for your support.
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="absolute top-5 right-5 text-primary cursor-pointer">

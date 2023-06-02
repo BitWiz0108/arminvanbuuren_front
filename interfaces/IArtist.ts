@@ -39,6 +39,7 @@ export interface IArtist {
   siteTitle: string;
   siteDescription: string;
   siteSocialPreviewImage: string;
+  subscriptionDescription: string;
 }
 
 export const DEFAULT_ARTIST = {
@@ -73,4 +74,5 @@ export const DEFAULT_ARTIST = {
   siteTitle: APP_NAME,
   siteDescription: APP_NAME,
   siteSocialPreviewImage: DEFAULT_LOGO_IMAGE,
+  subscriptionDescription: "",
 } as IArtist;
