@@ -45,7 +45,7 @@ const DonationModal = ({
   livestreamId = null,
 }: Props) => {
   const { isSignedIn } = useAuthValues();
-  const { isDonationModalVisible, setIsDonationModalVisible, paypalClientId } =
+  const { isDonationModalVisible, setIsDonationModalVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
 

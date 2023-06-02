@@ -35,12 +35,8 @@ import { DEFAULT_CURRENCY, ICurrency } from "@/interfaces/ICurrency";
 
 const SubscriptionModal = () => {
   const { isSignedIn } = useAuthValues();
-  const {
-    artist,
-    isSubscriptionModalVisible,
-    setIsSubscriptionModalVisible,
-    paypalClientId,
-  } = useShareValues();
+  const { artist, isSubscriptionModalVisible, setIsSubscriptionModalVisible } =
+    useShareValues();
   const { isMobile } = useSizeValues();
 
   const [provider, setProvider] = useState<PROVIDER>(PROVIDER.STRIPE);

@@ -39,7 +39,6 @@ const ViewExclusiveModal = () => {
     artist,
     isViewExclusiveModalVisible,
     setIsViewExclusiveModalVisible,
-    paypalClientId,
   } = useShareValues();
   const { isMobile } = useSizeValues();
 
