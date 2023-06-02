@@ -388,7 +388,7 @@ export default function FanClub() {
 
       <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
         <p className="text-primary text-sm font-medium text-center">Music</p>
-        {musicAlbums.map((album, albumIndex) => {
+        {musicAlbums.slice(0, 1).map((album, albumIndex) => {
           return (
             <div
               key={albumIndex}
