@@ -1,12 +1,14 @@
+import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Check from "@/components/Icons/Check";
 
 import { LIVESTREAM_QUALITY } from "@/libs/constants";
+import { IVideoPlayer } from "@/interfaces/IVideoPlayer";
 
 type Props = {
   close: Function;
-  videoPlayer: any;
+  videoPlayer: IVideoPlayer;
 };
 
 const LiveStreamSettingsModal = ({ close, videoPlayer }: Props) => {

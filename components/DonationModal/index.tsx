@@ -45,13 +45,8 @@ const DonationModal = ({
   livestreamId = null,
 }: Props) => {
   const { isSignedIn } = useAuthValues();
-  const {
-    isDonationModalVisible,
-    setIsDonationModalVisible,
-    paypalClientId,
-    paypalClientSecret,
-    stripeSecretKey,
-  } = useShareValues();
+  const { isDonationModalVisible, setIsDonationModalVisible, paypalClientId } =
+    useShareValues();
   const { isMobile } = useSizeValues();
 
   const [provider, setProvider] = useState<PROVIDER>(PROVIDER.STRIPE);
@@ -108,11 +103,7 @@ const DonationModal = ({
 
     setIsWorking(true);
 
-    const clientSecret = await createClientSecret(
-      amount,
-      currency.code,
-      stripeSecretKey
-    );
+    const clientSecret = await createClientSecret(amount, currency.code);
 
     if (clientSecret) {
       const result = await stripe.confirmCardPayment(clientSecret, {
@@ -166,12 +157,7 @@ const DonationModal = ({
       throw new Error("Please enter amount correctly.");
     }
 
-    const orderId = await createOrderId(
-      amount,
-      currency.code,
-      paypalClientId,
-      paypalClientSecret
-    );
+    const orderId = await createOrderId(amount, currency.code);
     if (orderId) return orderId;
 
     throw new Error("Failed to create PayPal order. Please try again later.");

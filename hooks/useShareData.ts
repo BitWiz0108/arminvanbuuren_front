@@ -8,12 +8,7 @@ import useFanclub from "@/hooks/useFanclub";
 import useMusic from "@/hooks/useMusic";
 import useTransaction from "@/hooks/useTransaction";
 
-import {
-  PAYPAL_CLIENT_ID,
-  PAYPAL_CLIENT_SECRET,
-  STRIPE_PUBLICK_API_KEY,
-  STRIPE_SECRET_KEY,
-} from "@/libs/constants";
+import { PAYPAL_CLIENT_ID, STRIPE_PUBLICK_API_KEY } from "@/libs/constants";
 
 import { DEFAULT_SHAREDATA, IShareData } from "@/interfaces/IShareData";
 import { DEFAULT_ARTIST, IArtist } from "@/interfaces/IArtist";
@@ -49,14 +44,9 @@ const useShareData = () => {
 
   const [paypalClientId, setPaypalClientId] =
     useState<string>(PAYPAL_CLIENT_ID);
-  const [paypalClientSecret, setPaypalClientSecret] =
-    useState<string>(PAYPAL_CLIENT_SECRET);
   const [stripePublicApiKey, setStripePublicApiKey] = useState<string>(
     STRIPE_PUBLICK_API_KEY
   );
-  const [stripeSecretKey, setStripeSecretKey] =
-    useState<string>(STRIPE_SECRET_KEY);
-
   const [shareData, setShareData] = useState<IShareData>(DEFAULT_SHAREDATA);
 
   useEffect(() => {
@@ -74,22 +64,11 @@ const useShareData = () => {
               ? PAYPAL_CLIENT_ID
               : data.paypalClientId
           );
-          setPaypalClientSecret(
-            !data.paypalClientSecret ||
-              data.paypalClientSecret == "PAYPAL_CLIENT_SECRET"
-              ? PAYPAL_CLIENT_SECRET
-              : data.paypalClientSecret
-          );
           setStripePublicApiKey(
             !data.stripePublicApiKey ||
               data.stripePublicApiKey == "STRIPE_PUBLIC_API_KEY"
               ? STRIPE_PUBLICK_API_KEY
               : data.stripePublicApiKey
-          );
-          setStripeSecretKey(
-            !data.stripeSecretKey || data.stripeSecretKey == "STRIPE_SECRET_KEY"
-              ? STRIPE_SECRET_KEY
-              : data.stripeSecretKey
           );
         }
       });
@@ -132,9 +111,7 @@ const useShareData = () => {
     shareData,
     setShareData,
     paypalClientId,
-    paypalClientSecret,
     stripePublicApiKey,
-    stripeSecretKey,
   };
 };
 

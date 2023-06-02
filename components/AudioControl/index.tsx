@@ -50,8 +50,6 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
   useEffect(() => {
     if (isMobile) {
       audioPlayer.setPlayingQuality(MUSIC_QUALITY.LOW);
-    } else {
-      audioPlayer.setPlayingQuality(MUSIC_QUALITY.AUTO);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

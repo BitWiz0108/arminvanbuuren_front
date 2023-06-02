@@ -40,8 +40,6 @@ const ViewExclusiveModal = () => {
     isViewExclusiveModalVisible,
     setIsViewExclusiveModalVisible,
     paypalClientId,
-    paypalClientSecret,
-    stripeSecretKey,
   } = useShareValues();
   const { isMobile } = useSizeValues();
 
@@ -99,11 +97,7 @@ const ViewExclusiveModal = () => {
 
     setIsWorking(true);
 
-    const clientSecret = await createClientSecret(
-      amount,
-      currency.code,
-      stripeSecretKey
-    );
+    const clientSecret = await createClientSecret(amount, currency.code);
 
     if (clientSecret) {
       const result = await stripe.confirmCardPayment(clientSecret, {
@@ -166,12 +160,7 @@ const ViewExclusiveModal = () => {
       throw new Error("Please enter amount correctly.");
     }
 
-    const orderId = await createOrderId(
-      amount,
-      currency.code,
-      paypalClientId,
-      paypalClientSecret
-    );
+    const orderId = await createOrderId(amount, currency.code);
     if (orderId) return orderId;
 
     throw new Error("Failed to create PayPal order. Please try again later.");

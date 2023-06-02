@@ -31,9 +31,7 @@ export const ShareContext = createContext({
   shareData: DEFAULT_SHAREDATA,
   setShareData: (value: IShareData) => {},
   paypalClientId: "",
-  paypalClientSecret: "",
   stripePublicApiKey: "",
-  stripeSecretKey: "",
 });
 
 export const ShareProvider = ({ children }: { children: ReactNode }) => {
@@ -61,9 +59,7 @@ export const ShareProvider = ({ children }: { children: ReactNode }) => {
     shareData,
     setShareData,
     paypalClientId,
-    paypalClientSecret,
     stripePublicApiKey,
-    stripeSecretKey,
   } = useShareData();
 
   return (
@@ -92,9 +88,7 @@ export const ShareProvider = ({ children }: { children: ReactNode }) => {
         shareData,
         setShareData,
         paypalClientId,
-        paypalClientSecret,
         stripePublicApiKey,
-        stripeSecretKey,
       }}
     >
       {children}

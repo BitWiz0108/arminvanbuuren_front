@@ -87,8 +87,6 @@ const VideoControl = ({
   useEffect(() => {
     if (isMobile) {
       videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.LOW);
-    } else {
-      videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.AUTO);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

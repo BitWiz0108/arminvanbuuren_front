@@ -311,7 +311,6 @@ export default function LiveStreams() {
             )}
           >
             {categoryId == null ? artist.artistName : getCategoryById().name}
-            &nbsp;Live Streams
           </h1>
           <h5
             className={twMerge(
@@ -622,15 +621,9 @@ export default function LiveStreams() {
         playsInline
         disablePictureInPicture
         ref={videoRef}
-        src={
-          videoPlayer.playingQuality == LIVESTREAM_QUALITY.LOW
-            ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
-              ? videoPlayer.getPlayingTrack()?.fullVideoCompressed
-              : videoPlayer.getPlayingTrack()?.fullVideo
-            : videoPlayer.getPlayingTrack()?.fullVideo
-        }
+        src={videoPlayer.getPlayingTrack()?.fullVideo}
         className="absolute left-0 top-0 object-center md:object-cover w-full h-full"
-      ></video>
+      />
     </div>
   );
 

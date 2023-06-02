@@ -113,7 +113,7 @@ const useTransaction = () => {
 
   const fetchPaymentData = async () => {
     const response = await fetch(
-      `${API_BASE_URL}/${API_VERSION}/admin/payment-gateways`,
+      `${API_BASE_URL}/${API_VERSION}/finance/payment-gateways`,
       {
         method: "GET",
         headers: {
@@ -126,9 +126,7 @@ const useTransaction = () => {
       const data = await response.json();
       return {
         paypalClientId: data.paypalClientId,
-        paypalClientSecret: data.paypalClientSecret,
         stripePublicApiKey: data.stripePublicApiKey,
-        stripeSecretKey: data.stripeSecretKey,
       };
     } else {
       return null;
