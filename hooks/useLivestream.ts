@@ -42,28 +42,36 @@ const useLivestream = () => {
       const livestreams = data.livestreams as Array<IStream>;
       const previewVideoPromises = livestreams.map((livestream) => {
         if (!livestream.previewVideo.includes("video/2023")) {
-          return livestream.previewVideo;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideo)
+          );
         } else {
           return getAWSSignedURL(livestream.previewVideo);
         }
       });
       const previewVideoCompressedPromises = livestreams.map((livestream) => {
         if (!livestream.previewVideoCompressed.includes("video/2023")) {
-          return livestream.previewVideoCompressed;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideoCompressed)
+          );
         } else {
           return getAWSSignedURL(livestream.previewVideoCompressed);
         }
       });
       const fullVideoPromises = livestreams.map((livestream) => {
         if (!livestream.fullVideo.includes("video/2023")) {
-          return livestream.fullVideo;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideo)
+          );
         } else {
           return getAWSSignedURL(livestream.fullVideo);
         }
       });
       const fullVideoCompressedPromises = livestreams.map((livestream) => {
         if (!livestream.fullVideoCompressed.includes("video/2023")) {
-          return livestream.fullVideoCompressed;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideoCompressed)
+          );
         } else {
           return getAWSSignedURL(livestream.fullVideoCompressed);
         }
@@ -124,7 +132,9 @@ const useLivestream = () => {
         const livestreams = category.livestreams;
         const livestreamPreviewVideoPromises = livestreams.map((livestream) => {
           if (!livestream.previewVideo.includes("video/2023")) {
-            return livestream.previewVideo;
+            return new Promise<string>((resolve, _) =>
+              resolve(livestream.previewVideo)
+            );
           } else {
             return getAWSSignedURL(livestream.previewVideo);
           }
@@ -132,7 +142,9 @@ const useLivestream = () => {
         const livestreamPreviewVideoCompressedPromises = livestreams.map(
           (livestream) => {
             if (!livestream.previewVideoCompressed.includes("video/2023")) {
-              return livestream.previewVideoCompressed;
+              return new Promise<string>((resolve, _) =>
+                resolve(livestream.previewVideoCompressed)
+              );
             } else {
               return getAWSSignedURL(livestream.previewVideoCompressed);
             }
@@ -140,7 +152,9 @@ const useLivestream = () => {
         );
         const livestreamFullVideoPromises = livestreams.map((livestream) => {
           if (!livestream.fullVideo.includes("video/2023")) {
-            return livestream.fullVideo;
+            return new Promise<string>((resolve, _) =>
+              resolve(livestream.fullVideo)
+            );
           } else {
             return getAWSSignedURL(livestream.fullVideo);
           }
@@ -148,7 +162,9 @@ const useLivestream = () => {
         const livestreamFullVideoCompressedVideoPromises = livestreams.map(
           (livestream) => {
             if (!livestream.fullVideoCompressed.includes("video/2023")) {
-              return livestream.fullVideoCompressed;
+              return new Promise<string>((resolve, _) =>
+                resolve(livestream.fullVideoCompressed)
+              );
             } else {
               return getAWSSignedURL(livestream.fullVideoCompressed);
             }
@@ -213,28 +229,36 @@ const useLivestream = () => {
       const livestreams = data as Array<IStream>;
       const previewVideoPromises = livestreams.map((livestream) => {
         if (!livestream.previewVideo.includes("video/2023")) {
-          return livestream.previewVideo;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideo)
+          );
         } else {
           return getAWSSignedURL(livestream.previewVideo);
         }
       });
       const previewVideoCompressedPromises = livestreams.map((livestream) => {
         if (!livestream.previewVideoCompressed.includes("video/2023")) {
-          return livestream.previewVideoCompressed;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideoCompressed)
+          );
         } else {
           return getAWSSignedURL(livestream.previewVideoCompressed);
         }
       });
       const fullVideoPromises = livestreams.map((livestream) => {
         if (!livestream.fullVideo.includes("video/2023")) {
-          return livestream.fullVideo;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideo)
+          );
         } else {
           return getAWSSignedURL(livestream.fullVideo);
         }
       });
       const fullVideoCompressedPromises = livestreams.map((livestream) => {
         if (!livestream.fullVideoCompressed.includes("video/2023")) {
-          return livestream.fullVideoCompressed;
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideoCompressed)
+          );
         } else {
           return getAWSSignedURL(livestream.fullVideoCompressed);
         }
@@ -247,6 +271,94 @@ const useLivestream = () => {
         Promise.all(fullVideoCompressedPromises),
       ]);
       livestreams.forEach((livestream, index) => {
+        livestream.previewVideo = assets[0][index];
+        livestream.previewVideoCompressed = assets[1][index];
+        livestream.fullVideo = assets[2][index];
+        livestream.fullVideoCompressed = assets[3][index];
+      });
+
+      setIsLoading(false);
+      return livestreams;
+    } else {
+      setIsLoading(false);
+    }
+    return [];
+  };
+
+  const fetchLivestreamByTitle = async (title: string) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/live-stream/get-by-title`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          title: title.replaceAll("-", " ").toLowerCase().trim(),
+          hasMembership: isMembership,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const livestreams = data as Array<IStream>;
+      const previewVideoPromises = livestreams.map((livestream) => {
+        if (!livestream)
+          return new Promise<string>((resolve, _) => resolve(""));
+        if (!livestream.previewVideo.includes("video/2023")) {
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideo)
+          );
+        } else {
+          return getAWSSignedURL(livestream.previewVideo);
+        }
+      });
+      const previewVideoCompressedPromises = livestreams.map((livestream) => {
+        if (!livestream)
+          return new Promise<string>((resolve, _) => resolve(""));
+        if (!livestream.previewVideoCompressed.includes("video/2023")) {
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.previewVideoCompressed)
+          );
+        } else {
+          return getAWSSignedURL(livestream.previewVideoCompressed);
+        }
+      });
+      const fullVideoPromises = livestreams.map((livestream) => {
+        if (!livestream)
+          return new Promise<string>((resolve, _) => resolve(""));
+        if (!livestream.fullVideo.includes("video/2023")) {
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideo)
+          );
+        } else {
+          return getAWSSignedURL(livestream.fullVideo);
+        }
+      });
+      const fullVideoCompressedPromises = livestreams.map((livestream) => {
+        if (!livestream)
+          return new Promise<string>((resolve, _) => resolve(""));
+        if (!livestream.fullVideoCompressed.includes("video/2023")) {
+          return new Promise<string>((resolve, _) =>
+            resolve(livestream.fullVideoCompressed)
+          );
+        } else {
+          return getAWSSignedURL(livestream.fullVideoCompressed);
+        }
+      });
+      const assets = await Promise.all([
+        Promise.all(previewVideoPromises),
+        Promise.all(previewVideoCompressedPromises),
+        Promise.all(fullVideoPromises),
+        Promise.all(fullVideoCompressedPromises),
+      ]);
+      livestreams.forEach((livestream, index) => {
+        if (!livestream) return;
         livestream.previewVideo = assets[0][index];
         livestream.previewVideoCompressed = assets[1][index];
         livestream.fullVideo = assets[2][index];
@@ -327,6 +439,7 @@ const useLivestream = () => {
     fetchLivestreams,
     fetchAllCategories,
     fetchCategoryLivestreams,
+    fetchLivestreamByTitle,
     fetchComments,
     writeComment,
   };

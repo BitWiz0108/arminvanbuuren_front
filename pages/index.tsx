@@ -69,7 +69,7 @@ export default function Signin() {
       window.localStorage.setItem(TAG_PASSWORD, "");
     }
 
-    const userId = username.replace(" ", "").toLowerCase().trim();
+    const userId = username.trim().replace(" ", "").toLowerCase().trim();
     signIn(userId, password).then((result) => {
       if (result) {
         router.push("/home");
@@ -103,7 +103,11 @@ export default function Signin() {
               } else {
                 firstName = username;
               }
-              const userId = username.replace(" ", "").toLowerCase().trim();
+              const userId = username
+                .trim()
+                .replace(" ", "")
+                .toLowerCase()
+                .trim();
               oAuthSignIn(
                 OAUTH_PROVIDER.FACEBOOK,
                 accessToken,

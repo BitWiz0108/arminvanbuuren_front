@@ -8,6 +8,7 @@ import ButtonVolume from "@/components/ButtonVolume";
 import List from "@/components/Icons/List";
 import PlayPrev from "@/components/Icons/PlayPrev";
 import FullScreen from "@/components/Icons/FullScreen";
+import FullScreenClose from "@/components/Icons/FullScreenClose";
 import Pause from "@/components/Icons/Pause";
 import Play from "@/components/Icons/Play";
 import PlayNext from "@/components/Icons/PlayNext";
@@ -32,13 +33,14 @@ import {
 } from "@/libs/constants";
 
 import { IVideoPlayer } from "@/interfaces/IVideoPlayer";
-import FullScreenClose from "../Icons/FullScreenClose";
 
 type Props = {
   videoPlayer: IVideoPlayer;
   viewMode: VIEW_MODE;
   onListView: Function;
   onPlayLivestream: Function;
+  onPrevVideo?: Function | null;
+  onNextVideo?: Function | null;
 };
 
 const VideoControl = ({
@@ -46,6 +48,8 @@ const VideoControl = ({
   viewMode,
   onListView,
   onPlayLivestream,
+  onPrevVideo = null,
+  onNextVideo = null,
 }: Props) => {
   const livestreamsettingsmodalRefMd = useRef(null);
   const { isMobile, contentWidth, sidebarWidth, toggleFullscreen } =
@@ -174,7 +178,11 @@ const VideoControl = ({
                   dark
                   size="small"
                   icon={<PlayPrev />}
-                  onClick={() => videoPlayer.playPreviousVideo()}
+                  onClick={() =>
+                    onPrevVideo
+                      ? onPrevVideo()
+                      : videoPlayer.playPreviousVideo()
+                  }
                 />
                 <ButtonCircle
                   dark={false}
@@ -192,7 +200,9 @@ const VideoControl = ({
                   dark
                   size="small"
                   icon={<PlayNext />}
-                  onClick={() => videoPlayer.playNextVideo()}
+                  onClick={() =>
+                    onNextVideo ? onNextVideo() : videoPlayer.playNextVideo()
+                  }
                 />
               </div>
 

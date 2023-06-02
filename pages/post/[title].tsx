@@ -31,7 +31,7 @@ import {
   IMAGE_BLUR_DATA_URL,
   PLACEHOLDER_IMAGE,
 } from "@/libs/constants";
-import { bigNumberFormat } from "@/libs/utils";
+import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 
@@ -56,14 +56,14 @@ export default function Post() {
   };
 
   const router = useRouter();
-  const { id } = router.query;
+  const { title } = router.query;
 
   const { isSignedIn } = useAuthValues();
   const { audioPlayer } = useShareValues();
   const { isMobile } = useSizeValues();
   const {
     isLoading: isFanclubWorking,
-    fetchPost,
+    fetchPostByTitle,
     createReply,
     togglePostFavorite,
     fetchReplies,
@@ -79,6 +79,7 @@ export default function Post() {
       },
     ],
   });
+  const [posts, setPosts] = useState<Array<IPost>>([]);
   const [replyContent, setReplyContent] = useState<string>("");
   const [repliesPage, setRepliesPage] = useState<number>(1);
   const [repliesPageCount, setRepliesPageCount] = useState<number>(1);
@@ -119,11 +120,11 @@ export default function Post() {
   };
 
   useEffect(() => {
-    if (id && isSignedIn) {
-      const postId = Number(id.toString());
-      fetchPost(postId).then((value) => {
-        if (value) {
-          setPost({ ...post, ...value });
+    if (title && isSignedIn) {
+      fetchPostByTitle(title.toString()).then((value) => {
+        if (value.length > 0 && value[1]) {
+          setPosts(value);
+          setPost({ ...post, ...value[1] });
           setRepliesPageCount(1);
           setRepliesPage(1);
         } else {
@@ -133,7 +134,7 @@ export default function Post() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isSignedIn]);
+  }, [title, isSignedIn]);
 
   const fullContent = (
     <>
@@ -314,11 +315,13 @@ export default function Post() {
 
             <div className="w-full flex justify-center items-center space-x-5 border-t border-dashed border-[#3e454d] p-5">
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
-                {post.id && post.id > 1 && (
+                {posts[0] && (
                   <ArrowLeft
                     width={28}
                     height={28}
-                    onClick={() => router.push(`/post/${post.id! - 1}`)}
+                    onClick={() =>
+                      router.push(getUrlFormattedTitle(posts[0], "post"))
+                    }
                   />
                 )}
               </div>
@@ -330,11 +333,15 @@ export default function Post() {
                 />
               </div>
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
-                <ArrowRight
-                  width={28}
-                  height={28}
-                  onClick={() => router.push(`/post/${post.id! + 1}`)}
-                />
+                {posts[2] && (
+                  <ArrowRight
+                    width={28}
+                    height={28}
+                    onClick={() =>
+                      router.push(getUrlFormattedTitle(posts[2], "post"))
+                    }
+                  />
+                )}
               </div>
             </div>
           </div>

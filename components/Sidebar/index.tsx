@@ -125,14 +125,14 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             onClick={() => goToLink("/about")}
           />
           <ButtonSidebar
-            active={router.pathname == "/musics"}
+            active={router.pathname.includes("music")}
             collapsed={isSidebarCollapsed}
             icon={<Music width={26} height={26} />}
             label="Music"
             onClick={() => goToLink("/musics")}
           />
           <ButtonSidebar
-            active={router.pathname == "/livestreams"}
+            active={router.pathname.includes("livestream")}
             collapsed={isSidebarCollapsed}
             icon={<Mic width={24} height={24} />}
             label="Live Streams"
@@ -146,7 +146,9 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             onClick={() => goToLink("/gallery")}
           />
           <ButtonSidebar
-            active={router.pathname == "/fanclub"}
+            active={
+              router.pathname == "/fanclub" || router.pathname.includes("post")
+            }
             collapsed={isSidebarCollapsed}
             icon={<ThumbUp width={24} height={24} />}
             label="Fan Club"

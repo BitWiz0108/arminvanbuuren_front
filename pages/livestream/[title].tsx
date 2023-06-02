@@ -21,59 +21,42 @@ import useLivestream from "@/hooks/useLivestream";
 import { ASSET_TYPE, LIVESTREAM_QUALITY, VIEW_MODE } from "@/libs/constants";
 
 import { IStream } from "@/interfaces/IStream";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
-export default function LiveStreams() {
+export default function LiveStream() {
   const videoRef = useRef(null);
   const router = useRouter();
-  const { id } = router.query;
+  const { title } = router.query;
 
   const { setIsSidebarVisible, setIsTopbarVisible } = useSizeValues();
   const { setIsLivestreamCommentVisible, setIsMetaVisible } = useShareValues();
   const { isSignedIn } = useAuthValues();
-  const { isLoading, fetchLivestreams } = useLivestream();
+  const { isLoading, fetchLivestreamByTitle } = useLivestream();
 
-  const [allLivestreams, setAllLivestreams] = useState<Array<IStream>>([]);
   const [livestreams, setLivestreams] = useState<Array<IStream>>([]);
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.VIDEO);
 
   const videoPlayer = useVideoPlayer(videoRef);
 
-  const getAllLivestreams = (
-    id: number,
-    page: number,
-    fresh: boolean = false
-  ) => {
+  const getLivestreams = (title: string) => {
     return new Promise<boolean>((resolve, _) => {
-      fetchLivestreams(page, false)
+      fetchLivestreamByTitle(title)
         .then((data) => {
-          let newLivestreams: Array<IStream> = [];
-          if (fresh) {
-            newLivestreams.push(...data.livestreams);
-          } else {
-            newLivestreams = allLivestreams.slice();
-            newLivestreams.push(...data.livestreams);
-          }
+          setLivestreams(data);
+          videoPlayer.setVideos(data);
 
-          setAllLivestreams(newLivestreams);
-          setLivestreams(newLivestreams);
-          videoPlayer.setVideos(newLivestreams);
+          console.log(data, "data");
 
-          const index = newLivestreams.findIndex((livestream) => {
-            return livestream.id == id;
-          });
-
-          if (index >= 0) {
-            videoPlayer.setPlayingIndex(index);
-
+          if (data[1]) {
             resolve(true);
+            videoPlayer.setPlayingIndex(1);
           } else {
             resolve(false);
-
             router.push("/livestreams");
           }
         })
         .catch((_) => {
-          setAllLivestreams([]);
+          setLivestreams([]);
           resolve(false);
         });
     });
@@ -105,14 +88,14 @@ export default function LiveStreams() {
   };
 
   useEffect(() => {
-    if (isSignedIn && id) {
+    if (isSignedIn && title) {
       setIsSidebarVisible(false);
       setIsTopbarVisible(false);
-      getAllLivestreams(Number(id.toString()), 1, true);
+      getLivestreams(title.toString());
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSignedIn, id]);
+  }, [isSignedIn, title]);
 
   useEffect(() => {
     setIsMetaVisible(false);
@@ -175,6 +158,12 @@ export default function LiveStreams() {
         viewMode={viewMode}
         onListView={onListView}
         onPlayLivestream={onPlayLivestream}
+        onPrevVideo={() =>
+          router.push(getUrlFormattedTitle(livestreams[0], "livestream"))
+        }
+        onNextVideo={() =>
+          router.push(getUrlFormattedTitle(livestreams[2], "livestream"))
+        }
       />
 
       {isLoading && (

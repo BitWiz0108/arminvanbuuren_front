@@ -64,7 +64,7 @@ export default function Signup() {
     } else {
       firstName = username;
     }
-    const userId = username.replace(" ", "").toLowerCase().trim();
+    const userId = username.trim().replace(" ", "").toLowerCase().trim();
 
     signUp(email, userId, password, firstName, lastName).then((result) => {
       if (result) {

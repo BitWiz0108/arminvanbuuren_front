@@ -32,6 +32,7 @@ import { useShareValues } from "@/contexts/contextShareData";
 import useMusic from "@/hooks/useMusic";
 
 import { ASSET_TYPE, PAGE_LIMIT, SITE_BASE_URL } from "@/libs/constants";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
@@ -172,7 +173,10 @@ export default function Musics() {
   const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/music/${audioPlayer.getPlayingTrack().id}`,
+      url: `${SITE_BASE_URL}${getUrlFormattedTitle(
+        audioPlayer.getPlayingTrack(),
+        "music"
+      )}`,
       title: audioPlayer.getPlayingTrack().title,
       subject: audioPlayer.getPlayingTrack().title,
       quote: audioPlayer.getPlayingTrack().title,

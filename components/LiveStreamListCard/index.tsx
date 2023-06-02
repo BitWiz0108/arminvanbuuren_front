@@ -18,6 +18,7 @@ import {
   PLACEHOLDER_IMAGE,
   SITE_BASE_URL,
 } from "@/libs/constants";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
@@ -55,7 +56,7 @@ const LiveStreamListCard = ({
   const onShare = () => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/livestream/${livestream.id}`,
+      url: `${SITE_BASE_URL}${getUrlFormattedTitle(livestream, "livestream")}`,
       title: livestream.title,
       subject: livestream.title,
       quote: livestream.title,

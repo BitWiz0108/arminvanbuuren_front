@@ -10,7 +10,7 @@ import Share from "@/components/Icons/Share";
 
 import { useShareValues } from "@/contexts/contextShareData";
 
-import { bigNumberFormat } from "@/libs/utils";
+import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 import {
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
@@ -67,7 +67,7 @@ const Post = ({
   const onShare = () => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/post/${post.id}`,
+      url: `${SITE_BASE_URL}${getUrlFormattedTitle(post, "post")}`,
       title: post.title,
       subject: post.title,
       quote: post.title,

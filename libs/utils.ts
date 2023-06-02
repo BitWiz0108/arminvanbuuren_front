@@ -75,3 +75,32 @@ export const generateRandomNumber = () => {
   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomNumber;
 };
+
+export const getUrlFormattedTitle = (
+  asset: any,
+  type: "livestream" | "music" | "post"
+) => {
+  if (!asset) {
+    switch (type) {
+      case "livestream":
+        return "/livestreams";
+      case "music":
+        return "/musics";
+      case "post":
+        return "/fanclub";
+      default:
+        return "/home";
+    }
+  }
+  const title = asset.title as string;
+  switch (type) {
+    case "livestream":
+      return `/livestream/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
+    case "music":
+      return `/music/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
+    case "post":
+      return `/post/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
+    default:
+      return "/home";
+  }
+};

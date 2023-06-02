@@ -33,6 +33,7 @@ import { useShareValues } from "@/contexts/contextShareData";
 import useMusic from "@/hooks/useMusic";
 
 import { ASSET_TYPE, PAGE_LIMIT, SITE_BASE_URL } from "@/libs/constants";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { IMusic } from "@/interfaces/IMusic";
 import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
@@ -40,7 +41,7 @@ import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function Musics() {
   const router = useRouter();
-  const { id } = router.query;
+  const { title } = router.query;
   const scrollRef = useRef<HTMLDivElement>(null);
   const musicsScrollRef = useRef<HTMLDivElement>(null);
 
@@ -175,7 +176,10 @@ export default function Musics() {
   const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/music/${audioPlayer.getPlayingTrack().id}`,
+      url: `${SITE_BASE_URL}${getUrlFormattedTitle(
+        audioPlayer.getPlayingTrack(),
+        "music"
+      )}`,
       title: audioPlayer.getPlayingTrack().title,
       subject: audioPlayer.getPlayingTrack().title,
       quote: audioPlayer.getPlayingTrack().title,
@@ -186,7 +190,11 @@ export default function Musics() {
     setIsShareModalVisible(true);
   };
 
-  const getAllMusics = (id: number, page: number, fresh: boolean = false) => {
+  const getAllMusics = (
+    title: string,
+    page: number,
+    fresh: boolean = false
+  ) => {
     return new Promise<boolean>((resolve, _) => {
       fetchMusics(page, isExclusive)
         .then((result) => {
@@ -202,7 +210,9 @@ export default function Musics() {
           audioPlayer.setMusics(newMusics);
 
           const index = newMusics.findIndex((music) => {
-            return music.id == id;
+            return (
+              music.title.trim().replaceAll(" ", "-").toLowerCase() == title
+            );
           });
 
           if (index >= 0) {
@@ -316,10 +326,10 @@ export default function Musics() {
   }, [isMobile, audioPlayer.playingIndex, audioPlayer.albumId]);
 
   useEffect(() => {
-    if (isSignedIn && id) {
+    if (isSignedIn && title) {
       setPage(1);
 
-      getAllMusics(Number(id.toString()), 1, true);
+      getAllMusics(title.toString(), 1, true);
 
       if (isExclusive && !isMembership) {
         setIsViewExclusiveModalVisible(true);
@@ -327,7 +337,7 @@ export default function Musics() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSignedIn, isExclusive, id]);
+  }, [isSignedIn, isExclusive, title]);
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">

@@ -26,7 +26,7 @@ import useFanclub from "@/hooks/useFanclub";
 import useMusic from "@/hooks/useMusic";
 import useLivestream from "@/hooks/useLivestream";
 
-import { bigNumberFormat } from "@/libs/utils";
+import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 import {
   APP_NAME,
   ASSET_TYPE,
@@ -229,8 +229,6 @@ export default function FanClub() {
           (videos[i] as HTMLVideoElement).pause();
         }
 
-        console.log(bannerHeight, postHeight);
-
         posts.forEach((_, index) => {
           if (
             position > bannerHeight + postHeight * index &&
@@ -325,10 +323,13 @@ export default function FanClub() {
       {latestLivestreams?.length > 0 && (
         <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
           <p className="text-primary text-sm font-medium">Latest Livestream</p>
-          <Link href={`/livestream/${latestLivestreams[0].id}`}>
+          <Link
+            href={getUrlFormattedTitle(latestLivestreams[0], "livestream")}
+            className="w-full"
+          >
             <Image
               className="w-full h-28 object-cover rounded-md"
-              src={latestLivestreams[0].coverImage ?? PLACEHOLDER_IMAGE}
+              src={latestLivestreams[0]?.coverImage ?? PLACEHOLDER_IMAGE}
               width={460}
               height={200}
               alt=""
@@ -337,9 +338,12 @@ export default function FanClub() {
               priority
             />
           </Link>
-          <Link href={`/livestream/${latestLivestreams[0].id}`}>
-            <p className="text-primary text-sm font-medium">
-              {latestLivestreams[0].title}
+          <Link
+            href={getUrlFormattedTitle(latestLivestreams[0], "livestream")}
+            className="w-full"
+          >
+            <p className="text-primary text-sm text-center font-medium">
+              {latestLivestreams[0]?.title}
             </p>
           </Link>
         </div>
@@ -354,7 +358,10 @@ export default function FanClub() {
                 key={index}
                 className="col-span-1 flex justify-center items-center cursor-pointer"
               >
-                <Link href={`/livestream/${value.id}`} className="w-full">
+                <Link
+                  href={getUrlFormattedTitle(value, "livestream")}
+                  className="w-full"
+                >
                   <Image
                     className="w-full h-10 object-cover rounded-md"
                     src={value.coverImage ?? PLACEHOLDER_IMAGE}
@@ -404,7 +411,7 @@ export default function FanClub() {
                         key={index}
                         className="col-span-1 flex justify-center items-center"
                       >
-                        <Link href={`/music/${value.id}`}>
+                        <Link href={getUrlFormattedTitle(value, "music")}>
                           <Image
                             className="w-20 h-20 object-cover rounded-md"
                             width={200}

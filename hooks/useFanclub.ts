@@ -146,6 +146,36 @@ const useFanclub = () => {
     return null;
   };
 
+  const fetchPostByTitle = async (title: string) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/fanclub/post/get-by-title`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          title: title.replaceAll("-", " ").toLowerCase().trim(),
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const posts = data as Array<IPost>;
+
+      setIsLoading(false);
+      return posts;
+    } else {
+      setIsLoading(false);
+    }
+    return [];
+  };
+
   const fetchReplies = async (
     postId: number | null,
     page: number,
@@ -184,6 +214,7 @@ const useFanclub = () => {
     createReply,
     togglePostFavorite,
     fetchPost,
+    fetchPostByTitle,
     fetchPosts,
     fetchReplies,
   };
