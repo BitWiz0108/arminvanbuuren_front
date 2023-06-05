@@ -295,7 +295,7 @@ export default function LiveStreams() {
   }, [isPreviewVideoLoading]);
 
   const listView = (
-    <div className="relative w-full min-h-[768px] md:min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-[#21292c] overflow-y-auto">
+    <div className="relative w-full min-h-[768px] md:min-h-[924px] max-h-screen h-screen flex flex-col justify-start items-center overflow-x-hidden bg-background overflow-y-auto">
       <div
         className={twMerge(
           "relative w-full h-auto flex-grow flex flex-col justify-start items-center z-0",
