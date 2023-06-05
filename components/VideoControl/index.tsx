@@ -80,7 +80,7 @@ const VideoControl = ({
 
       timeout = setTimeout(() => {
         setIsMinimumButtonVisible(false);
-      }, 500);
+      }, 1000);
     };
 
     window.addEventListener("mousemove", hasMouseCheck, false);

@@ -56,6 +56,10 @@ export default function Home() {
     if (isSignedIn) {
       fetchPageContentData();
 
+      setTimeout(() => {
+        audioPlayer.play();
+      }, 1000);
+
       if (!isMembership && !isAdmin()) {
         setTimeout(() => {
           setIsSubscriptionModalVisible(true);

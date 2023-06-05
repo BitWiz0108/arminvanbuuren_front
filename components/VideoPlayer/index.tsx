@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 
-import Loading from "@/components/Loading";
-
 import { LOADING_GIF } from "@/libs/constants";
 
 const VideoPlayer = (props: any) => {
