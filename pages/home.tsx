@@ -114,7 +114,7 @@ export default function Home() {
                 className="flex flex-row justify-center items-center space-x-5 cursor-pointer"
                 onClick={() => {
                   router.push(
-                    getUrlFormattedTitle(latestLivestream.title, "livestream")
+                    getUrlFormattedTitle(latestLivestream, "livestream")
                   );
                 }}
               >
