@@ -26,6 +26,8 @@ import {
 } from "@/libs/constants";
 
 import { DEFAULT_HOMEPAGE, IHomepage } from "@/interfaces/IHomepage";
+import { IStream } from "@/interfaces/IStream";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 export default function Home() {
   const router = useRouter();
@@ -38,8 +40,9 @@ export default function Home() {
 
   const [background, setBackground] = useState<IHomepage>(DEFAULT_HOMEPAGE);
 
-  const [latestLivestreamTitle, setLatestLivestreamTitle] =
-    useState<string>("");
+  const [latestLivestream, setLatestLivestream] = useState<IStream | null>(
+    null
+  );
 
   const fetchPageContentData = () => {
     fetchPageContent().then((data) => {
@@ -48,17 +51,13 @@ export default function Home() {
       }
     });
     fetchLivestreams(1, true, 6).then((data) => {
-      setLatestLivestreamTitle(data.livestreams[0]?.title);
+      setLatestLivestream(data.livestreams[0]);
     });
   };
 
   useEffect(() => {
     if (isSignedIn) {
       fetchPageContentData();
-
-      setTimeout(() => {
-        audioPlayer.play();
-      }, 1000);
 
       if (!isMembership && !isAdmin()) {
         setTimeout(() => {
@@ -110,23 +109,29 @@ export default function Home() {
                 onClick={() => router.push("/musics")}
               />
             </div>
-            <div
-              className="flex flex-row justify-center items-center space-x-5 cursor-pointer"
-              onClick={() => {
-                router.push("/livestreams");
-              }}
-            >
-              <div className="relative">
-                <RoundPlay
-                  fill={"#0052e4"}
-                  width={50}
-                  height={50}
-                  className="hover:scale-110 transition-all duration-300"
-                />
-                <div className="absolute left-0 top-0 w-full h-full rounded-full border border-primary animate-ping"></div>
+            {latestLivestream && (
+              <div
+                className="flex flex-row justify-center items-center space-x-5 cursor-pointer"
+                onClick={() => {
+                  router.push(
+                    getUrlFormattedTitle(latestLivestream.title, "livestream")
+                  );
+                }}
+              >
+                <div className="relative">
+                  <RoundPlay
+                    fill={"#0052e4"}
+                    width={50}
+                    height={50}
+                    className="hover:scale-110 transition-all duration-300"
+                  />
+                  <div className="absolute left-0 top-0 w-full h-full rounded-full border border-primary animate-ping"></div>
+                </div>
+                <h3 className="text-sm text-center">
+                  {latestLivestream?.title}
+                </h3>
               </div>
-              <h3 className="text-sm text-center">{latestLivestreamTitle}</h3>
-            </div>
+            )}
           </div>
 
           <div className="absolute left-0 top-0 w-full h-full overflow-hidden z-0">
