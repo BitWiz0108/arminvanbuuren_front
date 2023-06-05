@@ -2,6 +2,8 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useSizeValues } from "@/contexts/contextSize";
+
 type Props = {
   active: boolean;
   collapsed: boolean;
@@ -19,6 +21,8 @@ const ButtonSidebar = ({
   onClick,
   lastOne = false,
 }: Props) => {
+  const { isMobile } = useSizeValues();
+
   const [hovered, setHovered] = useState<boolean>(false);
 
   const onHover = () => {
@@ -36,7 +40,9 @@ const ButtonSidebar = ({
       className={twMerge(
         "relative w-full h-[48px] lg:h-[58px] flex flex-row justify-start items-center overflow-hidden cursor-pointer",
         collapsed ? "pl-6" : "pl-6 lg:pl-10",
-        lastOne
+        isMobile
+          ? ""
+          : lastOne
           ? "border-t-[0.1rem] border-b-[0.1rem] border-[#464646]"
           : "border-t-[0.1rem] border-[#464646]"
       )}
@@ -49,13 +55,13 @@ const ButtonSidebar = ({
         {!collapsed && <span className="hidden md:inline-flex">{label}</span>}
       </div>
       {active ? (
-        <div className="absolute -left-[20%] top-0 w-[130%] h-full bg-gradient-to-r from-transparent from-0% via-[#0e1959] via-10% to-[#273ccd] to-100% z-0"></div>
+        <div className="absolute -left-[20%] top-0 w-[130%] h-full bg-gradient-to-r from-transparent from-0% via-[#0e1959] via-10% to-[#273ccd] to-100% shadow-inner shadow-black/60 z-0"></div>
       ) : (
         <AnimatePresence>
           {hovered && (
             <motion.div
               className={twMerge(
-                "absolute left-0 top-0 w-[130%] h-full bg-gradient-to-r from-transparent from-0% via-[#0e1959] via-10% to-[#273ccd] to-100%",
+                "absolute left-0 top-0 w-[130%] h-full bg-gradient-to-r from-transparent from-0% via-[#0e1959] via-10% to-[#273ccd] to-100% shadow-inner shadow-black/60",
                 "z-0"
               )}
               initial={{ x: "120%" }}
