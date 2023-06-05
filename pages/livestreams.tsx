@@ -32,7 +32,6 @@ import useLivestream from "@/hooks/useLivestream";
 import {
   ASSET_TYPE,
   DATE_FORMAT,
-  LIVESTREAM_QUALITY,
   PAGE_LIMIT,
   VIEW_MODE,
 } from "@/libs/constants";
@@ -63,7 +62,7 @@ export default function LiveStreams() {
     setIsMetaVisible,
     audioPlayer,
   } = useShareValues();
-  const { isSignedIn, isMembership } = useAuthValues();
+  const { isSignedIn, isMembership, isAdmin } = useAuthValues();
   const {
     isLoading,
     fetchLivestreams,
@@ -86,7 +85,7 @@ export default function LiveStreams() {
   const [viewMode, setViewMode] = useState<VIEW_MODE>(VIEW_MODE.CATEGORY);
   const [isPreviewVideoLoading, setIsPreviewVideoLoading] = useState(true);
 
-  const videoPlayer = useVideoPlayer(videoRef);
+  const videoPlayer = useVideoPlayer(videoRef.current!);
 
   const getAllLivestreams = (page: number, fresh: boolean = false) => {
     return new Promise<boolean>((resolve, _) => {
@@ -614,15 +613,19 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className="relative w-full h-screen max-h-screen bg-black z-10"
+      className={twMerge(
+        "relative w-full h-screen max-h-screen bg-black",
+        viewMode == VIEW_MODE.VIDEO ? "z-40" : "z-10"
+      )}
     >
       <video
+        autoPlay={viewMode == VIEW_MODE.VIDEO}
         controls={false}
         playsInline
         disablePictureInPicture
         ref={videoRef}
         src={videoPlayer.getPlayingTrack()?.fullVideo}
-        className="absolute left-0 top-0 object-center md:object-cover w-full h-full"
+        className="absolute left-0 top-0 object-center w-full h-full"
       />
     </div>
   );
@@ -630,7 +633,7 @@ export default function LiveStreams() {
   const pageContent = (
     <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
       <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
-        {!isMembership && (
+        {!isMembership && !isAdmin() && (
           <div
             className={twMerge(
               "absolute z-10",

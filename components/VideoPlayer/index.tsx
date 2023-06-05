@@ -24,11 +24,7 @@ const VideoPlayer = (props: any) => {
 
   return (
     <>
-      {isGlobalLoading && (
-        <div className="loading">
-          <Loading width={64} height={64} />
-        </div>
-      )}
+      {isGlobalLoading && <div className="loading"></div>}
       {isVideoLoading && (
         <div className="absolute left-0 top-0 w-full h-full flex justify-center items-center bg-black z-10">
           <img

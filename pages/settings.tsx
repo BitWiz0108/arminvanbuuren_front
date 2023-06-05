@@ -42,8 +42,15 @@ export default function Settings() {
 
   const { fetchProfile, updateProfile, fetchLocation, subscribe } =
     useProfile();
-  const { isSignedIn, accessToken, checkAuth, servertime, user, isMembership } =
-    useAuthValues();
+  const {
+    isSignedIn,
+    accessToken,
+    checkAuth,
+    servertime,
+    user,
+    isMembership,
+    isAdmin,
+  } = useAuthValues();
   const {
     audioPlayer,
     isSubscriptionModalVisible,
@@ -214,43 +221,47 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className="relative w-full flex justify-center items-center mb-5">
-              <Switch
-                checked={isSubscribed}
-                setChecked={(flag: boolean) => {
-                  setIsSubScribed(flag);
-                  let planId = null;
-                  if (flag) {
-                    if (user.planStartDate && user.planEndDate) {
-                      if (
-                        moment(servertime).isAfter(
-                          moment(user.planStartDate)
-                        ) &&
-                        moment(servertime).isBefore(moment(user.planEndDate))
-                      ) {
-                        planId = 1;
+            {!isAdmin() && (
+              <div className="relative w-full flex justify-center items-center mb-5">
+                <Switch
+                  checked={isSubscribed}
+                  setChecked={(flag: boolean) => {
+                    setIsSubScribed(flag);
+                    let planId = null;
+                    if (flag) {
+                      if (user.planStartDate && user.planEndDate) {
+                        if (
+                          moment(servertime).isAfter(
+                            moment(user.planStartDate)
+                          ) &&
+                          moment(servertime).isBefore(moment(user.planEndDate))
+                        ) {
+                          planId = 1;
+                        } else {
+                          // Subscription expired user
+                          setIsSubscriptionModalVisible(true);
+                          return;
+                        }
                       } else {
-                        // Subscription expired user
+                        // Newly subscribing user
                         setIsSubscriptionModalVisible(true);
                         return;
                       }
-                    } else {
-                      // Newly subscribing user
-                      setIsSubscriptionModalVisible(true);
-                      return;
                     }
-                  }
 
-                  subscribe(planId).then((value) => {
-                    if (value) {
-                      checkAuth(accessToken);
-                    }
-                  });
-                }}
-                label={`Turn ${isSubscribed ? "off" : "on"} your subscription`}
-                labelPos="top"
-              />
-            </div>
+                    subscribe(planId).then((value) => {
+                      if (value) {
+                        checkAuth(accessToken);
+                      }
+                    });
+                  }}
+                  label={`Turn ${
+                    isSubscribed ? "off" : "on"
+                  } your subscription`}
+                  labelPos="top"
+                />
+              </div>
+            )}
 
             <div className="w-full flex flex-col lg:flex-row mt-5 space-x-0 lg:space-x-5">
               <TextInput

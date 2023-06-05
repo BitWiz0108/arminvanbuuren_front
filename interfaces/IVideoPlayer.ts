@@ -5,6 +5,7 @@ import { IStream } from "@/interfaces/IStream";
 export interface IVideoPlayer {
   volume: number;
   isPlaying: boolean;
+  setIsPlaying: Function;
   currentPercentage: number;
   duration: number;
   trackProgress: number;

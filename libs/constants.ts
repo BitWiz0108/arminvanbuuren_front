@@ -39,6 +39,12 @@ export const LOADING_GIF = "/images/loading.gif";
 //##########################################################
 //################### System configuration #################
 //##########################################################
+export enum ROLE {
+  ADMIN = "admin",
+  ARTIST = "artist",
+  USER = "user",
+}
+
 export enum GENDER {
   MALE = "MALE",
   FEMALE = "FEMALE",

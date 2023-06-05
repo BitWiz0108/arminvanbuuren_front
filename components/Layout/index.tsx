@@ -71,10 +71,14 @@ const Layout = ({ children }: LayoutProps) => {
   }, [firstLoading]);
 
   useEffect(() => {
-    setIsSidebarVisible(width >= 768);
+    if (router.pathname.includes("livestream")) {
+      setIsSidebarVisible(false);
+    } else {
+      setIsSidebarVisible(width >= 768);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width]);
+  }, [width, router.pathname]);
 
   return (
     <Elements stripe={stripePromise}>

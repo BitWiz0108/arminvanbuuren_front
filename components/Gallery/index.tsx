@@ -176,7 +176,7 @@ const GalleryView = () => {
                 >
                   {image.type == FILE_TYPE.IMAGE ? (
                     <Image
-                      className="relative w-full md:w-auto h-auto md:h-full object-cover md:object-none select-none pointer-events-none z-10"
+                      className="relative w-full md:w-auto h-auto md:h-full object-center select-none pointer-events-none z-10"
                       width={1600}
                       height={1600}
                       src={image.image ?? PLACEHOLDER_IMAGE}

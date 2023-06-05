@@ -154,7 +154,11 @@ export default function Signin() {
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);
-        setSignInDescription(value?.signInDescription);
+        setSignInDescription(
+          value?.signInDescription
+            ? value.signInDescription
+            : `Exclusive Music, Live Concerts & ${artist.artistName} Fan Community`
+        );
       }
     });
 

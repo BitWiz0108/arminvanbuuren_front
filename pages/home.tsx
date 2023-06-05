@@ -29,7 +29,7 @@ import { DEFAULT_HOMEPAGE, IHomepage } from "@/interfaces/IHomepage";
 
 export default function Home() {
   const router = useRouter();
-  const { isSignedIn, isMembership } = useAuthValues();
+  const { isSignedIn, isMembership, isAdmin } = useAuthValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
@@ -56,7 +56,7 @@ export default function Home() {
     if (isSignedIn) {
       fetchPageContentData();
 
-      if (!isMembership) {
+      if (!isMembership && !isAdmin()) {
         setTimeout(() => {
           setIsSubscriptionModalVisible(true);
         }, 5000);
@@ -85,11 +85,16 @@ export default function Home() {
               priority
             />
             <h3 className="px-5 text-md text-center mb-10">
-              {background.homePageDescription}
-              {/* Welcome To {artist.artistName} Official Fan Club. Watch private
-              live streams, listen to his latest music and engage with{" "}
-              {artist.artistName}
-              &nbsp;fans. */}
+              {background.homePageDescription ? (
+                background.homePageDescription
+              ) : (
+                <>
+                  Welcome To {artist.artistName} Official Fan Club. Watch
+                  private live streams, listen to his latest music and engage
+                  with {artist.artistName}
+                  &nbsp;fans.
+                </>
+              )}
             </h3>
             <div className="flex flex-col md:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0 mb-10">
               <HomepageButton

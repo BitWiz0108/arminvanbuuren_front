@@ -48,6 +48,9 @@ export const AuthContext = createContext({
     return false;
   },
   isMembership: false,
+  isAdmin: () => {
+    return false as boolean;
+  },
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -67,6 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     resendVerificationLink,
     oAuthSignIn,
     isMembership,
+    isAdmin,
   } = useAuth();
 
   return (
@@ -87,6 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         resendVerificationLink,
         oAuthSignIn,
         isMembership,
+        isAdmin,
       }}
     >
       {children}

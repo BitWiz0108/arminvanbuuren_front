@@ -42,7 +42,7 @@ export default function Musics() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const musicsScrollRef = useRef<HTMLDivElement>(null);
 
-  const { isSignedIn, isMembership } = useAuthValues();
+  const { isSignedIn, isMembership, isAdmin } = useAuthValues();
   const { isMobile, height, contentWidth, isSidebarVisible, isTopbarVisible } =
     useSizeValues();
   const {
@@ -628,7 +628,7 @@ export default function Musics() {
   const pageContent = (
     <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
       <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
-        {!isMembership && (
+        {!isMembership && !isAdmin() && (
           <div
             className={twMerge(
               "absolute top-2 z-10",

@@ -8,7 +8,7 @@ import {
   API_VERSION,
   DATETIME_FORMAT,
   OAUTH_PROVIDER,
-  PROVIDER,
+  ROLE,
   TAG_ACCESS_TOKEN,
 } from "@/libs/constants";
 import { initializeFirebase } from "@/libs/firebase-client";
@@ -442,6 +442,10 @@ const useAuth = () => {
     return false;
   };
 
+  const isAdmin = () => {
+    return user.role.name == ROLE.ADMIN;
+  };
+
   return {
     servertime,
     isLoading,
@@ -458,6 +462,7 @@ const useAuth = () => {
     resendVerificationLink,
     oAuthSignIn,
     isMembership,
+    isAdmin,
   };
 };
 
