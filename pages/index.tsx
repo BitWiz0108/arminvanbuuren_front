@@ -38,7 +38,7 @@ const auth = getAuth();
 export default function Signin() {
   const router = useRouter();
   const { isLoading, isSignedIn, signIn, oAuthSignIn } = useAuthValues();
-  const { artist } = useShareValues();
+  const { artist, audioPlayer } = useShareValues();
   const { isMobile } = useSizeValues();
   const { fetchPageContent } = useHomepage();
 
@@ -151,6 +151,8 @@ export default function Signin() {
   }, [isSignedIn, router]);
 
   useEffect(() => {
+    audioPlayer.pause();
+
     fetchPageContent().then((value) => {
       if (value) {
         setVideoUrl(value?.backgroundVideo);

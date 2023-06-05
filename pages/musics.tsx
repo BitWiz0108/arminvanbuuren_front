@@ -332,7 +332,7 @@ export default function Musics() {
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
-      <div className="w-full min-h-[768px] flex flex-col justify-start overflow-hidden">
+      <div className="w-full flex flex-col justify-start">
         <div className="relative w-full flex flex-row justify-center items-center px-5 space-x-14 md:space-x-20 z-10">
           <ButtonCircle
             dark
@@ -371,7 +371,7 @@ export default function Musics() {
         <div
           className={twMerge(
             "relative flex flex-row overflow-x-auto overflow-y-hidden px-5 mb-10 mx-5 z-10",
-            height < 768 ? "-mt-8" : "mt-24"
+            isMobile && height < 768 ? "-mt-8" : "mt-24"
           )}
           ref={scrollRef}
           onMouseDown={onMouseDown}
@@ -448,6 +448,7 @@ export default function Musics() {
           >
             <AudioVisualizer
               url={audioPlayer.getPlayingTrack().musicFileCompressed}
+              // url="/musics/1.mp3"
             />
           </div>
         )}

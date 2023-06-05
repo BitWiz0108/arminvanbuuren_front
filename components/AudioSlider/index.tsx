@@ -45,7 +45,7 @@ const AudioSlider: FC<Props> = ({ min, max, value, step, onChange }) => {
       <input
         type="range"
         min={min}
-        max={max}
+        max={max ? max : 0}
         step={step}
         value={value}
         ref={valueRef}
