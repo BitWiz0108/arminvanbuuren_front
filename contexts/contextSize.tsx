@@ -2,6 +2,7 @@ import { createContext, useContext, ReactNode } from "react";
 import PropTypes from "prop-types";
 
 import useDeviceSize from "@/hooks/useDeviceSize";
+import { BROWSER_TYPE } from "@/libs/constants";
 
 export const SizeContext = createContext({
   width: 0,
@@ -17,6 +18,8 @@ export const SizeContext = createContext({
   isTopbarVisible: false,
   setIsTopbarVisible: (flag: boolean) => {},
   toggleFullscreen: (flag: boolean) => {},
+  borswerType: BROWSER_TYPE.OTHER as BROWSER_TYPE,
+  setBrowserType: (type: BROWSER_TYPE) => {},
 });
 
 export const SizeProvider = ({ children }: { children: ReactNode }) => {
@@ -34,6 +37,8 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
     isTopbarVisible,
     setIsTopbarVisible,
     toggleFullscreen,
+    borswerType,
+    setBrowserType,
   } = useDeviceSize();
 
   return (
@@ -52,6 +57,8 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
         isTopbarVisible,
         setIsTopbarVisible,
         toggleFullscreen,
+        borswerType,
+        setBrowserType,
       }}
     >
       {children}

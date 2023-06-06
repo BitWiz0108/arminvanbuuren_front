@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import {
+  BROWSER_TYPE,
   SIDEBARWIDTH_LG,
   SIDEBARWIDTH_MD,
   SIDEBARWIDTH_SM,
@@ -16,6 +17,9 @@ const useDeviceSize = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
   const [isTopbarVisible, setTopbarVisible] = useState<boolean>(false);
+  const [borswerType, setBrowserType] = useState<BROWSER_TYPE>(
+    BROWSER_TYPE.OTHER
+  );
 
   const handleWindowSizeChange = () => {
     setWidth(window.innerWidth);
@@ -138,6 +142,8 @@ const useDeviceSize = () => {
     isTopbarVisible,
     setIsTopbarVisible,
     toggleFullscreen,
+    borswerType,
+    setBrowserType,
   };
 };
 

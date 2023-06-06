@@ -13,7 +13,7 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
-import { DEFAULT_LOGO_IMAGE } from "@/libs/constants";
+import { BROWSER_TYPE, DEFAULT_LOGO_IMAGE } from "@/libs/constants";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -33,6 +33,7 @@ const Layout = ({ children }: LayoutProps) => {
     setIsSidebarVisible,
     isTopbarVisible,
     setIsTopbarVisible,
+    setBrowserType,
   } = useSizeValues();
 
   const stripePromise = loadStripe(stripePublicApiKey);
@@ -79,6 +80,26 @@ const Layout = ({ children }: LayoutProps) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, router.pathname]);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    const userAgent = navigator.userAgent;
+    if (/Chrome/.test(userAgent) && !/Edg/.test(userAgent)) {
+      setBrowserType(BROWSER_TYPE.CHROME);
+    } else if (/Firefox/.test(userAgent)) {
+      setBrowserType(BROWSER_TYPE.FIREFOX);
+    } else if (/^((?!chrome|android).)*safari/i.test(userAgent)) {
+      setBrowserType(BROWSER_TYPE.SAFARI);
+    } else if (/Edg/.test(userAgent) || /Edge/.test(userAgent)) {
+      setBrowserType(BROWSER_TYPE.EDGE);
+    } else if (/MSIE|Trident/.test(userAgent)) {
+      setBrowserType(BROWSER_TYPE.IE);
+    } else {
+      setBrowserType(BROWSER_TYPE.OTHER);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Elements stripe={stripePromise}>

@@ -10,6 +10,7 @@ import SubscriptionModal from "@/components/SubscriptionModal";
 import HomepageButton from "@/components/HomepageButton";
 import RoundPlay from "@/components/Icons/RoundPlay";
 import Loading from "@/components/Loading";
+import WelcomeModal from "@/components/WelcomeModal";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -20,18 +21,20 @@ import useLivestream from "@/hooks/useLivestream";
 
 import {
   ASSET_TYPE,
+  BROWSER_TYPE,
   DEFAULT_LOGO_IMAGE,
   FILE_TYPE,
   PLACEHOLDER_IMAGE,
 } from "@/libs/constants";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { DEFAULT_HOMEPAGE, IHomepage } from "@/interfaces/IHomepage";
 import { IStream } from "@/interfaces/IStream";
-import { getUrlFormattedTitle } from "@/libs/utils";
 
 export default function Home() {
   const router = useRouter();
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
+  const { borswerType } = useSizeValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
@@ -39,10 +42,11 @@ export default function Home() {
   const { fetchLivestreams } = useLivestream();
 
   const [background, setBackground] = useState<IHomepage>(DEFAULT_HOMEPAGE);
-
   const [latestLivestream, setLatestLivestream] = useState<IStream | null>(
     null
   );
+  const [isWelcomeModalOpened, setIsWelcomeModalOpened] =
+    useState<boolean>(false);
 
   const fetchPageContentData = () => {
     fetchPageContent().then((data) => {
@@ -68,6 +72,14 @@ export default function Home() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
+
+  useEffect(() => {
+    if (borswerType == BROWSER_TYPE.SAFARI) {
+      setIsWelcomeModalOpened(true);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [borswerType]);
 
   const fullContent = (
     <>
@@ -170,6 +182,12 @@ export default function Home() {
       <AudioControl
         audioPlayer={audioPlayer}
         onListView={() => router.push("/musics")}
+      />
+
+      <WelcomeModal
+        isVisible={isWelcomeModalOpened}
+        setVisible={setIsWelcomeModalOpened}
+        artist={artist}
       />
 
       {isLoading && (

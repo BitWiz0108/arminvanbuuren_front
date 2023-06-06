@@ -103,6 +103,15 @@ export enum VIEW_MODE {
   VIDEO,
 }
 
+export enum BROWSER_TYPE {
+  CHROME,
+  FIREFOX,
+  SAFARI,
+  EDGE,
+  IE,
+  OTHER,
+}
+
 //##########################################################
 //################## Blur image for loading ################
 //##########################################################
