@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 
 import useAuth from "@/hooks/useAuth";
 
-import { DEFAULT_USER } from "@/interfaces/IUser";
 import { OAUTH_PROVIDER } from "@/libs/constants";
+
+import { DEFAULT_USER } from "@/interfaces/IUser";
 
 export const AuthContext = createContext({
   servertime: "",

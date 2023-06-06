@@ -11,12 +11,9 @@ import {
   ROLE,
   TAG_ACCESS_TOKEN,
 } from "@/libs/constants";
-import { initializeFirebase } from "@/libs/firebase-client";
 
 import { IUser } from "@/interfaces/IUser";
 import { DEFAULT_USER } from "@/interfaces/IUser";
-
-initializeFirebase();
 
 const useAuth = () => {
   const router = useRouter();

@@ -56,6 +56,8 @@ export enum PROVIDER {
 }
 
 export enum OAUTH_PROVIDER {
+  GOOGLE = "GOOGLE",
+  APPLE = "APPLE",
   FACEBOOK = "FACEBOOK",
   TWITTER = "TWITTER",
   LINKEDIN = "LINKEDIN",

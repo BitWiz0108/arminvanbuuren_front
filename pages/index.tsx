@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
-import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
-import Input from "@/components/Input";
-import Layout from "@/components/Layout";
+import Google from "@/components/Icons/Google";
 import Profile from "@/components/Icons/Profile";
 import Lock from "@/components/Icons/Lock";
+import Layout from "@/components/Layout";
+import Input from "@/components/Input";
 import ButtonOutline from "@/components/ButtonOutline";
-import Facebook from "@/components/Icons/Facebook";
 import PoweredBy from "@/components/PoweredBy";
 import Switch from "@/components/Switch";
 import Loading from "@/components/Loading";
@@ -24,16 +23,9 @@ import useHomepage from "@/hooks/useHomepage";
 
 import {
   DEFAULT_LOGO_IMAGE,
-  OAUTH_PROVIDER,
-  TAG_ACCESS_TOKEN,
   TAG_PASSWORD,
-  TAG_REFRESH_TOKEN,
   TAG_USERNAME,
 } from "@/libs/constants";
-import { getErrorMessageForCode } from "@/libs/utils";
-
-const provider = new FacebookAuthProvider();
-const auth = getAuth();
 
 export default function Signin() {
   const router = useRouter();
@@ -77,55 +69,7 @@ export default function Signin() {
     });
   };
 
-  const onFacebookLogin = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        const email = user.email ?? "";
-        const username = user.displayName ?? email;
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-
-        if (credential) {
-          result.user.getIdToken().then((accessToken) => {
-            const refreshToken = result.user.refreshToken;
-            const email = result.user.email;
-            const uid = result.user.uid;
-
-            if (accessToken && email && uid) {
-              window.localStorage.setItem(TAG_ACCESS_TOKEN, accessToken);
-              window.localStorage.setItem(TAG_REFRESH_TOKEN, refreshToken);
-
-              let firstName = "";
-              let lastName = "";
-              if (username.includes(" ")) {
-                firstName = username.split(" ")[0].trim();
-                lastName = username.split(" ")[1].trim();
-              } else {
-                firstName = username;
-              }
-              const userId = username
-                .trim()
-                .replace(" ", "")
-                .toLowerCase()
-                .trim();
-              oAuthSignIn(
-                OAUTH_PROVIDER.FACEBOOK,
-                accessToken,
-                refreshToken
-              ).then((result) => {
-                if (result) {
-                  router.push("/home");
-                }
-              });
-            }
-          });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        toast.error(getErrorMessageForCode(e.code));
-      });
-  };
+  const onGoogleSignin = () => {};
 
   useEffect(() => {
     if (isSignedIn) {
@@ -234,13 +178,14 @@ export default function Signin() {
               <ButtonOutline label="LOGIN" onClick={() => onSignin()} />
             </div>
 
-            <div className="mb-5">
+            {/* TODO: Google & Apple OAuth */}
+            {/* <div className="mb-5">
               <ButtonOutline
-                label="Sign in with Facebook"
-                onClick={() => onFacebookLogin()}
-                icon={<Facebook width={20} height={20} />}
+                label="Sign in with Google"
+                onClick={() => onGoogleSignin()}
+                icon={<Google width={20} height={20} />}
               />
-            </div>
+            </div> */}
 
             <div className="w-full flex flex-row justify-center items-center space-x-3 mb-5">
               <Link href="/signup">
