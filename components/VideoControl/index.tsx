@@ -83,10 +83,22 @@ const VideoControl = ({
       }, 1000);
     };
 
-    window.addEventListener("mousemove", hasMouseCheck, false);
+    if (isMobile) {
+      window.addEventListener("touchstart", hasMouseCheck, false);
+    } else {
+      window.addEventListener("mousemove", hasMouseCheck, false);
+    }
 
-    return () => window.removeEventListener("mousemove", hasMouseCheck, false);
-  }, []);
+    return () => {
+      if (isMobile) {
+        window.removeEventListener("touchstart", hasMouseCheck, false);
+      } else {
+        window.removeEventListener("mousemove", hasMouseCheck, false);
+      }
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -113,7 +125,7 @@ const VideoControl = ({
           transition={{ duration: 0.3 }}
           style={{ left: `${sidebarWidth}px`, width: `${contentWidth}px` }}
         >
-          <div className="hidden xs:flex w-24 h-24 lg:w-32 lg:h-32 min-w-[96px]">
+          <div className="hidden md:flex w-24 h-24 lg:w-32 lg:h-32 min-w-[96px]">
             <Image
               className="object-cover h-full"
               src={
@@ -236,7 +248,7 @@ const VideoControl = ({
                     isFullscreenView ? (
                       <FullScreenClose width={20} height={20} />
                     ) : (
-                      <FullScreen width={24} height={24} />
+                      <FullScreen width={20} height={20} />
                     )
                   }
                   onClick={() => {

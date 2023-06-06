@@ -231,7 +231,7 @@ export default function FanClub() {
 
         posts.forEach((_, index) => {
           if (
-            position > bannerHeight + postHeight * index &&
+            position > bannerHeight + postHeight * (index - 1) &&
             position < bannerHeight + postHeight * (index + 1)
           ) {
             const videos = document.getElementsByClassName(
