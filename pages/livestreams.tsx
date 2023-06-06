@@ -703,7 +703,7 @@ export default function LiveStreams() {
             if (viewMode == VIEW_MODE.LIST) {
               setViewMode(VIEW_MODE.CATEGORY);
             } else {
-              router.push("/musics");
+              router.push("/music");
             }
           }}
         />

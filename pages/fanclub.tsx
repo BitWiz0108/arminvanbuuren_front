@@ -825,7 +825,7 @@ export default function FanClub() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/musics")}
+        onListView={() => router.push("/music")}
       />
 
       {isBannerVideoLoading && (

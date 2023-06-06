@@ -37,7 +37,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
     useSizeValues();
 
   const checkFullScreenPage = () => {
-    return router.pathname == "/musics" || router.pathname == "/livestreams";
+    return router.pathname == "/music" || router.pathname == "/livestreams";
   };
 
   const goToLink = (link: string) => {
@@ -129,7 +129,7 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             collapsed={isSidebarCollapsed}
             icon={<Music width={26} height={26} />}
             label="Music"
-            onClick={() => goToLink("/musics")}
+            onClick={() => goToLink("/music")}
           />
           <ButtonSidebar
             active={router.pathname.includes("livestream")}

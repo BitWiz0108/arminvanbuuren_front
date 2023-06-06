@@ -222,7 +222,7 @@ export default function About() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/musics")}
+        onListView={() => router.push("/music")}
       />
 
       {isLoading && (

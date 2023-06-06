@@ -118,7 +118,7 @@ export default function Home() {
               />
               <HomepageButton
                 label="PLAY MUSIC"
-                onClick={() => router.push("/musics")}
+                onClick={() => router.push("/music")}
               />
             </div>
             {latestLivestream && (
@@ -181,7 +181,7 @@ export default function Home() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/musics")}
+        onListView={() => router.push("/music")}
       />
 
       <AutoPlayPermissionModal

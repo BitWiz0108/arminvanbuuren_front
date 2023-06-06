@@ -64,7 +64,7 @@ export const getUrlFormattedTitle = (
       case "livestream":
         return "/livestreams";
       case "music":
-        return "/musics";
+        return "/music";
       case "post":
         return "/fanclub";
       default:
@@ -76,7 +76,7 @@ export const getUrlFormattedTitle = (
     case "livestream":
       return `/livestream/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
     case "music":
-      return `/music/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
+      return `/album/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
     case "post":
       return `/post/${title.trim().replaceAll(" ", "-").toLowerCase()}`;
     default:

@@ -412,7 +412,7 @@ export default function Settings() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/musics")}
+        onListView={() => router.push("/music")}
       />
     </>
   );

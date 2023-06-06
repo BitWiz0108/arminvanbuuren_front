@@ -143,7 +143,7 @@ export default function Musics() {
   };
 
   const onListView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    router.push("/musics");
+    router.push("/music");
   };
 
   const onMenuView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -226,7 +226,7 @@ export default function Musics() {
               resolve(false);
             }
           } else {
-            router.push("/musics");
+            router.push("/music");
           }
         })
         .catch((_) => {
