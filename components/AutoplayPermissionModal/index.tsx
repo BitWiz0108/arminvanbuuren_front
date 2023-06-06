@@ -3,21 +3,20 @@ import { twMerge } from "tailwind-merge";
 
 import X from "@/components/Icons/X";
 
-import { useShareValues } from "@/contexts/contextShareData";
 import { useSizeValues } from "@/contexts/contextSize";
 
 import { BROWSER_TYPE } from "@/libs/constants";
 
-import { IArtist } from "@/interfaces/IArtist";
+import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
+import { IVideoPlayer } from "@/interfaces/IVideoPlayer";
 
 type Props = {
   isVisible: boolean;
   setVisible: Function;
-  artist: IArtist;
+  player: IAudioPlayer | IVideoPlayer;
 };
 
-const WelcomeModal = ({ isVisible, setVisible, artist }: Props) => {
-  const { audioPlayer } = useShareValues();
+const AutoplayPermissionModal = ({ isVisible, setVisible, player }: Props) => {
   const { isMobile, setBrowserType } = useSizeValues();
 
   return (
@@ -41,16 +40,13 @@ const WelcomeModal = ({ isVisible, setVisible, artist }: Props) => {
                 onClick={() => {
                   setVisible(false);
                   setBrowserType(BROWSER_TYPE.OTHER);
-                  audioPlayer.play();
+                  player.play();
                 }}
               />
             </div>
 
             <h3 className="px-5 text-md text-center pt-10">
-              Welcome To {artist.artistName} Official Fan Club. Watch private
-              live streams, listen to his latest music and engage with&nbsp;
-              {artist.artistName}
-              &nbsp;fans.
+              Please be aware that our website would play music in background.
             </h3>
           </div>
         </motion.div>
@@ -59,4 +55,4 @@ const WelcomeModal = ({ isVisible, setVisible, artist }: Props) => {
   );
 };
 
-export default WelcomeModal;
+export default AutoplayPermissionModal;

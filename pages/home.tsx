@@ -10,7 +10,7 @@ import SubscriptionModal from "@/components/SubscriptionModal";
 import HomepageButton from "@/components/HomepageButton";
 import RoundPlay from "@/components/Icons/RoundPlay";
 import Loading from "@/components/Loading";
-import WelcomeModal from "@/components/WelcomeModal";
+import AutoPlayPermissionModal from "@/components/AutoplayPermissionModal";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -34,7 +34,7 @@ import { IStream } from "@/interfaces/IStream";
 export default function Home() {
   const router = useRouter();
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
-  const { borswerType } = useSizeValues();
+  const { browserType } = useSizeValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
@@ -45,7 +45,7 @@ export default function Home() {
   const [latestLivestream, setLatestLivestream] = useState<IStream | null>(
     null
   );
-  const [isWelcomeModalOpened, setIsWelcomeModalOpened] =
+  const [isAutoplayPermissionModalOpened, setIsAutoplayPermissionModalOpened] =
     useState<boolean>(false);
 
   const fetchPageContentData = () => {
@@ -74,12 +74,12 @@ export default function Home() {
   }, [isSignedIn]);
 
   useEffect(() => {
-    if (borswerType == BROWSER_TYPE.SAFARI) {
-      setIsWelcomeModalOpened(true);
+    if (browserType == BROWSER_TYPE.SAFARI && !audioPlayer.isPlaying) {
+      setIsAutoplayPermissionModalOpened(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [borswerType]);
+  }, [browserType, audioPlayer]);
 
   const fullContent = (
     <>
@@ -184,10 +184,10 @@ export default function Home() {
         onListView={() => router.push("/musics")}
       />
 
-      <WelcomeModal
-        isVisible={isWelcomeModalOpened}
-        setVisible={setIsWelcomeModalOpened}
-        artist={artist}
+      <AutoPlayPermissionModal
+        isVisible={isAutoplayPermissionModalOpened}
+        setVisible={setIsAutoplayPermissionModalOpened}
+        player={audioPlayer}
       />
 
       {isLoading && (

@@ -17,7 +17,7 @@ const useDeviceSize = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
   const [isTopbarVisible, setTopbarVisible] = useState<boolean>(false);
-  const [borswerType, setBrowserType] = useState<BROWSER_TYPE>(
+  const [browserType, setBrowserType] = useState<BROWSER_TYPE>(
     BROWSER_TYPE.OTHER
   );
 
@@ -41,6 +41,8 @@ const useDeviceSize = () => {
   };
 
   const toggleFullscreen = (flag: boolean) => {
+    if (browserType == BROWSER_TYPE.SAFARI) return;
+
     const element = document.documentElement;
     if (flag) {
       if (element.requestFullscreen) {
@@ -142,7 +144,7 @@ const useDeviceSize = () => {
     isTopbarVisible,
     setIsTopbarVisible,
     toggleFullscreen,
-    borswerType,
+    browserType,
     setBrowserType,
   };
 };
