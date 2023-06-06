@@ -80,18 +80,18 @@ const VideoControl = ({
 
       timeout = setTimeout(() => {
         setIsMinimumButtonVisible(false);
-      }, 1000);
+      }, 2000);
     };
 
     if (isMobile) {
-      window.addEventListener("touchstart", hasMouseCheck, false);
+      window.addEventListener("touchmove", hasMouseCheck, false);
     } else {
       window.addEventListener("mousemove", hasMouseCheck, false);
     }
 
     return () => {
       if (isMobile) {
-        window.removeEventListener("touchstart", hasMouseCheck, false);
+        window.removeEventListener("touchmove", hasMouseCheck, false);
       } else {
         window.removeEventListener("mousemove", hasMouseCheck, false);
       }
