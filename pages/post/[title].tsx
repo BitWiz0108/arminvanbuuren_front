@@ -352,6 +352,7 @@ export default function Post() {
         assetType={ASSET_TYPE.MUSIC}
         musicId={audioPlayer.getPlayingTrack().id}
       />
+
       <AudioControl
         audioPlayer={audioPlayer}
         onListView={() => router.push("/music")}

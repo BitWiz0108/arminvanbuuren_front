@@ -1,6 +1,7 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME!;
 export const PRODUCTION_MODE =
   Number(process.env.NEXT_PUBLIC_PRODUCTION_MODE!) == 1;
+export const CHURCH_APP = Number(process.env.NEXT_PUBLIC_CHURCH_APP!) == 1;
 export const SITE_BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL!;
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 export const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION!;

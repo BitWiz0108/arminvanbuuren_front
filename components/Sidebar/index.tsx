@@ -16,12 +16,17 @@ import ThumbUp from "@/components/Icons/ThumbUp";
 import Setting from "@/components/Icons/Setting";
 import PoweredBy from "@/components/PoweredBy";
 import Info from "@/components/Icons/Info";
+import HeartBalloon from "@/components/Icons/HeartBalloon";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
-import { DEFAULT_LOGO_IMAGE, SIDEBARWIDTH_SM } from "@/libs/constants";
+import {
+  CHURCH_APP,
+  DEFAULT_LOGO_IMAGE,
+  SIDEBARWIDTH_SM,
+} from "@/libs/constants";
 
 type Props = {
   visible: boolean;
@@ -154,6 +159,15 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             label="Fan Club"
             onClick={() => goToLink("/fanclub")}
           />
+          {CHURCH_APP && (
+            <ButtonSidebar
+              active={router.pathname == "/prayer-request"}
+              collapsed={isSidebarCollapsed}
+              icon={<HeartBalloon width={22} height={22} />}
+              label="Prayer Request"
+              onClick={() => goToLink("/prayer-request")}
+            />
+          )}
           <ButtonSidebar
             active={router.pathname == "/settings"}
             collapsed={isSidebarCollapsed}
