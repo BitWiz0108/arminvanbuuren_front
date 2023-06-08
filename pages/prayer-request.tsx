@@ -259,7 +259,7 @@ export default function FanClub() {
       <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
         <div
           className={twMerge(
-            "relative px-5 pt-16 bg-background w-full min-h-screen flex justify-center items-center",
+            "relative px-5 pt-16 bg-background w-full min-h-screen flex justify-center items-start",
             isMobile ? "pb-[180px]" : "pb-28 lg:pb-36"
           )}
         >
