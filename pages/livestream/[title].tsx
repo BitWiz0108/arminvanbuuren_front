@@ -115,10 +115,7 @@ export default function LiveStream() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className={twMerge(
-        "relative w-full h-screen max-h-screen bg-black",
-        viewMode == VIEW_MODE.VIDEO ? "z-40" : "z-10"
-      )}
+      className={twMerge("relative w-full h-screen max-h-screen bg-black z-20")}
     >
       <video
         autoPlay={true}

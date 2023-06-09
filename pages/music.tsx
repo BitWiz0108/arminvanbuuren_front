@@ -324,6 +324,10 @@ export default function Musics() {
 
       if (isExclusive && !isMembership) {
         setIsViewExclusiveModalVisible(true);
+
+        setTimeout(() => {
+          setIsExclusive(false);
+        }, 500);
       }
     }
 

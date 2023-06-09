@@ -14,6 +14,7 @@ const useDeviceSize = () => {
   const [sidebarWidth, setSidebarWidth] = useState<number>(0);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isTablet, setIsTablet] = useState<boolean>(false);
+  const [isHamburgerVisible, setIsHamburgerVisible] = useState<boolean>(true);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
   const [isTopbarVisible, setTopbarVisible] = useState<boolean>(false);
@@ -137,6 +138,8 @@ const useDeviceSize = () => {
     sidebarWidth,
     width,
     height,
+    isHamburgerVisible,
+    setIsHamburgerVisible,
     isSidebarCollapsed,
     setIsSidebarCollapsed,
     isSidebarVisible,

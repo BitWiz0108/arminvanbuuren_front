@@ -228,6 +228,10 @@ export default function LiveStreams() {
 
       if (isExclusive && !isMembership) {
         setIsViewExclusiveModalVisible(true);
+
+        setTimeout(() => {
+          setIsExclusive(false);
+        }, 500);
       }
     }
 
@@ -613,10 +617,7 @@ export default function LiveStreams() {
   const fullScreenView = (
     <div
       id="livestreamfullview"
-      className={twMerge(
-        "relative w-full h-screen max-h-screen bg-black",
-        viewMode == VIEW_MODE.VIDEO ? "z-40" : "z-10"
-      )}
+      className={twMerge("relative w-full h-screen max-h-screen bg-black z-20")}
     >
       <video
         autoPlay={viewMode == VIEW_MODE.VIDEO}
@@ -665,11 +666,7 @@ export default function LiveStreams() {
   );
 
   const nullContent = (
-    <div className="relative w-full h-screen flex justify-center items-center">
-      <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : ""}
-      </p>
-    </div>
+    <div className="relative w-full h-screen flex justify-center items-center"></div>
   );
 
   const fullContent = (

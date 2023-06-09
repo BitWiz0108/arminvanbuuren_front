@@ -29,6 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
     width,
     sidebarWidth,
     contentWidth,
+    isHamburgerVisible,
     isSidebarVisible,
     setIsSidebarVisible,
     isTopbarVisible,
@@ -188,17 +189,21 @@ const Layout = ({ children }: LayoutProps) => {
         </Head>
 
         <main className="relative w-full flex flex-row justify-start items-start">
-          <div className="flex absolute left-5 top-5 z-20">
-            <Menu
-              width={35}
-              height={35}
-              className="cursor-pointer text-primary hover:text-secondary transition-all duration-300"
-              onClick={() => {
-                setIsSidebarVisible(!isSidebarVisible);
-              }}
-            />
-          </div>
+          {isHamburgerVisible && (
+            <div className="flex absolute left-5 top-5 z-30">
+              <Menu
+                width={35}
+                height={35}
+                className="cursor-pointer text-primary hover:text-secondary transition-all duration-300"
+                onClick={() => {
+                  setIsSidebarVisible(!isSidebarVisible);
+                }}
+              />
+            </div>
+          )}
+
           <Topbar visible={isTopbarVisible} setVisible={setIsTopbarVisible} />
+
           <Sidebar
             visible={isSidebarVisible}
             setVisible={setIsSidebarVisible}

@@ -52,8 +52,13 @@ const VideoControl = ({
   onNextVideo = null,
 }: Props) => {
   const livestreamsettingsmodalRefMd = useRef(null);
-  const { isMobile, contentWidth, sidebarWidth, toggleFullscreen } =
-    useSizeValues();
+  const {
+    isMobile,
+    contentWidth,
+    sidebarWidth,
+    toggleFullscreen,
+    setIsHamburgerVisible,
+  } = useSizeValues();
   const {
     setIsDonationModalVisible,
     isLivestreamCommentVisible,
@@ -109,6 +114,7 @@ const VideoControl = ({
   }, [isMobile, videoPlayer]);
 
   useEffect(() => {
+    setIsHamburgerVisible(!isFullscreenView);
     toggleFullscreen(isFullscreenView);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
