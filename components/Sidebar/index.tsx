@@ -23,9 +23,10 @@ import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
 import {
-  CHURCH_APP,
+  SYSTEM_TYPE,
   DEFAULT_LOGO_IMAGE,
   SIDEBARWIDTH_SM,
+  APP_TYPE,
 } from "@/libs/constants";
 
 type Props = {
@@ -42,7 +43,11 @@ const Sidebar = ({ visible, setVisible }: Props) => {
     useSizeValues();
 
   const checkFullScreenPage = () => {
-    return router.pathname == "/music" || router.pathname == "/livestreams";
+    return (
+      router.pathname == "/music" ||
+      router.pathname == "/audio" ||
+      router.pathname == "/livestreams"
+    );
   };
 
   const goToLink = (link: string) => {
@@ -130,11 +135,17 @@ const Sidebar = ({ visible, setVisible }: Props) => {
             onClick={() => goToLink("/about")}
           />
           <ButtonSidebar
-            active={router.pathname.includes("music")}
+            active={
+              router.pathname.includes("music") ||
+              router.pathname.includes("audio") ||
+              router.pathname.includes("album")
+            }
             collapsed={isSidebarCollapsed}
             icon={<Music width={26} height={26} />}
-            label="Music"
-            onClick={() => goToLink("/music")}
+            label={SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
+            onClick={() =>
+              goToLink(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+            }
           />
           <ButtonSidebar
             active={router.pathname.includes("livestream")}
@@ -152,20 +163,26 @@ const Sidebar = ({ visible, setVisible }: Props) => {
           />
           <ButtonSidebar
             active={
-              router.pathname == "/fanclub" || router.pathname.includes("post")
+              router.pathname == "/fanclub" ||
+              router.pathname == "/community" ||
+              router.pathname.includes("post")
             }
             collapsed={isSidebarCollapsed}
             icon={<ThumbUp width={24} height={24} />}
-            label="Fan Club"
-            onClick={() => goToLink("/fanclub")}
+            label={SYSTEM_TYPE == APP_TYPE.CHURCH ? "Community" : "Fan Club"}
+            onClick={() =>
+              goToLink(
+                SYSTEM_TYPE == APP_TYPE.CHURCH ? "/community" : "/fanclub"
+              )
+            }
           />
-          {CHURCH_APP && (
+          {SYSTEM_TYPE != APP_TYPE.TYPICAL && (
             <ButtonSidebar
-              active={router.pathname == "/prayer-request"}
+              active={router.pathname == "/prayer-requests"}
               collapsed={isSidebarCollapsed}
               icon={<HeartBalloon width={22} height={22} />}
-              label="Prayer Request"
-              onClick={() => goToLink("/prayer-request")}
+              label="Prayer Requests"
+              onClick={() => goToLink("/prayer-requests")}
             />
           )}
           <ButtonSidebar

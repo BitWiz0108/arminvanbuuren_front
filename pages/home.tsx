@@ -20,11 +20,13 @@ import useHomepage from "@/hooks/useHomepage";
 import useLivestream from "@/hooks/useLivestream";
 
 import {
+  APP_TYPE,
   ASSET_TYPE,
   BROWSER_TYPE,
   DEFAULT_LOGO_IMAGE,
   FILE_TYPE,
   PLACEHOLDER_IMAGE,
+  SYSTEM_TYPE,
 } from "@/libs/constants";
 import { getUrlFormattedTitle } from "@/libs/utils";
 
@@ -104,9 +106,11 @@ export default function Home() {
                 background.homePageDescription
               ) : (
                 <>
-                  Welcome To {artist.artistName} Official Fan Club. Watch
-                  private live streams, listen to his latest music and engage
-                  with {artist.artistName}
+                  Welcome To {artist.artistName} Official&nbsp;
+                  {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Community" : "Fan Club"}.
+                  Watch private live streams, listen to his latest&nbsp;
+                  {SYSTEM_TYPE == APP_TYPE.CHURCH ? "audio" : "music"} and
+                  engage with {artist.artistName}
                   &nbsp;fans.
                 </>
               )}
@@ -117,8 +121,14 @@ export default function Home() {
                 onClick={() => router.push("/livestreams")}
               />
               <HomepageButton
-                label="PLAY MUSIC"
-                onClick={() => router.push("/music")}
+                label={
+                  SYSTEM_TYPE == APP_TYPE.CHURCH ? "PLAY AUDIO" : "PLAY MUSIC"
+                }
+                onClick={() =>
+                  router.push(
+                    SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music"
+                  )
+                }
               />
             </div>
             {latestLivestream && (
@@ -181,7 +191,9 @@ export default function Home() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() =>
+          router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+        }
       />
 
       <AutoPlayPermissionModal

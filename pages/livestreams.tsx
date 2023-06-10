@@ -30,9 +30,11 @@ import useVideoPlayer from "@/hooks/useVideoplayer";
 import useLivestream from "@/hooks/useLivestream";
 
 import {
+  APP_TYPE,
   ASSET_TYPE,
   DATE_FORMAT,
   PAGE_LIMIT,
+  SYSTEM_TYPE,
   VIEW_MODE,
 } from "@/libs/constants";
 
@@ -700,7 +702,7 @@ export default function LiveStreams() {
             if (viewMode == VIEW_MODE.LIST) {
               setViewMode(VIEW_MODE.CATEGORY);
             } else {
-              router.push("/music");
+              router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music");
             }
           }}
         />

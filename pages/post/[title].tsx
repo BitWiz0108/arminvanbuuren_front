@@ -24,12 +24,14 @@ import { useSizeValues } from "@/contexts/contextSize";
 import useFanclub from "@/hooks/useFanclub";
 
 import {
+  APP_TYPE,
   ASSET_TYPE,
   DATETIME_FORMAT,
   DEFAULT_AVATAR_IMAGE,
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
   PLACEHOLDER_IMAGE,
+  SYSTEM_TYPE,
 } from "@/libs/constants";
 import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 
@@ -128,7 +130,9 @@ export default function Post() {
           setRepliesPageCount(1);
           setRepliesPage(1);
         } else {
-          router.push("/fanclub");
+          router.push(
+            SYSTEM_TYPE == APP_TYPE.CHURCH ? "/community" : "/fanclub"
+          );
         }
       });
     }
@@ -329,7 +333,11 @@ export default function Post() {
                 <Home
                   width={24}
                   height={24}
-                  onClick={() => router.push("/fanclub")}
+                  onClick={() =>
+                    router.push(
+                      SYSTEM_TYPE == APP_TYPE.CHURCH ? "/community" : "/fanclub"
+                    )
+                  }
                 />
               </div>
               <div className="w-8 h-8 flex justify-center items-center text-primary hover:text-blueSecondary transition-all duration-300 cursor-pointer">
@@ -355,7 +363,9 @@ export default function Post() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() =>
+          router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+        }
       />
     </>
   );

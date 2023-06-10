@@ -10,7 +10,7 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
 import { useSizeValues } from "@/contexts/contextSize";
 
-import { ASSET_TYPE } from "@/libs/constants";
+import { APP_TYPE, ASSET_TYPE, SYSTEM_TYPE } from "@/libs/constants";
 
 export default function Gallery() {
   const router = useRouter();
@@ -36,7 +36,9 @@ export default function Gallery() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() =>
+          router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+        }
       />
     </>
   );

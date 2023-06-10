@@ -13,7 +13,7 @@ import { useSizeValues } from "@/contexts/contextSize";
 
 import useTermsOfService from "@/hooks/useTermsOfService";
 
-import { ASSET_TYPE } from "@/libs/constants";
+import { APP_TYPE, ASSET_TYPE, SYSTEM_TYPE } from "@/libs/constants";
 
 import { DEFAULT_TERMSOFSERVICE } from "@/interfaces/ITermsOfService";
 
@@ -71,7 +71,9 @@ export default function TermsOfService() {
           />
           <AudioControl
             audioPlayer={audioPlayer}
-            onListView={() => router.push("/music")}
+            onListView={() =>
+              router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+            }
           />
         </>
       )}

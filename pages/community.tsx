@@ -95,9 +95,9 @@ export default function FanClub() {
     setShareData({
       ...DEFAULT_SHAREDATA,
       url: `${SITE_BASE_URL}/fan-club`,
-      title: `${APP_NAME} Music - Fan Club`,
-      subject: `${APP_NAME} Music - Fan Club`,
-      quote: `${APP_NAME} Music - Fan Club`,
+      title: `${APP_NAME} Audio - Fan Club`,
+      subject: `${APP_NAME} Audio - Fan Club`,
+      quote: `${APP_NAME} Audio - Fan Club`,
       about: artist.description,
       body: artist.description,
       summary: artist.description,
@@ -312,7 +312,7 @@ export default function FanClub() {
           <p className="text-primary text-base text-center font-semibold">
             {artist.numberOfMusics}
           </p>
-          <p className="text-primary text-sm text-center">Songs</p>
+          <p className="text-primary text-sm text-center">Audio</p>
         </div>
         <div className="flex flex-col space-y-5">
           <p className="text-primary text-base text-center font-semibold">
@@ -396,7 +396,7 @@ export default function FanClub() {
       </div>
 
       <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
-        <p className="text-primary text-sm font-medium text-center">Music</p>
+        <p className="text-primary text-sm font-medium text-center">Audio</p>
         {musicAlbums.slice(0, 1).map((album, albumIndex) => {
           return (
             <div

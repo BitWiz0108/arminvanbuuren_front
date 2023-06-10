@@ -20,7 +20,7 @@ import { useSizeValues } from "@/contexts/contextSize";
 
 import usePrayerRequest from "@/hooks/usePrayerRequest";
 
-import { ASSET_TYPE } from "@/libs/constants";
+import { APP_TYPE, ASSET_TYPE, SYSTEM_TYPE } from "@/libs/constants";
 
 import {
   DEFAULT_PRAYERREQUEST,
@@ -287,7 +287,9 @@ export default function FanClub() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() =>
+          router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+        }
       />
     </>
   );

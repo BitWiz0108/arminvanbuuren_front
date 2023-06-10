@@ -1,3 +1,5 @@
+import { APP_TYPE, SYSTEM_TYPE } from "@/libs/constants";
+
 export const validateEmail = (email: string) => {
   return String(email)
     .toLowerCase()
@@ -64,8 +66,14 @@ export const getUrlFormattedTitle = (
       case "livestream":
         return "/livestreams";
       case "music":
+        if (SYSTEM_TYPE == APP_TYPE.CHURCH) {
+          return "/audio";
+        }
         return "/music";
       case "post":
+        if (SYSTEM_TYPE == APP_TYPE.CHURCH) {
+          return "/community";
+        }
         return "/fanclub";
       default:
         return "/home";

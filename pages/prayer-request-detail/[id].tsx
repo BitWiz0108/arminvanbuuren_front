@@ -21,10 +21,12 @@ import { useShareValues } from "@/contexts/contextShareData";
 import usePrayerRequest from "@/hooks/usePrayerRequest";
 
 import {
+  APP_TYPE,
   ASSET_TYPE,
   DATETIME_FORMAT,
   DEFAULT_AVATAR_IMAGE,
   IMAGE_BLUR_DATA_URL,
+  SYSTEM_TYPE,
 } from "@/libs/constants";
 
 import {
@@ -244,7 +246,9 @@ export default function PrayerRequest() {
 
       <AudioControl
         audioPlayer={audioPlayer}
-        onListView={() => router.push("/music")}
+        onListView={() =>
+          router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music")
+        }
       />
     </>
   );

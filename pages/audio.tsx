@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { twMerge } from "tailwind-merge";
 
 import Layout from "@/components/Layout";
@@ -46,8 +45,6 @@ import { DEFAULT_ALBUM, IAlbum } from "@/interfaces/IAlbum";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function Musics() {
-  const router = useRouter();
-  const { title } = router.query;
   const scrollRef = useRef<HTMLDivElement>(null);
   const musicsScrollRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +77,7 @@ export default function Musics() {
   const [clientX, setClientX] = useState<number>(0);
   const [gapWidth, setGapWidth] = useState<number>(0);
   const [activeWidth, setActiveWidth] = useState<number>(0);
-  const [isListView, setIsListView] = useState<boolean>(false);
+  const [isListView, setIsListView] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
 
   const checkActiveIndex = (scrollPos: number, right: boolean) => {
@@ -149,7 +146,7 @@ export default function Musics() {
   };
 
   const onListView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music");
+    setIsListView(!isListView);
   };
 
   const onMenuView = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -196,11 +193,7 @@ export default function Musics() {
     setIsShareModalVisible(true);
   };
 
-  const getAllMusics = (
-    title: string,
-    page: number,
-    fresh: boolean = false
-  ) => {
+  const getAllMusics = (page: number, fresh: boolean = false) => {
     return new Promise<boolean>((resolve, _) => {
       fetchMusics(page, isExclusive)
         .then((result) => {
@@ -215,24 +208,15 @@ export default function Musics() {
           setAllMusics(newMusics);
           audioPlayer.setMusics(newMusics);
 
-          const index = newMusics.findIndex((music) => {
-            return (
-              music.title.trim().replaceAll(" ", "-").toLowerCase() == title
-            );
-          });
+          // For the first loading, to avoid null playing track
+          if (audioPlayer.playingIndex == 0 && newMusics.length > 0) {
+            audioPlayer.setPlayingIndex(0);
+          }
 
-          if (index >= 0) {
-            audioPlayer.setPlayingIndex(index);
-            setTimeout(() => {
-              audioPlayer.play();
-            }, 1000);
-            if (result.musics.length > 0) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
+          if (result.musics.length > 0) {
+            resolve(true);
           } else {
-            router.push(SYSTEM_TYPE == APP_TYPE.CHURCH ? "/audio" : "/music");
+            resolve(false);
           }
         })
         .catch((_) => {
@@ -335,18 +319,26 @@ export default function Musics() {
   }, [isMobile, audioPlayer.playingIndex, audioPlayer.albumId]);
 
   useEffect(() => {
-    if (isSignedIn && title) {
+    if (isSignedIn) {
       setPage(1);
 
-      getAllMusics(title.toString(), 1, true);
+      getAllMusics(1, true);
+
+      fetchAllAlbums(1, isExclusive).then((albums) => {
+        setAlbums(albums);
+      });
 
       if (isExclusive && !isMembership) {
         setIsViewExclusiveModalVisible(true);
+
+        setTimeout(() => {
+          setIsExclusive(false);
+        }, 500);
       }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSignedIn, isExclusive, title]);
+  }, [isSignedIn, isExclusive]);
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
@@ -364,7 +356,7 @@ export default function Musics() {
                 ? artist.artistName
                 : getAlbumById().name}
             </span>
-            &nbsp;{SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
+            &nbsp;Audio
           </h1>
           <div className="flex flex-col justify-center items-center space-y-3">
             <div
@@ -522,8 +514,7 @@ export default function Musics() {
                   : "pl-0"
               )}
             >
-              {album.size} {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
-              {album.size > 1 && SYSTEM_TYPE != APP_TYPE.CHURCH ? "S" : ""}
+              {album.size} AUDIO
             </p>
             <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
@@ -582,9 +573,7 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          <span className="font-semibold">
-            All {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
-          </span>
+          <span className="font-semibold">All Audio</span>
         </h1>
         <p
           className={twMerge(
@@ -598,11 +587,7 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          {artist.numberOfMusics}{" "}
-          {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
-          {artist.numberOfMusics > 1 && SYSTEM_TYPE != APP_TYPE.CHURCH
-            ? "S"
-            : ""}
+          {artist.numberOfMusics} AUDIO
         </p>
         <div
           ref={musicsScrollRef}

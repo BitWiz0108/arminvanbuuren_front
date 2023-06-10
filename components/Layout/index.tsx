@@ -13,7 +13,12 @@ import { useAuthValues } from "@/contexts/contextAuth";
 import { useSizeValues } from "@/contexts/contextSize";
 import { useShareValues } from "@/contexts/contextShareData";
 
-import { BROWSER_TYPE, CHURCH_APP, DEFAULT_LOGO_IMAGE } from "@/libs/constants";
+import {
+  BROWSER_TYPE,
+  SYSTEM_TYPE,
+  DEFAULT_LOGO_IMAGE,
+  APP_TYPE,
+} from "@/libs/constants";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -79,7 +84,26 @@ const Layout = ({ children }: LayoutProps) => {
       setIsSidebarVisible(width >= 768);
     }
 
-    if (!CHURCH_APP && router.pathname.includes("prayer-request")) {
+    if (
+      SYSTEM_TYPE == APP_TYPE.TYPICAL &&
+      (router.pathname.includes("prayer-requests") ||
+        router.pathname == "/audio" ||
+        router.pathname == "/community")
+    ) {
+      router.push("/home");
+    }
+
+    if (
+      SYSTEM_TYPE == APP_TYPE.CHRISTIAN &&
+      (router.pathname == "/audio" || router.pathname == "/community")
+    ) {
+      router.push("/home");
+    }
+
+    if (
+      SYSTEM_TYPE == APP_TYPE.CHURCH &&
+      (router.pathname == "/music" || router.pathname == "/fanclub")
+    ) {
       router.push("/home");
     }
 
