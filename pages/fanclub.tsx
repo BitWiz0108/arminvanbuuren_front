@@ -94,10 +94,24 @@ export default function FanClub() {
   const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setShareData({
       ...DEFAULT_SHAREDATA,
-      url: `${SITE_BASE_URL}/fan-club`,
-      title: `${APP_NAME} Music - Fan Club`,
-      subject: `${APP_NAME} Music - Fan Club`,
-      quote: `${APP_NAME} Music - Fan Club`,
+      url: `${SITE_BASE_URL}/${
+        SYSTEM_TYPE == APP_TYPE.CHURCH ? "community" : "fan-club"
+      }`,
+      title: `${APP_NAME} ${
+        SYSTEM_TYPE == APP_TYPE.CHURCH
+          ? "Audio - Community"
+          : "Music - Fan Club"
+      }`,
+      subject: `${APP_NAME} ${
+        SYSTEM_TYPE == APP_TYPE.CHURCH
+          ? "Audio - Community"
+          : "Music - Fan Club"
+      }`,
+      quote: `${APP_NAME} ${
+        SYSTEM_TYPE == APP_TYPE.CHURCH
+          ? "Audio - Community"
+          : "Music - Fan Club"
+      }`,
       about: artist.description,
       body: artist.description,
       summary: artist.description,
@@ -226,11 +240,7 @@ export default function FanClub() {
 
         const position = scrollRef.current.scrollTop;
 
-        const videos = document.getElementsByClassName("post-video");
-        for (let i = 0; i < videos.length; i++) {
-          (videos[i] as HTMLVideoElement).pause();
-        }
-
+        const allVideos = document.getElementsByClassName("post-video");
         posts.forEach((_, index) => {
           if (
             position > bannerHeight + postHeight * (index - 1) &&
@@ -239,8 +249,18 @@ export default function FanClub() {
             const videos = document.getElementsByClassName(
               `post-video-${index}`
             );
-            for (let i = 0; i < videos.length; i++) {
-              (videos[i] as HTMLVideoElement).play();
+
+            for (let i = 0; i < allVideos.length; i++) {
+              for (let j = 0; j < videos.length; j++) {
+                if (
+                  (videos[j] as HTMLVideoElement).src ==
+                  (allVideos[i] as HTMLVideoElement).src
+                ) {
+                  (videos[j] as HTMLVideoElement).play();
+                } else {
+                  (allVideos[i] as HTMLVideoElement).pause();
+                }
+              }
             }
           }
         });
@@ -312,7 +332,9 @@ export default function FanClub() {
           <p className="text-primary text-base text-center font-semibold">
             {artist.numberOfMusics}
           </p>
-          <p className="text-primary text-sm text-center">Songs</p>
+          <p className="text-primary text-sm text-center">
+            {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Songs"}
+          </p>
         </div>
         <div className="flex flex-col space-y-5">
           <p className="text-primary text-base text-center font-semibold">
@@ -396,7 +418,9 @@ export default function FanClub() {
       </div>
 
       <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
-        <p className="text-primary text-sm font-medium text-center">Music</p>
+        <p className="text-primary text-sm font-medium text-center">
+          {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
+        </p>
         {musicAlbums.slice(0, 1).map((album, albumIndex) => {
           return (
             <div

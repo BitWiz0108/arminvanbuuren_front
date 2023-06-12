@@ -356,7 +356,7 @@ export default function Musics() {
                 ? artist.artistName
                 : getAlbumById().name}
             </span>
-            &nbsp;Audio
+            &nbsp;{SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
           </h1>
           <div className="flex flex-col justify-center items-center space-y-3">
             <div
@@ -514,7 +514,8 @@ export default function Musics() {
                   : "pl-0"
               )}
             >
-              {album.size} AUDIO
+              {album.size} {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
+              {SYSTEM_TYPE != APP_TYPE.CHURCH && album.size > 1 ? "S" : ""}
             </p>
             <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
@@ -573,7 +574,9 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          <span className="font-semibold">All Audio</span>
+          <span className="font-semibold">
+            All {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
+          </span>
         </h1>
         <p
           className={twMerge(
@@ -587,7 +590,11 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          {artist.numberOfMusics} AUDIO
+          {artist.numberOfMusics}{" "}
+          {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
+          {SYSTEM_TYPE != APP_TYPE.CHURCH && artist.numberOfMusics > 1
+            ? "S"
+            : ""}
         </p>
         <div
           ref={musicsScrollRef}

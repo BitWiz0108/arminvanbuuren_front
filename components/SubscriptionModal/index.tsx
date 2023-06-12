@@ -26,7 +26,13 @@ import { useSizeValues } from "@/contexts/contextSize";
 
 import useTransaction from "@/hooks/useTransaction";
 
-import { ASSET_TYPE, PROVIDER, TRANSACTION_TYPE } from "@/libs/constants";
+import {
+  APP_TYPE,
+  ASSET_TYPE,
+  PROVIDER,
+  SYSTEM_TYPE,
+  TRANSACTION_TYPE,
+} from "@/libs/constants";
 import { createClientSecret } from "@/libs/stripe";
 import { createOrderId } from "@/libs/paypal";
 import { checkNumber } from "@/libs/utils";
@@ -235,7 +241,7 @@ const SubscriptionModal = () => {
             <div className="mb-4">
               {artist.subscriptionDescription ? (
                 <div
-                  className="none-tailwind"
+                  className="none-tailwind text-center"
                   dangerouslySetInnerHTML={{
                     __html: artist.subscriptionDescription,
                   }}
@@ -243,7 +249,8 @@ const SubscriptionModal = () => {
               ) : (
                 <>
                   <h1 className="text-2xl text-center text-primary font-semibold">
-                    Join The {artist.artistName} Fan Club
+                    Join The {artist.artistName}&nbsp;
+                    {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Community" : "Fan Club"}
                   </h1>
                   <p className="text-sm text-center text-secondary">
                     In order to access exclusive content like this please pay $5

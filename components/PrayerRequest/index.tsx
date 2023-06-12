@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 import Comment from "@/components/Icons/Comment";
@@ -17,33 +16,42 @@ import { useAuthValues } from "@/contexts/contextAuth";
 type Props = {
   prayerRequest: IPrayerRequest;
   favorite: Function;
-  DeletePrayerRequest: Function,
-  EditPrayerRequest: Function,
+  DeletePrayerRequest: Function;
+  EditPrayerRequest: Function;
   comment: Function;
 };
 
-
-const PrayerRequest = ({ prayerRequest, favorite, DeletePrayerRequest, EditPrayerRequest, comment }: Props) => {
-
+const PrayerRequest = ({
+  prayerRequest,
+  favorite,
+  DeletePrayerRequest,
+  EditPrayerRequest,
+  comment,
+}: Props) => {
   const { accessToken, user } = useAuthValues();
-
   const [isSeenMore, setIsSeenMore] = useState<boolean>(false);
-
-  console.log("!!!!!: ", prayerRequest.author.id);
-  console.log("?????: ", user.id);
 
   return (
     <div className="w-full flex flex-col justify-start items-start space-y-2 p-3 rounded-lg bg-third">
       <p
+        className={twMerge("w-full text-left text-base lg:text-lg font-medium")}
+      >
+        {prayerRequest.isAnonymous
+          ? "Anonymous"
+          : prayerRequest.author.firstName +
+            " " +
+            prayerRequest.author.lastName}
+      </p>
+      <p
         className={twMerge(
-          "w-full text-left text-base lg:text-lg font-medium transition-all duration-300",
+          "w-full text-left text-sm lg:text-base font-medium transition-all duration-300 cursor-pointer",
           isSeenMore
             ? "text-blueSecondary"
             : "text-primary hover:text-blueSecondary"
         )}
         onClick={() => comment()}
       >
-        {prayerRequest.isAnonymous ? "Anonymous" : prayerRequest.author.firstName + " " + prayerRequest.author.lastName}
+        {prayerRequest.title}
       </p>
 
       <div className={twMerge("relative w-full", isSeenMore ? "pb-5" : "pb-0")}>
@@ -58,14 +66,16 @@ const PrayerRequest = ({ prayerRequest, favorite, DeletePrayerRequest, EditPraye
             __html: prayerRequest.content,
           }}
         ></div>
-        {prayerRequest.author.id == user.id ?
+        {prayerRequest.author.id == user.id ? (
           <div>
             <div className="absolute bottom-0 right-20 text-secondary text-sm pl-1 bg-third hover:text-primary transition-all duration-300 cursor-pointer select-none">
               <Edit
                 width={24}
                 height={24}
                 className="text-primary hover:text-blueSecondary cursor-pointer transition-all duration-300"
-                onClick={() => { EditPrayerRequest(prayerRequest.id) }}
+                onClick={() => {
+                  EditPrayerRequest(prayerRequest.id);
+                }}
               />
             </div>
             <div className="absolute bottom-0 right-32 text-secondary text-sm pl-1 bg-third hover:text-primary transition-all duration-300 cursor-pointer select-none">
@@ -73,12 +83,15 @@ const PrayerRequest = ({ prayerRequest, favorite, DeletePrayerRequest, EditPraye
                 width={24}
                 height={24}
                 className="text-primary hover:text-red-500 cursor-pointer transition-all duration-300"
-                onClick={() => { DeletePrayerRequest(prayerRequest.id) }}
+                onClick={() => {
+                  DeletePrayerRequest(prayerRequest.id);
+                }}
               />
             </div>
           </div>
-          : ""
-        }
+        ) : (
+          ""
+        )}
 
         {isSeenMore ? (
           <div
@@ -119,10 +132,17 @@ const PrayerRequest = ({ prayerRequest, favorite, DeletePrayerRequest, EditPraye
           onClick={() => comment()}
         >
           <Comment width={18} height={18} />
-          <span className="text-sm md:text-base select-none">Reply to {prayerRequest.isAnonymous ? "Anonymous" : prayerRequest.author.firstName + " " + prayerRequest.author.lastName}</span>
+          <span className="text-sm md:text-base select-none">
+            Reply to{" "}
+            {prayerRequest.isAnonymous
+              ? "Anonymous"
+              : prayerRequest.author.firstName +
+                " " +
+                prayerRequest.author.lastName}
+          </span>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

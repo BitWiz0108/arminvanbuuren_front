@@ -26,7 +26,13 @@ import { useSizeValues } from "@/contexts/contextSize";
 
 import useTransaction from "@/hooks/useTransaction";
 
-import { ASSET_TYPE, PROVIDER, TRANSACTION_TYPE } from "@/libs/constants";
+import {
+  APP_TYPE,
+  ASSET_TYPE,
+  PROVIDER,
+  SYSTEM_TYPE,
+  TRANSACTION_TYPE,
+} from "@/libs/constants";
 import { createClientSecret } from "@/libs/stripe";
 import { createOrderId } from "@/libs/paypal";
 import { checkNumber } from "@/libs/utils";
@@ -45,7 +51,7 @@ const DonationModal = ({
   livestreamId = null,
 }: Props) => {
   const { isSignedIn } = useAuthValues();
-  const { isDonationModalVisible, setIsDonationModalVisible } =
+  const { isDonationModalVisible, setIsDonationModalVisible, artist } =
     useShareValues();
   const { isMobile } = useSizeValues();
 
@@ -227,8 +233,12 @@ const DonationModal = ({
           transition={{ duration: 0.3 }}
         >
           <div className="relative w-full md:w-[540px] max-h-full px-5 md:px-10 pt-20 pb-5 md:pb-10 bg-background rounded-lg overflow-x-hidden overflow-y-auto pr-5">
-            <h1 className="absolute top-5 left-1/2 -translate-x-1/2 text-2xl text-center text-primary font-semibold">
+            <h1 className="absolute top-8 left-1/2 -translate-x-1/2 text-2xl text-center text-primary font-semibold">
               Donation
+            </h1>
+            <h1 className="text-center text-primary font-semibold mb-2">
+              The {artist.artistName}&nbsp;
+              {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Community" : "Fan Club"}
             </h1>
 
             <div className="absolute top-5 right-5 text-primary cursor-pointer">

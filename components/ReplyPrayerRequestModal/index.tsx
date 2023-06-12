@@ -125,9 +125,9 @@ const ReplyPrayerRequestModal = ({
                         key={index}
                         className="w-full flex justify-center items-center space-x-2 p-2 bg-third rounded-md"
                       >
-                        <div className="w-24 min-w-[96px] flex flex-col justify-center items-center">
+                        <div className="w-24 min-w-[96px] flex flex-col justify-center items-center space-y-1">
                           {!reply.isAnonymous ? (
-                            <div>
+                            <>
                               <Image
                                 className="w-8 h-8 object-cover rounded-full overflow-hidden"
                                 src={
@@ -145,7 +145,7 @@ const ReplyPrayerRequestModal = ({
                                   ? "anonymous"
                                   : reply.replier.username}
                               </p>
-                            </div>
+                            </>
                           ) : (
                             "Anonymous"
                           )}

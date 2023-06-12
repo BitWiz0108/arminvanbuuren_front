@@ -2,12 +2,7 @@ import { useState } from "react";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 
-import { getAWSSignedURL } from "@/libs/aws";
-import {
-  API_BASE_URL,
-  API_VERSION,
-  DEFAULT_AVATAR_IMAGE,
-} from "@/libs/constants";
+import { API_BASE_URL, API_VERSION } from "@/libs/constants";
 
 import { IPrayerRequest } from "@/interfaces/IPrayerRequest";
 import { IPrayerReply } from "@/interfaces/IPrayerReply";
@@ -43,10 +38,6 @@ const usePrayerRequest = () => {
     if (response.ok) {
       const data = await response.json();
       const reply = data as IPrayerReply;
-      reply.replier.avatarImage = await getAWSSignedURL(
-        reply.replier.avatarImage,
-        DEFAULT_AVATAR_IMAGE
-      );
 
       setIsLoading(false);
       return reply;
@@ -128,15 +119,6 @@ const usePrayerRequest = () => {
     if (response.ok) {
       const data = await response.json();
       const post = data as IPrayerRequest;
-      const avatarImagePromises = post.replies.map((reply) => {
-        return getAWSSignedURL(reply.replier.avatarImage, DEFAULT_AVATAR_IMAGE);
-      });
-      if (avatarImagePromises && avatarImagePromises.length > 0) {
-        const avatarImages = await Promise.all(avatarImagePromises);
-        post.replies.forEach(
-          (reply, index) => (reply.replier.avatarImage = avatarImages[index])
-        );
-      }
 
       setIsLoading(false);
       return post;
@@ -168,16 +150,6 @@ const usePrayerRequest = () => {
     if (response.ok) {
       const data = await response.json();
       const replies = data.replies as Array<IPrayerReply>;
-      const avatarImagePromises = replies.map((reply) => {
-        return getAWSSignedURL(reply.replier.avatarImage, DEFAULT_AVATAR_IMAGE);
-      });
-      if (avatarImagePromises && avatarImagePromises.length > 0) {
-        const avatarImages = await Promise.all(avatarImagePromises);
-        replies.forEach(
-          (reply, index) => (reply.replier.avatarImage = avatarImages[index])
-        );
-      }
-
       const pages = Number(data.pages);
 
       setIsLoading(false);

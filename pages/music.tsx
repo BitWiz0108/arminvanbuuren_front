@@ -31,7 +31,13 @@ import { useShareValues } from "@/contexts/contextShareData";
 
 import useMusic from "@/hooks/useMusic";
 
-import { ASSET_TYPE, PAGE_LIMIT, SITE_BASE_URL } from "@/libs/constants";
+import {
+  APP_TYPE,
+  ASSET_TYPE,
+  PAGE_LIMIT,
+  SITE_BASE_URL,
+  SYSTEM_TYPE,
+} from "@/libs/constants";
 import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { IMusic } from "@/interfaces/IMusic";
@@ -350,7 +356,7 @@ export default function Musics() {
                 ? artist.artistName
                 : getAlbumById().name}
             </span>
-            &nbsp;Music
+            &nbsp;{SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
           </h1>
           <div className="flex flex-col justify-center items-center space-y-3">
             <div
@@ -508,7 +514,8 @@ export default function Musics() {
                   : "pl-0"
               )}
             >
-              {album.size} SONG{album.size > 1 ? "S" : ""}
+              {album.size} {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
+              {SYSTEM_TYPE != APP_TYPE.CHURCH && album.size > 1 ? "S" : ""}
             </p>
             <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
@@ -567,7 +574,9 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          <span className="font-semibold">All Music</span>
+          <span className="font-semibold">
+            All {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
+          </span>
         </h1>
         <p
           className={twMerge(
@@ -581,7 +590,11 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          {artist.numberOfMusics} SONG{artist.numberOfMusics > 1 ? "S" : ""}
+          {artist.numberOfMusics}{" "}
+          {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
+          {SYSTEM_TYPE != APP_TYPE.CHURCH && artist.numberOfMusics > 1
+            ? "S"
+            : ""}
         </p>
         <div
           ref={musicsScrollRef}
