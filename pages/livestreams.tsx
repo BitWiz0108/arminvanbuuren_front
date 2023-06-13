@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
+import { isMobile as isMobileDevice } from "react-device-detect";
 
 import Layout from "@/components/Layout";
 import Play from "@/components/Icons/Play";
@@ -288,11 +289,14 @@ export default function LiveStreams() {
         setIsSidebarVisible(false);
         setIsTopbarVisible(false);
         audioPlayer.pause();
+        if (isMobileDevice) {
+          toggleFullscreen(true);
+        }
         break;
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewMode]);
+  }, [viewMode, isMobileDevice]);
 
   useEffect(() => {
     if (isPreviewVideoLoading) {
@@ -335,7 +339,7 @@ export default function LiveStreams() {
           autoPlay
           playsInline
           disablePictureInPicture
-          className="relative w-full h-full object-cover z-0 filter blur-[4px]"
+          className="relative w-full h-full object-cover z-0 filter blur-[3px]"
           src={videoPlayer.getPlayingTrack().previewVideo}
           onLoadStart={() => setIsPreviewVideoLoading(true)}
           onLoadedData={() => setIsPreviewVideoLoading(false)}
@@ -628,7 +632,7 @@ export default function LiveStreams() {
         disablePictureInPicture
         ref={videoRef}
         src={videoPlayer.getPlayingTrack()?.fullVideo}
-        className="absolute left-0 top-0 object-center w-full h-full"
+        className={twMerge("absolute left-0 top-0 w-full h-full object-center")}
       />
     </div>
   );

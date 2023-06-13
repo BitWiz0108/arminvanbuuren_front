@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
+import { isMobile as isMobileDevice } from "react-device-detect";
 
 import ButtonCircle from "@/components/ButtonCircle";
 import ButtonVolume from "@/components/ButtonVolume";
@@ -88,14 +89,14 @@ const VideoControl = ({
       }, 2000);
     };
 
-    if (isMobile) {
+    if (isMobileDevice) {
       window.addEventListener("touchmove", hasMouseCheck, false);
     } else {
       window.addEventListener("mousemove", hasMouseCheck, false);
     }
 
     return () => {
-      if (isMobile) {
+      if (isMobileDevice) {
         window.removeEventListener("touchmove", hasMouseCheck, false);
       } else {
         window.removeEventListener("mousemove", hasMouseCheck, false);
@@ -103,15 +104,15 @@ const VideoControl = ({
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile]);
+  }, [isMobileDevice]);
 
   useEffect(() => {
-    if (isMobile) {
+    if (isMobileDevice) {
       videoPlayer.setPlayingQuality(LIVESTREAM_QUALITY.LOW);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile, videoPlayer]);
+  }, [isMobileDevice, videoPlayer]);
 
   useEffect(() => {
     setIsHamburgerVisible(!isFullscreenView);

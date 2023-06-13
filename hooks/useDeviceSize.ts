@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import * as rdd from "react-device-detect";
 
 import {
   BROWSER_TYPE,
@@ -42,8 +43,6 @@ const useDeviceSize = () => {
   };
 
   const toggleFullscreen = (flag: boolean) => {
-    if (browserType == BROWSER_TYPE.SAFARI) return;
-
     const element = document.documentElement;
     if (flag) {
       if (element.requestFullscreen) {
@@ -130,6 +129,24 @@ const useDeviceSize = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, isSidebarCollapsed, isSidebarVisible]);
+
+  useEffect(() => {
+    if (rdd.isChrome) {
+      setBrowserType(BROWSER_TYPE.CHROME);
+    } else if (rdd.isFirefox) {
+      setBrowserType(BROWSER_TYPE.FIREFOX);
+    } else if (rdd.isSafari || rdd.isMobileSafari) {
+      setBrowserType(BROWSER_TYPE.SAFARI);
+    } else if (rdd.isEdge) {
+      setBrowserType(BROWSER_TYPE.EDGE);
+    } else if (rdd.isIE) {
+      setBrowserType(BROWSER_TYPE.IE);
+    } else {
+      setBrowserType(BROWSER_TYPE.OTHER);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rdd]);
 
   return {
     isMobile,
