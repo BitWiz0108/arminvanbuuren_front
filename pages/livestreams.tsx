@@ -335,7 +335,7 @@ export default function LiveStreams() {
           autoPlay
           playsInline
           disablePictureInPicture
-          className="relative w-full h-full object-cover z-0"
+          className="relative w-full h-full object-cover z-0 filter blur-[4px]"
           src={videoPlayer.getPlayingTrack().previewVideo}
           onLoadStart={() => setIsPreviewVideoLoading(true)}
           onLoadedData={() => setIsPreviewVideoLoading(false)}
