@@ -22,7 +22,6 @@ import useLivestream from "@/hooks/useLivestream";
 import {
   APP_TYPE,
   ASSET_TYPE,
-  BROWSER_TYPE,
   DEFAULT_LOGO_IMAGE,
   FILE_TYPE,
   PLACEHOLDER_IMAGE,
@@ -36,7 +35,6 @@ import { IStream } from "@/interfaces/IStream";
 export default function Home() {
   const router = useRouter();
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
-  const { browserType } = useSizeValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
@@ -47,6 +45,7 @@ export default function Home() {
   const [latestLivestream, setLatestLivestream] = useState<IStream | null>(
     null
   );
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const [isAutoplayPermissionModalOpened, setIsAutoplayPermissionModalOpened] =
     useState<boolean>(false);
 
@@ -76,12 +75,26 @@ export default function Home() {
   }, [isSignedIn]);
 
   useEffect(() => {
-    if (browserType == BROWSER_TYPE.SAFARI && !audioPlayer.isPlaying) {
+    const timeout = setTimeout(() => {
+      setFirstLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (firstLoading) {
+      return;
+    }
+
+    if (!audioPlayer.isPlaying) {
       setIsAutoplayPermissionModalOpened(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [browserType, audioPlayer]);
+  }, [firstLoading]);
 
   const fullContent = (
     <>

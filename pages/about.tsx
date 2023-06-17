@@ -98,15 +98,9 @@ export default function About() {
           <div className="relative w-full flex flex-col xl:flex-row justify-center items-center">
             <div className="w-full xl:w-1/2 h-screen min-h-[750px] justify-center items-center flex flex-col bg-background">
               <div className="w-3/4 flex flex-col justify-center items-center">
-                {SYSTEM_TYPE == APP_TYPE.CHURCH ? (
-                  <h1 className="text-5xl uppercase font-thin font-[100] text-center">
-                    {APP_NAME}
-                  </h1>
-                ) : (
-                  <h1 className="text-5xl uppercase font-thin font-[100] text-center tracking-[-6px]">
-                    ABOUT THE ARTIST
-                  </h1>
-                )}
+                <h1 className="text-5xl uppercase font-thin font-[100] text-center">
+                  {artist?.artistName ? artist.artistName : APP_NAME}
+                </h1>
                 <div className="relative w-full h-[500px] text-center my-5 pr-2 overflow-x-hidden overflow-y-auto">
                   <div
                     className="none-tailwind text-sm"

@@ -131,11 +131,7 @@ export default function LiveStream() {
   );
 
   const nullContent = (
-    <div className="relative w-full h-screen flex justify-center items-center">
-      <p className="text-center text-secondary text-base font-medium">
-        {isLoading ? <Loading width={40} height={40} /> : ""}
-      </p>
-    </div>
+    <div className="relative w-full h-screen flex justify-center items-center"></div>
   );
 
   const fullContent = (

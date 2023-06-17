@@ -40,6 +40,8 @@ body {
   overflow-x: hidden;
   background: var(--color-background);
   color: var(--color-primary);
+  scrollbar-color: var(--color-blue-primary) var(--color-third);
+  scrollbar-width: 6px;
 }
 
 a {
@@ -78,6 +80,42 @@ a {
 
 ::-webkit-scrollbar-thumb:horizontal {
   background-color: var(--color-blue-primary);
+}
+
+.simplebar-vertical .simplebar-scrollbar {
+  background-color: var(--color-blue-primary) !important;
+  border-radius: 10px;
+  width: 6px;
+}
+
+.simplebar-vertical.simplebar-track {
+  background-color: var(--color-third) !important;
+  border-radius: 10px !important;
+  width: 6px !important;
+}
+
+.simplebar-horizontal .simplebar-scrollbar {
+  background-color: var(--color-blue-primary) !important;
+  border-radius: 10px;
+  height: 6px;
+}
+
+.simplebar-horizontal.simplebar-track {
+  background-color: var(--color-third) !important;
+  border-radius: 10px !important;
+  height: 6px !important;
+}
+
+.simplebar-track {
+  background-color: var(--color-third) !important;
+}
+
+.simplebar-scrollbar:before {
+  background-color: var(--color-blue-primary) !important;
+}
+
+.simplebar-scrollbar:hover:before {
+  background-color: var(--color-blue-primary) !important;
 }
 
 ::-webkit-calendar-picker-indicator {
@@ -232,6 +270,20 @@ div.none-tailwind * {
   z-index: 100;
   width: 100vw;
   height: 100vh;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sub-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;

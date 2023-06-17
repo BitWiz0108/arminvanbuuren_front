@@ -7,6 +7,7 @@ import Heart from "@/components/Icons/Heart";
 import HeartFill from "@/components/Icons/HeartFill";
 import Comment from "@/components/Icons/Comment";
 import Share from "@/components/Icons/Share";
+import VideoPlayer from "@/components/VideoPlayer";
 
 import { useShareValues } from "@/contexts/contextShareData";
 
@@ -20,7 +21,6 @@ import {
 
 import { IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
-import VideoPlayer from "../VideoPlayer";
 
 type Props = {
   setRef?: Function | null;

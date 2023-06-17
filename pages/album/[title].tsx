@@ -14,7 +14,6 @@ import MusicCard, {
   MUSIC_CARD_NORMAL_WIDTH_DESKTOP,
   MUSIC_CARD_NORMAL_WIDTH_MOBILE,
 } from "@/components/MusicCard";
-import MusicListCard from "@/components/MusicListCard";
 import VDots from "@/components/Icons/VDots";
 import AudioVisualizer from "@/components/AudioVisualizer";
 import AudioControl from "@/components/AudioControl";
@@ -49,7 +48,6 @@ export default function Musics() {
   const router = useRouter();
   const { title } = router.query;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const musicsScrollRef = useRef<HTMLDivElement>(null);
 
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
   const { isMobile, height, contentWidth, isSidebarVisible, isTopbarVisible } =
@@ -63,13 +61,8 @@ export default function Musics() {
     setIsShareModalVisible,
     setShareData,
   } = useShareValues();
-  const {
-    isLoading,
-    fetchMusics,
-    fetchAllAlbums,
-    fetchAlbumMusics,
-    toggleMusicFavorite,
-  } = useMusic();
+  const { isLoading, fetchMusics, fetchAlbumMusics, toggleMusicFavorite } =
+    useMusic();
 
   const [allMusics, setAllMusics] = useState<Array<IMusic>>([]);
   const [albums, setAlbums] = useState<Array<IAlbum>>([]);
@@ -474,185 +467,12 @@ export default function Musics() {
     </div>
   );
 
-  const listView = (
-    <div className="relative w-full min-h-screen flex flex-col justify-start items-start space-y-10 pt-5 pb-44 bg-background">
-      {albums.map((album, index) => {
-        return (
-          <div
-            key={index}
-            className="w-full flex flex-col justify-start items-start px-5"
-          >
-            <h1
-              className={twMerge(
-                "text-primary text-base md:text-xl text-center",
-                index == 0
-                  ? isMobile
-                    ? "pl-16"
-                    : isSidebarVisible
-                    ? "md:pl-0"
-                    : "md:pl-16"
-                  : "pl-0"
-              )}
-            >
-              <span className="font-semibold">{album.name}</span>
-            </h1>
-            <p
-              className={twMerge(
-                "text-secondary text-xs md:text-sm text-center",
-                index == 0
-                  ? isMobile
-                    ? "pl-16"
-                    : isSidebarVisible
-                    ? "md:pl-0"
-                    : "md:pl-16"
-                  : "pl-0"
-              )}
-            >
-              {album.description}
-            </p>
-            <p
-              className={twMerge(
-                "text-secondary text-sm md:text-base font-semibold text-center",
-                index == 0
-                  ? isMobile
-                    ? "pl-16"
-                    : isSidebarVisible
-                    ? "md:pl-0"
-                    : "md:pl-16"
-                  : "pl-0"
-              )}
-            >
-              {album.size} {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
-              {album.size > 1 && SYSTEM_TYPE != APP_TYPE.CHURCH ? "S" : ""}
-            </p>
-            <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
-              <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
-                {album.musics.map((music, index) => {
-                  return (
-                    <MusicListCard
-                      playing={
-                        music.id == audioPlayer.getPlayingTrack().id &&
-                        audioPlayer.albumId == album.id
-                      }
-                      soundStatus={
-                        music.id == audioPlayer.getPlayingTrack().id &&
-                        audioPlayer.albumId == album.id
-                          ? audioPlayer.isPlaying
-                            ? "playing"
-                            : "paused"
-                          : "none"
-                      }
-                      music={music}
-                      togglePlay={() => {
-                        if (audioPlayer.isPlaying) {
-                          audioPlayer.pause();
-                        } else {
-                          audioPlayer.play();
-                        }
-                      }}
-                      play={() => {
-                        audioPlayer.setAlbumId(album.id);
-                        audioPlayer.setMusics(album.musics);
-                        setPage(
-                          Math.floor(album.musics.length / PAGE_LIMIT) + 1
-                        );
-                        audioPlayer.setPlayingIndex(index);
-                        setIsListView(false);
-                      }}
-                      key={index}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-
-      <div className="relative w-full flex flex-col justify-start items-start px-5">
-        <h1
-          className={twMerge(
-            "text-primary text-base md:text-xl text-center",
-            albums.length == 0
-              ? isMobile
-                ? "pl-16"
-                : isSidebarVisible
-                ? "md:pl-0"
-                : "md:pl-16"
-              : "pl-0"
-          )}
-        >
-          <span className="font-semibold">
-            All {SYSTEM_TYPE == APP_TYPE.CHURCH ? "Audio" : "Music"}
-          </span>
-        </h1>
-        <p
-          className={twMerge(
-            "text-secondary text-xs md:text-sm font-semibold text-center",
-            albums.length == 0
-              ? isMobile
-                ? "pl-16"
-                : isSidebarVisible
-                ? "md:pl-0"
-                : "md:pl-16"
-              : "pl-0"
-          )}
-        >
-          {artist.numberOfMusics}{" "}
-          {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
-          {artist.numberOfMusics > 1 && SYSTEM_TYPE != APP_TYPE.CHURCH
-            ? "S"
-            : ""}
-        </p>
-        <div
-          ref={musicsScrollRef}
-          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-          onWheel={(e) => onWheel(e, musicsScrollRef)}
-          style={{ scrollBehavior: "unset" }}
-        >
-          <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
-            {allMusics.map((music, index) => {
-              return (
-                <MusicListCard
-                  playing={
-                    music.id == audioPlayer.getPlayingTrack().id &&
-                    audioPlayer.albumId == null
-                  }
-                  soundStatus={
-                    music.id == audioPlayer.getPlayingTrack().id &&
-                    audioPlayer.albumId == null
-                      ? audioPlayer.isPlaying
-                        ? "playing"
-                        : "paused"
-                      : "none"
-                  }
-                  music={music}
-                  togglePlay={() => {
-                    if (audioPlayer.isPlaying) {
-                      audioPlayer.pause();
-                    } else {
-                      audioPlayer.play();
-                    }
-                  }}
-                  play={() => {
-                    audioPlayer.setAlbumId(null);
-                    audioPlayer.setMusics(allMusics);
-                    setPage(Math.floor(allMusics.length / PAGE_LIMIT) + 1);
-                    audioPlayer.setPlayingIndex(index);
-                    setIsListView(false);
-                  }}
-                  key={index}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   const pageContent = (
-    <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
+    <div
+      className="w-full h-screen overflow-x-hidden overflow-y-auto"
+      data-simplebar
+      data-simplebar-auto-hide="false"
+    >
       <div className="relative w-full min-h-screen flex flex-col justify-start items-center">
         {!isMembership && !isAdmin() && (
           <div
@@ -670,7 +490,7 @@ export default function Musics() {
           </div>
         )}
 
-        {isListView ? listView : sliderView}
+        {sliderView}
       </div>
 
       {isLoading && (

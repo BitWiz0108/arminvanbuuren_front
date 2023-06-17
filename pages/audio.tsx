@@ -99,25 +99,25 @@ export default function Musics() {
     }
   };
 
-  const onWheel = (
-    e: React.WheelEvent<HTMLDivElement>,
-    ref: any,
-    element: boolean = false
-  ) => {
-    if (e.deltaY == 0) return;
+  // const onWheel = (
+  //   e: React.WheelEvent<HTMLDivElement>,
+  //   ref: any,
+  //   element: boolean = false
+  // ) => {
+  //   if (e.deltaY == 0) return;
 
-    if (element) {
-      ref.scrollTo({
-        left: ref.current?.scrollLeft + e.deltaY,
-        behavior: "smooth",
-      });
-    } else {
-      ref.current.scrollTo({
-        left: ref.current.scrollLeft + e.deltaY,
-        behavior: "smooth",
-      });
-    }
-  };
+  //   if (element) {
+  //     ref.scrollTo({
+  //       left: ref.current?.scrollLeft + e.deltaY,
+  //       behavior: "smooth",
+  //     });
+  //   } else {
+  //     ref.current.scrollTo({
+  //       left: ref.current.scrollLeft + e.deltaY,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsScrolling(true);
@@ -517,7 +517,11 @@ export default function Musics() {
               {album.size} {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
               {SYSTEM_TYPE != APP_TYPE.CHURCH && album.size > 1 ? "S" : ""}
             </p>
-            <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
+            <div
+              className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10 pb-1"
+              data-simplebar
+              data-simplebar-auto-hide="false"
+            >
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
                 {album.musics.map((music, index) => {
                   return (
@@ -598,9 +602,11 @@ export default function Musics() {
         </p>
         <div
           ref={musicsScrollRef}
-          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-          onWheel={(e) => onWheel(e, musicsScrollRef)}
-          style={{ scrollBehavior: "unset" }}
+          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10 pb-1"
+          // onWheel={(e) => onWheel(e, musicsScrollRef)}
+          // style={{ scrollBehavior: "unset" }}
+          data-simplebar
+          data-simplebar-auto-hide="false"
         >
           <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
             {allMusics.map((music, index) => {

@@ -5,8 +5,6 @@ import X from "@/components/Icons/X";
 
 import { useSizeValues } from "@/contexts/contextSize";
 
-import { BROWSER_TYPE } from "@/libs/constants";
-
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
 import { IVideoPlayer } from "@/interfaces/IVideoPlayer";
 
@@ -17,7 +15,7 @@ type Props = {
 };
 
 const AutoplayPermissionModal = ({ isVisible, setVisible, player }: Props) => {
-  const { isMobile, setBrowserType } = useSizeValues();
+  const { isMobile } = useSizeValues();
 
   return (
     <AnimatePresence>
@@ -39,14 +37,13 @@ const AutoplayPermissionModal = ({ isVisible, setVisible, player }: Props) => {
                 height={24}
                 onClick={() => {
                   setVisible(false);
-                  setBrowserType(BROWSER_TYPE.OTHER);
                   player.play();
                 }}
               />
             </div>
 
             <h3 className="px-5 text-md text-center pt-10">
-              Please be aware that our website would play music in background.
+              Our website will play music in background.
             </h3>
           </div>
         </motion.div>

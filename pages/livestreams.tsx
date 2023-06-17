@@ -198,26 +198,26 @@ export default function LiveStreams() {
     }
   };
 
-  const onWheel = (
-    e: React.WheelEvent<HTMLDivElement>,
-    ref: any,
-    element: boolean = false
-  ) => {
-    if (!ref || !ref.current) return;
-    if (e.deltaY == 0) return;
+  // const onWheel = (
+  //   e: React.WheelEvent<HTMLDivElement>,
+  //   ref: any,
+  //   element: boolean = false
+  // ) => {
+  //   if (!ref || !ref.current) return;
+  //   if (e.deltaY == 0) return;
 
-    if (element) {
-      ref.scrollTo({
-        left: ref.current.scrollLeft + e.deltaY,
-        behavior: "smooth",
-      });
-    } else {
-      ref.current.scrollTo({
-        left: ref.current.scrollLeft + e.deltaY,
-        behavior: "smooth",
-      });
-    }
-  };
+  //   if (element) {
+  //     ref.scrollTo({
+  //       left: ref.current.scrollLeft + e.deltaY,
+  //       behavior: "smooth",
+  //     });
+  //   } else {
+  //     ref.current.scrollTo({
+  //       left: ref.current.scrollLeft + e.deltaY,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     if (isSignedIn) {
@@ -345,6 +345,12 @@ export default function LiveStreams() {
           onLoadedData={() => setIsPreviewVideoLoading(false)}
         />
 
+        {isPreviewVideoLoading && (
+          <div className="sub-loading">
+            <Loading width={64} height={64} />
+          </div>
+        )}
+
         <div className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center py-8 sm:py -8 lg:py-8 w-4/5 z-10 filter">
           <div className="w-full flex-col justify-end md:justify-center items-center text-primary pb-5">
             <p className="text-center text-primary text-xl md:text-2xl tracking-widest mb-2">
@@ -386,9 +392,11 @@ export default function LiveStreams() {
         <div className="w-full flex flex-col justify-start items-start px-5">
           <div
             ref={livestreamScrollRef}
-            className="w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-            onWheel={(e) => onWheel(e, livestreamScrollRef)}
-            style={{ scrollBehavior: "unset" }}
+            className="w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10 pb-1"
+            // onWheel={(e) => onWheel(e, livestreamScrollRef)}
+            // style={{ scrollBehavior: "unset" }}
+            data-simplebar
+            data-simplebar-auto-hide="false"
           >
             <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
               {livestreams.map((livestream, index) => {
@@ -472,7 +480,11 @@ export default function LiveStreams() {
               &nbsp;&nbsp;
               <span className="">{category.hours.toFixed(2)} Hours</span>
             </p>
-            <div className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10">
+            <div
+              className="w-full flex flex-row overflow-x-auto overflow-y-hidden z-10 pb-1"
+              data-simplebar
+              data-simplebar-auto-hide="false"
+            >
               <div className="w-fit py-2 flex flex-row justify-start items-start gap-10">
                 {category.livestreams.map((livestream, index) => {
                   return (
@@ -565,9 +577,11 @@ export default function LiveStreams() {
         </p>
         <div
           ref={livestreamScrollRef}
-          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10"
-          onWheel={(e) => onWheel(e, livestreamScrollRef)}
-          style={{ scrollBehavior: "unset" }}
+          className="relative w-full flex flex-row overflow-x-auto overflow-y-hidden overscroll-contain z-10 pb-1"
+          // onWheel={(e) => onWheel(e, livestreamScrollRef)}
+          // style={{ scrollBehavior: "unset" }}
+          data-simplebar
+          data-simplebar-auto-hide="false"
         >
           <div className="relative w-fit py-2 flex flex-row justify-start items-start gap-10">
             {allLivestreams.map((livestream, index) => {
@@ -712,7 +726,7 @@ export default function LiveStreams() {
         />
       )}
 
-      {isPreviewVideoLoading && (
+      {isLoading && (
         <div className="loading">
           <Loading width={64} height={64} />
         </div>
