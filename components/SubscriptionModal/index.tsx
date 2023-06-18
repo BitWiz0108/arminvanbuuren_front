@@ -41,8 +41,12 @@ import { DEFAULT_CURRENCY, ICurrency } from "@/interfaces/ICurrency";
 
 const SubscriptionModal = () => {
   const { isSignedIn } = useAuthValues();
-  const { artist, isSubscriptionModalVisible, setIsSubscriptionModalVisible } =
-    useShareValues();
+  const {
+    audioPlayer,
+    artist,
+    isSubscriptionModalVisible,
+    setIsSubscriptionModalVisible,
+  } = useShareValues();
   const { isMobile } = useSizeValues();
 
   const [provider, setProvider] = useState<PROVIDER>(PROVIDER.STRIPE);
@@ -266,7 +270,10 @@ const SubscriptionModal = () => {
               <X
                 width={24}
                 height={24}
-                onClick={() => setIsSubscriptionModalVisible(false)}
+                onClick={() => {
+                  audioPlayer.play();
+                  setIsSubscriptionModalVisible(false);
+                }}
               />
             </div>
 
@@ -319,7 +326,10 @@ const SubscriptionModal = () => {
                         ? "bg-third text-primary"
                         : "bg-transparent text-secondary hover:bg-third"
                     } transition-all duration-300`}
-                    onClick={() => setProvider(PROVIDER.STRIPE)}
+                    onClick={() => {
+                      audioPlayer.play();
+                      setProvider(PROVIDER.STRIPE);
+                    }}
                     disabled={isWorking}
                   >
                     <Image
@@ -338,6 +348,7 @@ const SubscriptionModal = () => {
                         : "bg-transparent text-secondary hover:bg-third"
                     } transition-all duration-300`}
                     onClick={() => {
+                      audioPlayer.play();
                       if (amount <= 0) {
                         toast.warn("Please enter amount correctly.");
                         return;

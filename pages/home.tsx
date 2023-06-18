@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
@@ -33,6 +33,7 @@ import { DEFAULT_HOMEPAGE, IHomepage } from "@/interfaces/IHomepage";
 import { IStream } from "@/interfaces/IStream";
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
   const { artist, audioPlayer, setIsSubscriptionModalVisible } =
@@ -77,7 +78,7 @@ export default function Home() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFirstLoading(false);
-    }, 5000);
+    }, 10000);
 
     return () => clearTimeout(timeout);
 
@@ -89,12 +90,27 @@ export default function Home() {
       return;
     }
 
-    if (!audioPlayer.isPlaying) {
+    if (!audioPlayer.isPlaying && (isMembership || isAdmin())) {
       setIsAutoplayPermissionModalOpened(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstLoading]);
+
+  useEffect(() => {
+    let interval: any = null;
+    if (videoRef && videoRef.current) {
+      interval = setInterval(() => {
+        videoRef.current?.play();
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [videoRef]);
 
   const fullContent = (
     <>
@@ -181,6 +197,7 @@ export default function Home() {
             ) : (
               <div className="absolute -left-4 -top-4 -right-4 -bottom-4">
                 <video
+                  ref={videoRef}
                   loop
                   muted
                   autoPlay

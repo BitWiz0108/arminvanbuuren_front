@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,6 +28,7 @@ import {
 } from "@/libs/constants";
 
 export default function Signin() {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isLoading, isSignedIn, signIn, oAuthSignIn } = useAuthValues();
   const { artist, audioPlayer } = useShareValues();
@@ -110,6 +111,21 @@ export default function Signin() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    let interval: any = null;
+    if (videoRef && videoRef.current) {
+      interval = setInterval(() => {
+        videoRef.current?.play();
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [videoRef]);
 
   return (
     <Layout>
@@ -210,6 +226,7 @@ export default function Signin() {
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden z-0">
           <div className="absolute -left-4 -top-4 -right-4 -bottom-4 filter blur-[5px]">
             <video
+              ref={videoRef}
               loop
               muted
               autoPlay
