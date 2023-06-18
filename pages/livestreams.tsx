@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
@@ -34,6 +35,7 @@ import {
   APP_TYPE,
   ASSET_TYPE,
   DATE_FORMAT,
+  LOADING_GIF,
   PAGE_LIMIT,
   SYSTEM_TYPE,
   VIEW_MODE,
@@ -347,7 +349,11 @@ export default function LiveStreams() {
 
         {isPreviewVideoLoading && (
           <div className="sub-loading">
-            <Loading width={64} height={64} />
+            <img
+              className="w-16 h-16 object-cover"
+              src={LOADING_GIF}
+              alt="Loading"
+            />
           </div>
         )}
 
