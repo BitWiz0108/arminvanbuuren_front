@@ -99,7 +99,7 @@ const ReplyPrayerRequestModal = ({
             </div>
 
             <p className="w-full text-center text-xl md:text-xl lg:text-3xl text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-5">
-              Reply to{" "}
+              Reply to&nbsp;
               {prayerRequest.isAnonymous
                 ? "Anonymous"
                 : prayerRequest.author.firstName +

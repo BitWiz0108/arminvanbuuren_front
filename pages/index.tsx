@@ -224,19 +224,18 @@ export default function Signin() {
         </div>
 
         <div className="absolute left-0 top-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute -left-4 -top-4 -right-4 -bottom-4 filter blur-[5px]">
+          <div className="absolute -left-4 -top-4 -right-4 -bottom-4">
             <video
               ref={videoRef}
+              preload="auto"
               loop
               muted
               autoPlay
               playsInline
               disablePictureInPicture
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover filter blur-[5px]"
               src={vidoeUrl}
-            >
-              <source src={vidoeUrl} type="video/mp4" />
-            </video>
+            />
           </div>
         </div>
       </div>

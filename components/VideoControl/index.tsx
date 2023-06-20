@@ -185,7 +185,7 @@ const VideoControl = ({
                     {videoPlayer.getPlayingTrack().singer?.artistName}
                   </p>
                   <p className="text-[red] text-left text-sm truncate">
-                    *LIVE{" "}
+                    *LIVE&nbsp;
                     {moment(videoPlayer.getPlayingTrack().releaseDate).format(
                       DATE_FORMAT
                     )}

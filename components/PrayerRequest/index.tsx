@@ -133,7 +133,7 @@ const PrayerRequest = ({
         >
           <Comment width={18} height={18} />
           <span className="text-sm md:text-base select-none">
-            Reply to{" "}
+            Reply to&nbsp;
             {prayerRequest.isAnonymous
               ? "Anonymous"
               : prayerRequest.author.firstName +

@@ -198,6 +198,7 @@ export default function Home() {
               <div className="absolute -left-4 -top-4 -right-4 -bottom-4">
                 <video
                   ref={videoRef}
+                  preload="auto"
                   loop
                   muted
                   autoPlay

@@ -594,7 +594,7 @@ export default function Musics() {
               : "pl-0"
           )}
         >
-          {artist.numberOfMusics}{" "}
+          {artist.numberOfMusics}&nbsp;
           {SYSTEM_TYPE == APP_TYPE.CHURCH ? "AUDIO" : "SONG"}
           {SYSTEM_TYPE != APP_TYPE.CHURCH && artist.numberOfMusics > 1
             ? "S"
