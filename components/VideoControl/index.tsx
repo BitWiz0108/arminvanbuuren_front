@@ -234,14 +234,12 @@ const VideoControl = ({
                     onClick={() => setIsSettingsModalMdVisible(true)}
                   />
                 </div>
-
                 <ButtonCircle
                   dark={false}
                   size="small"
                   icon={<Donate width={20} height={20} />}
                   onClick={() => setIsDonationModalVisible(true)}
                 />
-
                 <ButtonCircle
                   dark={isLivestreamCommentVisible}
                   size="small"
@@ -250,7 +248,6 @@ const VideoControl = ({
                     setIsLivestreamCommentVisible(!isLivestreamCommentVisible)
                   }
                 />
-
                 <ButtonCircle
                   dark={false}
                   size="small"
@@ -267,7 +264,6 @@ const VideoControl = ({
                     setIsLivestreamCommentVisible(false);
                   }}
                 />
-
                 <ButtonVolume
                   size="small"
                   iconSize={20}
