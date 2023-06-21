@@ -226,12 +226,15 @@ const VideoControl = ({
               </div>
 
               <div className="flex flex-row justify-end items-center space-x-2 xl:space-x-5 lg:w-2/5">
-                <ButtonCircle
-                  dark
-                  size="small"
-                  icon={<Setting width={24} height={24} />}
-                  onClick={() => setIsSettingsModalMdVisible(true)}
-                />
+                <div className="hidden xs:flex">
+                  <ButtonCircle
+                    dark
+                    size="small"
+                    icon={<Setting width={24} height={24} />}
+                    onClick={() => setIsSettingsModalMdVisible(true)}
+                  />
+                </div>
+
                 <ButtonCircle
                   dark={false}
                   size="small"
@@ -265,14 +268,12 @@ const VideoControl = ({
                   }}
                 />
 
-                <div className="hidden lg:flex">
-                  <ButtonVolume
-                    size="small"
-                    iconSize={20}
-                    volume={videoPlayer.volume}
-                    setVolume={videoPlayer.setVolume}
-                  />
-                </div>
+                <ButtonVolume
+                  size="small"
+                  iconSize={20}
+                  volume={videoPlayer.volume}
+                  setVolume={videoPlayer.setVolume}
+                />
 
                 <AnimatePresence>
                   {isSettingsModalMdVisible && (
