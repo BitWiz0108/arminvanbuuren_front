@@ -55,7 +55,7 @@ export default function ResetPassword() {
   useEffect(() => {
     fetchPageContent().then((value) => {
       if (value) {
-        setVideoUrl(value?.backgroundVideo);
+        setVideoUrl(value?.signInBackgroundVideo);
       }
     });
 

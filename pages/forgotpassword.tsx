@@ -39,7 +39,7 @@ export default function ForgotPassword() {
   useEffect(() => {
     fetchPageContent().then((value) => {
       if (value) {
-        setVideoUrl(value?.backgroundVideo);
+        setVideoUrl(value?.signInBackgroundVideo);
       }
     });
 

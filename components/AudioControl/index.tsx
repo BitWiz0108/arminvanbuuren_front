@@ -10,6 +10,9 @@ import Play from "@/components/Icons/Play";
 import PlayNext from "@/components/Icons/PlayNext";
 import Setting from "@/components/Icons/Setting";
 import Donate from "@/components/Icons/Donate";
+import Shuffle from "@/components/Icons/Shuffle";
+import RepeatAll from "@/components/Icons/RepeatAll";
+import RepeatOne from "@/components/Icons/RepeatOne";
 import ButtonVolume from "@/components/ButtonVolume";
 import MusicSettingsModal from "@/components/MusicSettingsModal";
 import AudioSlider from "@/components/AudioSlider";
@@ -23,6 +26,7 @@ import {
   IMAGE_BLUR_DATA_URL,
   MUSIC_QUALITY,
   PLACEHOLDER_IMAGE,
+  REPEAT,
 } from "@/libs/constants";
 
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
@@ -87,7 +91,7 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
           )}
         </div>
 
-        <div className="relative w-full h-full flex flex-row px-2 lg:px-10 justify-center lg:justify-between items-center space-x-1 lg:space-x-2 z-10">
+        <div className="relative w-full h-full flex flex-row px-2 lg:px-2 xl:px-5 justify-center lg:justify-between items-center space-x-1 lg:space-x-2 z-10">
           <div className="flex flex-row justify-start items-center space-x-0 lg:space-x-5 w-auto lg:w-1/3">
             <ButtonCircle
               dark
@@ -105,7 +109,7 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
             </div>
           </div>
 
-          <div className="flex flex-grow flex-row justify-center items-center space-x-1 lg:space-x-5">
+          <div className="flex flex-grow flex-row justify-center items-center space-x-1 lg:space-x-2 xl:space-x-5">
             <ButtonCircle
               dark
               size="small"
@@ -138,19 +142,45 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
             />
           </div>
 
-          <div className="relative flex flex-row justify-end items-center space-x-1 lg:space-x-5 w-auto lg:w-1/3">
+          <div className="relative flex flex-row justify-end items-center space-x-1 lg:space-x-2 xl:space-x-5 w-auto lg:w-1/3">
             <ButtonCircle
-              dark
+              dark={!audioPlayer.isShuffled}
               size="small"
-              icon={<Setting width={24} height={24} />}
-              onClick={() => setIsMusicSettingsModalMdVisible(true)}
+              icon={<Shuffle width={24} height={24} />}
+              onClick={() => audioPlayer.setIsShuffled(!audioPlayer.isShuffled)}
             />
             <ButtonCircle
               dark={false}
               size="small"
-              icon={<Donate width={20} height={20} />}
-              onClick={() => setIsDonationModalVisible(true)}
+              icon={
+                audioPlayer.repeatType == REPEAT.ALL ? (
+                  <RepeatAll width={24} height={24} />
+                ) : (
+                  <RepeatOne width={24} height={24} />
+                )
+              }
+              onClick={() =>
+                audioPlayer.setRepeatType(
+                  audioPlayer.repeatType == REPEAT.ALL ? REPEAT.ONE : REPEAT.ALL
+                )
+              }
             />
+            {!isMobile && (
+              <>
+                <ButtonCircle
+                  dark
+                  size="small"
+                  icon={<Setting width={24} height={24} />}
+                  onClick={() => setIsMusicSettingsModalMdVisible(true)}
+                />
+                <ButtonCircle
+                  dark={false}
+                  size="small"
+                  icon={<Donate width={20} height={20} />}
+                  onClick={() => setIsDonationModalVisible(true)}
+                />
+              </>
+            )}
             <ButtonVolume
               size="small"
               iconSize={20}

@@ -47,6 +47,7 @@ export default function About() {
 
   const [coverImage1, setCoverImage1] = useState<string>(PLACEHOLDER_IMAGE);
   const [coverImage2, setCoverImage2] = useState<string>(PLACEHOLDER_IMAGE);
+  const [connectContent, setConnectContent] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -61,6 +62,7 @@ export default function About() {
         setCoverImage2(
           data.coverImage2 == "" ? PLACEHOLDER_IMAGE : data.coverImage2
         );
+        setConnectContent(data.content);
       }
     });
   };
@@ -171,10 +173,18 @@ export default function About() {
                   CONNECT
                 </h1>
                 <h3 className="text-lg text-center mt-5">
-                  Interested In Booking or Connecting With&nbsp;
-                  <span className="capitalize">{artist?.artistName ?? ""}</span>
-                  ? Fill out the form below and he will respond to you as soon
-                  as possible. Thank you.
+                  {connectContent ? (
+                    connectContent
+                  ) : (
+                    <>
+                      Interested In Booking or Connecting With&nbsp;
+                      <span className="capitalize">
+                        {artist?.artistName ?? ""}
+                      </span>
+                      ? Fill out the form below and he will respond to you as
+                      soon as possible. Thank you.
+                    </>
+                  )}
                 </h3>
                 <div className="space-y-8 mt-5">
                   <Input

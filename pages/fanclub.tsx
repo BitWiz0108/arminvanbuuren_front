@@ -17,6 +17,7 @@ import DonationModal from "@/components/DonationModal";
 import ButtonCircle from "@/components/ButtonCircle";
 import ArrowLeft from "@/components/Icons/ArrowLeft";
 import ArrowRight from "@/components/Icons/ArrowRight";
+import F10sVideoPlayer from "@/components/F10sVideoPlayer";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -25,6 +26,7 @@ import { useSizeValues } from "@/contexts/contextSize";
 import useFanclub from "@/hooks/useFanclub";
 import useMusic from "@/hooks/useMusic";
 import useLivestream from "@/hooks/useLivestream";
+import useGallery from "@/hooks/useGallery";
 
 import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 import {
@@ -43,7 +45,7 @@ import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_POST, IPost } from "@/interfaces/IPost";
 import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 import { IAlbum } from "@/interfaces/IAlbum";
-import F10sVideoPlayer from "@/components/F10sVideoPlayer";
+import { IImage } from "@/interfaces/IGallery";
 
 const POSTS_PAGE_SIZE = 30;
 const MUSICS_PAGE_SIZE = 8;
@@ -59,6 +61,7 @@ export default function FanClub() {
     fetchPosts,
     togglePostFavorite,
   } = useFanclub();
+  const { isLoading: isWorkingGallery, fetchPageContent } = useGallery();
   const {
     isLoading: isWorkingMusics,
     fetchAllAlbums,
@@ -77,6 +80,7 @@ export default function FanClub() {
   const [musicAlbums, setMusicAlbums] = useState<Array<IAlbum>>([]);
   const [musicPages, setMusicPages] = useState<Array<number>>([]);
   const [musicPageCounts, setMusicPageCounts] = useState<Array<number>>([]);
+  const [images, setImages] = useState<Array<IImage>>([]);
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [postsPage, setPostsPage] = useState<number>(1);
   const [postsPageCount, setPostsPageCount] = useState<number>(1);
@@ -306,6 +310,9 @@ export default function FanClub() {
         setPostsPageCount(value.pages);
         setPostsPage(1);
       });
+      fetchPageContent().then((value) => {
+        if (value) setImages(value.images);
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -526,11 +533,49 @@ export default function FanClub() {
           })}
         </div>
       </div>
+
+      <div className="w-full flex flex-col justify-start items-center space-y-3 bg-background rounded-lg p-3 lg:p-5">
+        <p className="text-primary text-sm font-medium">Latest Galleries</p>
+        <div className="w-full grid grid-cols-4 md:grid-cols-3 gap-2">
+          {images.slice(0, 8)?.map((image, index) => {
+            return (
+              <div
+                key={index}
+                className="col-span-1 flex justify-center items-center cursor-pointer"
+              >
+                {image.type == FILE_TYPE.IMAGE ? (
+                  <Image
+                    className="w-full h-20 lg:h-10 object-cover rounded-md"
+                    src={image.imageCompressed ?? PLACEHOLDER_IMAGE}
+                    width={1600}
+                    height={900}
+                    alt=""
+                    placeholder="blur"
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                    priority
+                    onClick={() => {}}
+                  />
+                ) : (
+                  <F10sVideoPlayer
+                    loop
+                    muted
+                    autoPlay
+                    playsInline
+                    className="w-full h-20 lg:h-10 object-cover rounded-md"
+                    src={image.videoCompressed}
+                    onClick={() => {}}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 
   const postsView = (
-    <div className="w-80 flex-grow flex flex-col justify-start items-center space-y-5">
+    <div className="w-full lg:w-80 flex-grow flex flex-col justify-start items-center space-y-5">
       {posts.map((post, index) => {
         return (
           <Post

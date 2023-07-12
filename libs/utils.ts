@@ -57,6 +57,10 @@ export const generateRandomNumber = () => {
   return randomNumber;
 };
 
+export const getRandomIndex = (max: number) => {
+  return Math.floor(Math.random() * (max + 1));
+};
+
 export const getUrlFormattedTitle = (
   asset: any,
   type: "livestream" | "music" | "post"

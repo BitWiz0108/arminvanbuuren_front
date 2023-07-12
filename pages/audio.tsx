@@ -79,6 +79,7 @@ export default function Musics() {
   const [activeWidth, setActiveWidth] = useState<number>(0);
   const [isListView, setIsListView] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
+  const [videoUrl, setVideoUrl] = useState<string>("");
 
   const checkActiveIndex = (scrollPos: number, right: boolean) => {
     const value = scrollPos / activeWidth;
@@ -315,6 +316,22 @@ export default function Musics() {
   useEffect(() => {
     setActiveIndex(audioPlayer.playingIndex);
 
+    let videoUrl = "";
+    if (isMobile) {
+      if (audioPlayer.getPlayingTrack().videoBackgroundCompressed) {
+        videoUrl = audioPlayer.getPlayingTrack().videoBackgroundCompressed;
+      } else {
+        videoUrl = getAlbumById().videoBackgroundCompressed;
+      }
+    } else {
+      if (audioPlayer.getPlayingTrack().videoBackground) {
+        videoUrl = audioPlayer.getPlayingTrack().videoBackground;
+      } else {
+        videoUrl = getAlbumById().videoBackground;
+      }
+    }
+    setVideoUrl(videoUrl ?? "");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, audioPlayer.playingIndex, audioPlayer.albumId]);
 
@@ -342,6 +359,23 @@ export default function Musics() {
 
   const sliderView = (
     <div className="relative w-full h-screen flex justify-center items-start md:items-center pt-20 overflow-y-auto">
+      {videoUrl && (
+        <div className="absolute left-0 top-0 w-full h-full overflow-hidden z-0">
+          <div className="absolute -left-4 -top-4 -right-4 -bottom-4">
+            <video
+              preload="auto"
+              loop
+              muted
+              autoPlay
+              playsInline
+              disablePictureInPicture
+              className="w-full h-full object-cover"
+              src={videoUrl}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="w-full flex flex-col justify-start">
         <div className="relative w-full flex flex-row justify-center items-center px-5 space-x-14 md:space-x-20 z-10">
           <ButtonCircle

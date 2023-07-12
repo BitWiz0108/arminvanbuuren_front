@@ -10,6 +10,8 @@ export interface IMusic {
   coverImage: string;
   musicFile: string;
   musicFileCompressed: string;
+  videoBackground: string;
+  videoBackgroundCompressed: string;
   isFavorite: boolean;
   isExclusive: boolean;
   lyrics: string;
@@ -26,6 +28,8 @@ export const DEFAULT_MUSIC = {
   coverImage: PLACEHOLDER_IMAGE,
   musicFile: "",
   musicFileCompressed: "",
+  videoBackground: "",
+  videoBackgroundCompressed: "",
   isFavorite: false,
   isExclusive: false,
   lyrics: "",

@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
 
-import { MUSIC_QUALITY } from "@/libs/constants";
+import { MUSIC_QUALITY, REPEAT } from "@/libs/constants";
 
 import { DEFAULT_MUSIC, IMusic } from "@/interfaces/IMusic";
+import { getRandomIndex } from "@/libs/utils";
 
 const useAudioPlayer = () => {
-  const router = useRouter();
-
   const [albumId, setAlbumId] = useState<number | null>(null);
   const [musics, setMusics] = useState<Array<IMusic>>([DEFAULT_MUSIC]);
   const [volume, setVolume] = useState<number>(100);
@@ -18,6 +16,8 @@ const useAudioPlayer = () => {
   const [playingQuality, setPlayingQuality] = useState<MUSIC_QUALITY>(
     MUSIC_QUALITY.AUTO
   );
+  const [repeatType, setRepeatType] = useState<REPEAT>(REPEAT.ALL);
+  const [isShuffled, setIsShuffled] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>();
   const intervalRef = useRef<NodeJS.Timer>();
@@ -32,7 +32,16 @@ const useAudioPlayer = () => {
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         if (audioRef.current.ended) {
-          playNextMusic();
+          if (repeatType == REPEAT.ONE) {
+            onScrub(0);
+            audioRef.current.play();
+          } else {
+            if (isShuffled) {
+              playRandomMusic();
+            } else {
+              playNextMusic();
+            }
+          }
         } else {
           setTrackProgress(audioRef.current.currentTime);
         }
@@ -68,6 +77,18 @@ const useAudioPlayer = () => {
   const pause = () => {
     if (!isPlaying) return;
     setIsPlaying(false);
+  };
+
+  const playRandomMusic = () => {
+    setPlayingIndex((prev) => {
+      if (musics.length == 1) return 0;
+
+      let index = getRandomIndex(musics.length);
+      while (index == prev) {
+        index = getRandomIndex(musics.length);
+      }
+      return index;
+    });
   };
 
   const playNextMusic = () => {
@@ -118,7 +139,7 @@ const useAudioPlayer = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying]);
+  }, [isPlaying, isShuffled, repeatType]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -241,6 +262,10 @@ const useAudioPlayer = () => {
     setVolume,
     onScrub,
     onScrubEnd,
+    repeatType,
+    setRepeatType,
+    isShuffled,
+    setIsShuffled,
   };
 };
 

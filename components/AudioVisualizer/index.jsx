@@ -29,7 +29,7 @@ const AudioVisualizer = ({ url }) => {
     srcBuffer,
     callback
   ) {
-    this.context.decodeAudioData(
+    this.context?.decodeAudioData(
       srcBuffer,
       function onSuccess(buffer) {
         this.buffers[bufferName] = buffer;
@@ -52,14 +52,16 @@ const AudioVisualizer = ({ url }) => {
   };
 
   BufferLoader.prototype._playBuffer = function (name, gain, time) {
-    var source = this.context.createBufferSource();
-    source.buffer = this.buffer;
-
-    var analyser = this.context.createAnalyser();
-
-    source.connect(analyser);
-    source.connect(this.context.destination);
-    source.start(time);
+    if (this.context) {
+      var source = this.context.createBufferSource();
+      source.buffer = this.buffer;
+  
+      var analyser = this.context.createAnalyser();
+  
+      source.connect(analyser);
+      source.connect(this.context.destination);
+      source.start(time);
+    }
   };
 
   BufferLoader.prototype.play = function (name, gain, time) {

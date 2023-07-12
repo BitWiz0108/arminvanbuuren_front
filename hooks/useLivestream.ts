@@ -434,6 +434,58 @@ const useLivestream = () => {
     return null;
   };
 
+  const editComment = async (
+    id: number | null,
+    livestreamId: number | null,
+    content: string
+  ) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/live-stream/comment`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ id, livestreamId, userId: user.id, content }),
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      const comment = data as IComment;
+
+      setIsLoading(false);
+      return comment;
+    } else {
+      setIsLoading(false);
+    }
+    return null;
+  };
+
+  const deleteComment = async (id: number | null) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/live-stream/comment?id=${id}&userId=${user.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (response.ok) {
+      setIsLoading(false);
+      return true;
+    } else {
+      setIsLoading(false);
+    }
+    return false;
+  };
+
   return {
     isLoading,
     fetchLivestreams,
@@ -442,6 +494,8 @@ const useLivestream = () => {
     fetchLivestreamByTitle,
     fetchComments,
     writeComment,
+    editComment,
+    deleteComment,
   };
 };
 

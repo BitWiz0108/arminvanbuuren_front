@@ -9,6 +9,8 @@ export interface IAlbum {
   size: number;
   hours: number;
   musics: Array<IMusic>;
+  videoBackground: string;
+  videoBackgroundCompressed: string;
 }
 
 export const DEFAULT_ALBUM = {
@@ -20,4 +22,6 @@ export const DEFAULT_ALBUM = {
   size: 0,
   hours: 0,
   musics: [],
+  videoBackground: "",
+  videoBackgroundCompressed: "",
 } as IAlbum;

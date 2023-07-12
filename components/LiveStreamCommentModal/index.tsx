@@ -8,6 +8,8 @@ import { twMerge } from "tailwind-merge";
 import X from "@/components/Icons/X";
 import Reply from "@/components/Icons/Reply";
 import Loading from "@/components/Loading";
+import Delete from "@/components/Icons/Delete";
+import Edit from "@/components/Icons/Edit";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -22,22 +24,27 @@ import {
 } from "@/libs/constants";
 
 import { IComment } from "@/interfaces/IComment";
+import EditCommentModal from "../EditCommentModal";
 
 type Props = {
   livestreamId: number | null;
 };
 
 const LiveStreamCommentModal = ({ livestreamId }: Props) => {
-  const { isSignedIn } = useAuthValues();
+  const { isSignedIn, user } = useAuthValues();
   const { isLivestreamCommentVisible, setIsLivestreamCommentVisible } =
     useShareValues();
   const { isMobile } = useSizeValues();
-  const { isLoading, fetchComments, writeComment } = useLivestream();
+  const { isLoading, fetchComments, writeComment, editComment, deleteComment } =
+    useLivestream();
 
   const [comments, setComments] = useState<Array<IComment>>([]);
+  const [comment, setComment] = useState<IComment>();
   const [replyContent, setReplyContent] = useState<string>("");
   const [pageCount, setPageCount] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
+  const [isEditCommentModalVisible, setIsEditCommentModalVisible] =
+    useState<boolean>(false);
 
   const reply = () => {
     writeComment(livestreamId, replyContent).then((value) => {
@@ -116,6 +123,42 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
                         </p>
                       </div>
                       <div className="flex flex-grow flex-col justify-start items-start space-y-2">
+                        <div className="w-full flex justify-end items-center space-x-2">
+                          {user.id == reply.author.id ? (
+                            <>
+                              <Edit
+                                width={18}
+                                height={18}
+                                className="text-primary hover:text-blueSecondary cursor-pointer transition-all duration-300"
+                                onClick={() => {
+                                  setComment(reply);
+                                  setIsEditCommentModalVisible(true);
+                                }}
+                              />
+                              <Delete
+                                width={18}
+                                height={18}
+                                className="text-primary hover:text-red-500 cursor-pointer transition-all duration-300"
+                                onClick={() => {
+                                  deleteComment(reply.id).then((value) => {
+                                    if (value) {
+                                      const tcomments = comments.slice();
+                                      const index = tcomments.findIndex(
+                                        (comment) => comment.id == reply.id
+                                      );
+                                      if (index >= 0) {
+                                        tcomments.splice(index, 1);
+                                        setComments(tcomments);
+                                      }
+                                    }
+                                  });
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
                         <p className="w-full text-left text-sm text-primary">
                           {reply.content}
                         </p>
@@ -175,6 +218,26 @@ const LiveStreamCommentModal = ({ livestreamId }: Props) => {
           </div>
         </motion.div>
       )}
+
+      <EditCommentModal
+        isVisible={isEditCommentModalVisible}
+        setVisible={setIsEditCommentModalVisible}
+        comment={comment}
+        editComment={(id: number, content: string) => {
+          editComment(id, livestreamId, content).then((value) => {
+            if (value) {
+              const tcomments = comments.slice();
+              const index = tcomments.findIndex(
+                (tcomment) => tcomment.id == comment?.id
+              );
+              if (index >= 0) {
+                tcomments[index].content = content;
+                setComments(tcomments);
+              }
+            }
+          });
+        }}
+      />
     </AnimatePresence>
   );
 };

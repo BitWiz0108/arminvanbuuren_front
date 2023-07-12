@@ -1,4 +1,4 @@
-import { MUSIC_QUALITY } from "@/libs/constants";
+import { MUSIC_QUALITY, REPEAT } from "@/libs/constants";
 
 import { IMusic } from "@/interfaces/IMusic";
 
@@ -24,4 +24,8 @@ export interface IAudioPlayer {
   setVolume: (volume: number) => void;
   onScrub: (value: number) => void;
   onScrubEnd: () => void;
+  repeatType: REPEAT;
+  setRepeatType: (type: REPEAT) => void;
+  isShuffled: boolean;
+  setIsShuffled: (flag: boolean) => void;
 }
