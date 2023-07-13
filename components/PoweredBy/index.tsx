@@ -12,7 +12,7 @@ const PoweredBy = () => {
             ? "/images/TM-church.png"
             : SYSTEM_TYPE == APP_TYPE.CHRISTIAN
             ? "/images/TM-christian.png"
-            : "images/TM.png"
+            : "/images/TM.png"
         }
         width={114}
         height={19}
