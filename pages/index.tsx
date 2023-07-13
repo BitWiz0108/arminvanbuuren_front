@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import Google from "@/components/Icons/Google";
 import Profile from "@/components/Icons/Profile";
@@ -40,12 +41,18 @@ export default function Signin() {
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
   const [siginInDescription, setSignInDescription] = useState<string>("");
+  const [captchaResponse, setCaptchaResponse] = useState<string | null>("");
 
   const onSignin = () => {
     if (isLoading) return;
 
     if (!username || !password) {
       toast.error("Please enter username and password correctly!");
+      return;
+    }
+
+    if (!captchaResponse) {
+      toast.error("Please complete the captcha verification!");
       return;
     }
 
@@ -187,6 +194,13 @@ export default function Signin() {
                 setChecked={setRememberPassword}
                 label="Remember Password?&nbsp;&nbsp;&nbsp;&nbsp;"
                 labelPos="left"
+              />
+            </div>
+
+            <div className="mb-5">
+              <ReCAPTCHA
+                sitekey="6LeYkRwnAAAAAGSTAhvS6Xu3AL-0cA4URGt5Pg33"
+                onChange={(response) => setCaptchaResponse(response)}
               />
             </div>
 
