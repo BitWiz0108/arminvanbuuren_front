@@ -51,10 +51,10 @@ export default function Signin() {
       return;
     }
 
-    if (!captchaResponse) {
-      toast.error("Please complete the captcha verification!");
-      return;
-    }
+    // if (!captchaResponse) {
+    //   toast.error("Please complete the captcha verification!");
+    //   return;
+    // }
 
     if (rememberPassword) {
       if (window) {
@@ -197,12 +197,12 @@ export default function Signin() {
               />
             </div>
 
-            <div className="mb-5">
+            {/* <div className="mb-5">
               <ReCAPTCHA
                 sitekey="6LeYkRwnAAAAAGSTAhvS6Xu3AL-0cA4URGt5Pg33"
                 onChange={(response) => setCaptchaResponse(response)}
               />
-            </div>
+            </div> */}
 
             <div className="mb-5">
               <ButtonOutline label="LOGIN" onClick={() => onSignin()} />
