@@ -1,5 +1,7 @@
 import { FC, useCallback, useEffect, useRef } from "react";
 
+import { secondsToHHMMSS } from "@/libs/utils";
+
 type Props = {
   min: number;
   max: number;
@@ -60,6 +62,10 @@ const AudioSlider: FC<Props> = ({ min, max, value, step, onChange }) => {
         <div className="slider__track"></div>
         <div ref={range} className="slider__range"></div>
       </div>
+
+      <span className="absolute right-2 -bottom-7 text-primary text-xs">
+        {secondsToHHMMSS(value)} / {secondsToHHMMSS(max)}
+      </span>
     </div>
   );
 };

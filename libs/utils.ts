@@ -95,3 +95,32 @@ export const getUrlFormattedTitle = (
       return "/home";
   }
 };
+
+export const secondsToHHMMSS = (seconds: number) => {
+  if (seconds == null || seconds == undefined || typeof seconds != "number")
+    return "";
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  let formattedTime = "";
+
+  if (Number.isFinite(hours) && hours > 0) {
+    formattedTime += hours.toString().padStart(2, "0") + ":";
+  }
+
+  if (Number.isFinite(minutes)) {
+    formattedTime += minutes.toString().padStart(2, "0") + ":";
+  } else {
+    formattedTime += "00:";
+  }
+
+  if (Number.isFinite(remainingSeconds)) {
+    formattedTime += remainingSeconds.toString().padStart(2, "0");
+  } else {
+    formattedTime += "00";
+  }
+
+  return formattedTime;
+};
