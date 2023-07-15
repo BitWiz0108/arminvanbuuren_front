@@ -46,7 +46,7 @@ const useMusic = () => {
         Promise.all(musicFilePromises),
         Promise.all(musicFileCompressedPromises),
       ]);
-      musics.forEach((music, index) => {
+      musics.map((music, index) => {
         music.musicFile = assets[0][index];
         music.musicFileCompressed = assets[1][index];
       });
@@ -102,8 +102,8 @@ const useMusic = () => {
         ]);
       });
       const assets = await Promise.all(promises);
-      albums.forEach((album, indexAlbum) => {
-        album.musics.forEach((music, indexMusic) => {
+      albums.map((album, indexAlbum) => {
+        album.musics.map((music, indexMusic) => {
           music.musicFile = assets[indexAlbum][0][indexMusic];
           music.musicFileCompressed = assets[indexAlbum][1][indexMusic];
         });
@@ -156,7 +156,7 @@ const useMusic = () => {
         Promise.all(musicFilePromises),
         Promise.all(musicFileCompressedPromises),
       ]);
-      musics.forEach((music, index) => {
+      musics.map((music, index) => {
         music.musicFile = assets[0][index];
         music.musicFileCompressed = assets[1][index];
       });

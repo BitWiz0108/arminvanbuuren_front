@@ -82,7 +82,7 @@ const useLivestream = () => {
         Promise.all(fullVideoPromises),
         Promise.all(fullVideoCompressedPromises),
       ]);
-      livestreams.forEach((livestream, index) => {
+      livestreams.map((livestream, index) => {
         livestream.previewVideo = assets[0][index];
         livestream.previewVideoCompressed = assets[1][index];
         livestream.fullVideo = assets[2][index];
@@ -179,8 +179,8 @@ const useLivestream = () => {
         ]);
       });
       const assets = await Promise.all(promises);
-      categories.forEach((category, indexCategory) => {
-        category.livestreams.forEach((livestream, indexLivestream) => {
+      categories.map((category, indexCategory) => {
+        category.livestreams.map((livestream, indexLivestream) => {
           livestream.previewVideo = assets[indexCategory][0][indexLivestream];
           livestream.previewVideoCompressed =
             assets[indexCategory][1][indexLivestream];
@@ -270,7 +270,7 @@ const useLivestream = () => {
         Promise.all(fullVideoPromises),
         Promise.all(fullVideoCompressedPromises),
       ]);
-      livestreams.forEach((livestream, index) => {
+      livestreams.map((livestream, index) => {
         livestream.previewVideo = assets[0][index];
         livestream.previewVideoCompressed = assets[1][index];
         livestream.fullVideo = assets[2][index];
@@ -357,7 +357,7 @@ const useLivestream = () => {
         Promise.all(fullVideoPromises),
         Promise.all(fullVideoCompressedPromises),
       ]);
-      livestreams.forEach((livestream, index) => {
+      livestreams.map((livestream, index) => {
         if (!livestream) return;
         livestream.previewVideo = assets[0][index];
         livestream.previewVideoCompressed = assets[1][index];

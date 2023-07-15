@@ -245,7 +245,7 @@ export default function FanClub() {
         const position = scrollRef.current.scrollTop;
 
         const allVideos = document.getElementsByClassName("post-video");
-        posts.forEach((_, index) => {
+        posts.map((_, index) => {
           if (
             position > bannerHeight + postHeight * (index - 1) &&
             position < bannerHeight + postHeight * (index + 1)
