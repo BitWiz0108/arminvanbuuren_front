@@ -14,13 +14,16 @@ const usePlaylist = () => {
   const fetchPlaylists = async () => {
     setIsLoading(true);
 
-    const response = await fetch(`${API_BASE_URL}/${API_VERSION}/playlist`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/playlist?userId=${user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
