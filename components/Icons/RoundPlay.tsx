@@ -1,4 +1,4 @@
-const ArrowDown = (props: any) => {
+const RoundPlay = (props: any) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,4 +14,4 @@ const ArrowDown = (props: any) => {
   );
 };
 
-export default ArrowDown;
+export default RoundPlay;

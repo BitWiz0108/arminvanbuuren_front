@@ -52,13 +52,24 @@ const usePlaylist = () => {
           playlists[index].musics[indexFile].musicFileCompressed = file;
         });
       });
+      const result: Array<IPlaylist> = [];
+      playlists.map((playlist) => {
+        if (user.id != playlist.creator.id) {
+          result.push(playlist);
+        }
+      });
+      playlists.map((playlist) => {
+        if (user.id == playlist.creator.id) {
+          result.push(playlist);
+        }
+      });
 
       setIsLoading(false);
-      return { playlists };
+      return result;
     } else {
       setIsLoading(false);
     }
-    return { playlists: [] };
+    return [];
   };
 
   const createPlaylist = async (name: string) => {
@@ -126,7 +137,7 @@ const usePlaylist = () => {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          playlistIds,
+          playlistIds: playlistIds.join(","),
           musicId,
           userId: user.id,
         }),
@@ -135,25 +146,30 @@ const usePlaylist = () => {
 
     if (response.ok) {
       const data = await response.json();
-      const playlist = data as IPlaylist;
+      if (typeof data == "object" && data.length > 0) {
+        const playlist = data[0] as IPlaylist;
 
-      const musicFilePromises = playlist.musics.map((music) => {
-        return getAWSSignedURL(music.musicFile);
-      });
-      const musicFileCompressedPromises = playlist.musics.map((music) => {
-        return getAWSSignedURL(music.musicFileCompressed);
-      });
-      const assets = await Promise.all([
-        Promise.all(musicFilePromises),
-        Promise.all(musicFileCompressedPromises),
-      ]);
-      playlist.musics.map((music, index) => {
-        music.musicFile = assets[0][index];
-        music.musicFileCompressed = assets[1][index];
-      });
+        const musicFilePromises = playlist.musics.map((music) => {
+          return getAWSSignedURL(music.musicFile);
+        });
+        const musicFileCompressedPromises = playlist.musics.map((music) => {
+          return getAWSSignedURL(music.musicFileCompressed);
+        });
+        const assets = await Promise.all([
+          Promise.all(musicFilePromises),
+          Promise.all(musicFileCompressedPromises),
+        ]);
+        playlist.musics.map((music, index) => {
+          music.musicFile = assets[0][index];
+          music.musicFileCompressed = assets[1][index];
+        });
 
-      setIsLoading(false);
-      return playlist;
+        setIsLoading(false);
+        return playlist;
+      } else {
+        setIsLoading(false);
+        return null;
+      }
     } else {
       setIsLoading(false);
     }

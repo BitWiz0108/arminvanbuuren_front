@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ButtonCircle from "@/components/ButtonCircle";
@@ -14,13 +15,17 @@ import Shuffle from "@/components/Icons/Shuffle";
 import RepeatAll from "@/components/Icons/RepeatAll";
 import RepeatOne from "@/components/Icons/RepeatOne";
 import ButtonVolume from "@/components/ButtonVolume";
+import Playlist from "@/components/Icons/Playlist";
 import MusicSettingsModal from "@/components/MusicSettingsModal";
+import PlaylistModal from "@/components/PlaylistModal";
 import AudioSlider from "@/components/AudioSlider";
 
 import { useShareValues } from "@/contexts/contextShareData";
 import { useSizeValues } from "@/contexts/contextSize";
+import { useAuthValues } from "@/contexts/contextAuth";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
+import usePlaylist from "@/hooks/usePlaylist";
 
 import {
   IMAGE_BLUR_DATA_URL,
@@ -31,6 +36,7 @@ import {
 
 import { IAudioPlayer } from "@/interfaces/IAudioPlayer";
 import { DEFAULT_MUSIC } from "@/interfaces/IMusic";
+import { IPlaylist } from "@/interfaces/IPlaylist";
 
 type Props = {
   audioPlayer: IAudioPlayer;
@@ -39,8 +45,29 @@ type Props = {
 
 const AudioControl = ({ audioPlayer, onListView }: Props) => {
   const musicsettingsmodalRefMd = useRef(null);
+  const playlistmodalRefMd = useRef(null);
+
+  const { isSignedIn } = useAuthValues();
   const { isMobile, contentWidth, sidebarWidth } = useSizeValues();
   const { setIsDonationModalVisible } = useShareValues();
+
+  const {
+    isLoading,
+    fetchPlaylists,
+    createPlaylist,
+    deletePlaylist,
+    addMusicToPlaylist,
+    deleteMusicFromPlaylist,
+  } = usePlaylist();
+
+  const [playlists, setPlaylists] = useState<Array<IPlaylist>>([]);
+
+  const [isPlaylistModalMdVisible, setIsPlaylistModalMdVisible] =
+    useState<boolean>(false);
+
+  useOutsideClick(playlistmodalRefMd, () => {
+    setIsPlaylistModalMdVisible(false);
+  });
 
   const [isMusicSettingsModalMdVisible, setIsMusicSettingsModalMdVisible] =
     useState<boolean>(false);
@@ -58,6 +85,16 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, audioPlayer]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      fetchPlaylists().then((values) => {
+        setPlaylists(values);
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignedIn]);
 
   return (
     <div
@@ -92,13 +129,161 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
         </div>
 
         <div className="relative w-full h-full flex flex-row px-2 lg:px-2 xl:px-5 justify-center lg:justify-between items-center space-x-1 lg:space-x-2 z-10">
-          <div className="flex flex-row justify-start items-center space-x-0 lg:space-x-5 w-auto lg:w-1/3">
+          <div className="relative flex flex-row justify-start items-center space-x-1 lg:space-x-2 xl:space-x-5 w-auto lg:w-1/3">
             <ButtonCircle
               dark
               size="small"
               icon={<List width={24} height={24} />}
               onClick={() => onListView()}
             />
+            <ButtonCircle
+              dark
+              size="small"
+              icon={<Playlist width={24} height={24} />}
+              onClick={() => setIsPlaylistModalMdVisible(true)}
+            />
+
+            <AnimatePresence>
+              {isPlaylistModalMdVisible && (
+                <motion.div
+                  key={"playlistModalMd"}
+                  ref={playlistmodalRefMd}
+                  className="absolute bottom-16 left-0 w-60"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <PlaylistModal
+                    isLoading={isLoading}
+                    close={() => setIsPlaylistModalMdVisible(false)}
+                    audioPlayer={audioPlayer}
+                    playlists={playlists}
+                    createNewPlaylist={(playlistName: string) => {
+                      createPlaylist(playlistName)
+                        .then((playlist) => {
+                          if (playlist) {
+                            const tplaylists = playlists.slice();
+                            tplaylists.push(playlist);
+                            setPlaylists(tplaylists);
+
+                            toast.success("Successfully created playlist!");
+                          } else {
+                            toast.error(
+                              "Something went wrong! Please try again."
+                            );
+                          }
+                        })
+                        .catch(() => {
+                          toast.error(
+                            "Something went wrong! Please try again."
+                          );
+                        });
+                    }}
+                    deletePlaylist={(playlistId: number | null) => {
+                      deletePlaylist(playlistId)
+                        .then((value) => {
+                          if (value) {
+                            const tplaylists = playlists.slice();
+                            const index = tplaylists.findIndex(
+                              (playlist) => playlist.id == playlistId
+                            );
+                            if (index >= 0) {
+                              tplaylists.splice(index, 1);
+                              setPlaylists(tplaylists);
+                            }
+                            toast.success("Successfully deleted playlist!");
+                          } else {
+                            toast.error(
+                              "Something went wrong! Please try again."
+                            );
+                          }
+                        })
+                        .catch(() => {
+                          toast.error(
+                            "Something went wrong! Please try again."
+                          );
+                        });
+                    }}
+                    addMusicToPlaylist={(playlistId: number | null) => {
+                      const tplaylists = playlists.slice();
+                      const index = tplaylists.findIndex(
+                        (playlist) => playlist.id == playlistId
+                      );
+                      if (index >= 0) {
+                        const indexMusic = tplaylists[index].musics.findIndex(
+                          (music) =>
+                            music.id == audioPlayer.getPlayingTrack().id
+                        );
+                        if (indexMusic >= 0) {
+                          toast.warn(
+                            "Already added! Please select other playlist."
+                          );
+                          return;
+                        }
+                      } else {
+                        toast.error("Something went wrong! Please try again.");
+                        return;
+                      }
+
+                      addMusicToPlaylist(
+                        [playlistId],
+                        audioPlayer.getPlayingTrack().id
+                      )
+                        .then((playlist) => {
+                          if (playlist) {
+                            if (index >= 0) {
+                              tplaylists[index] = playlist;
+                              setPlaylists(tplaylists);
+                            }
+                            toast.success("Successfully added music!");
+                          } else {
+                            toast.error(
+                              "Something went wrong! Please try again."
+                            );
+                          }
+                        })
+                        .catch(() => {
+                          toast.error(
+                            "Something went wrong! Please try again."
+                          );
+                        });
+                    }}
+                    deleteMusicFromPlaylist={(
+                      playlistId: number | null,
+                      musicId: number | null
+                    ) => {
+                      deleteMusicFromPlaylist(playlistId, musicId)
+                        .then((value) => {
+                          if (value) {
+                            const tplaylists = playlists.slice();
+                            const index = tplaylists.findIndex(
+                              (playlist) => playlist.id == playlistId
+                            );
+                            if (index >= 0) {
+                              tplaylists[index].musics = tplaylists[
+                                index
+                              ].musics.filter((music) => music.id != musicId);
+                              setPlaylists(tplaylists);
+                            }
+                            toast.success("Successfully deleted music!");
+                          } else {
+                            toast.error(
+                              "Something went wrong! Please try again."
+                            );
+                          }
+                        })
+                        .catch(() => {
+                          toast.error(
+                            "Something went wrong! Please try again."
+                          );
+                        });
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <div className="hidden lg:flex flex-col w-2/3 justify-center items-start space-y-1 truncate">
               <h2 className="w-full text-primary text-left text-lg md:text-xl font-semibold truncate">
                 {track.title}
