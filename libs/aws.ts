@@ -52,3 +52,49 @@ export const getAWSObjectKey = (asset: string) => {
   }
   return asset;
 };
+
+export const getRandomClientId = () => {
+  return Math.random().toString(36).substring(2).toUpperCase();
+};
+
+export const printPeerConnectionStateInfo = async (
+  event: any,
+  logPrefix: any,
+  remoteClientId: any
+) => {
+  const rtcPeerConnection = event.target;
+  console.debug(
+    logPrefix,
+    "PeerConnection state:",
+    rtcPeerConnection.connectionState
+  );
+  if (rtcPeerConnection.connectionState === "connected") {
+    console.log(logPrefix, "Connection to peer successful!");
+    const stats = await rtcPeerConnection.getStats();
+    if (!stats) return;
+
+    rtcPeerConnection.getSenders().map((sender: any) => {
+      const trackType = sender.track?.kind;
+      if (sender.transport) {
+        const iceTransport = sender.transport.iceTransport;
+        const logSelectedCandidate = () =>
+          console.debug(
+            `Chosen candidate pair (${trackType || "unknown"}):`,
+            iceTransport.getSelectedCandidatePair()
+          );
+        iceTransport.onselectedcandidatepairchange = logSelectedCandidate;
+        logSelectedCandidate();
+      } else {
+        console.error("Failed to fetch the candidate pair!");
+      }
+    });
+  } else if (rtcPeerConnection.connectionState === "failed") {
+    if (remoteClientId) {
+      // removeViewerTrackFromMaster(remoteClientId);
+    }
+    console.error(
+      logPrefix,
+      `Connection to ${remoteClientId || "peer"} failed!`
+    );
+  }
+};

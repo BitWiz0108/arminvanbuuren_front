@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-kinesis-video": "^3.370.0",
+    "@aws-sdk/client-kinesis-video-media": "^3.370.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@paypal/react-paypal-js": "^7.8.3",
     "@stripe/react-stripe-js": "^2.1.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
     "@types/react-dom": "18.0.11",
+    "amazon-kinesis-video-streams-webrtc": "^2.0.4",
     "aws-sdk": "^2.1361.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
