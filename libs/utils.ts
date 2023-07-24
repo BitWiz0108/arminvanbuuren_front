@@ -1,6 +1,13 @@
 import { initializeApp, getApps } from "firebase/app";
 
-import { APP_TYPE, FIREBASE_CONFIG, SYSTEM_TYPE } from "@/libs/constants";
+import {
+  APP_TYPE,
+  FIREBASE_CONFIG,
+  SYSTEM_TYPE,
+  TRANSACTION_TYPE,
+} from "@/libs/constants";
+
+import { ITransaction } from "@/interfaces/ITransaction";
 
 export const initializeFirebase = () => {
   try {
@@ -109,6 +116,22 @@ export const getUrlFormattedTitle = (
     default:
       return "/home";
   }
+};
+
+export const getTransactionAsset = (transaction: ITransaction) => {
+  if (transaction.type == TRANSACTION_TYPE.DONATION) {
+    if (transaction.musicId && transaction.music) {
+      return `Music: ${transaction.music.title}`;
+    }
+    if (transaction.livestreamId && transaction.livestream) {
+      return `Livestream: ${transaction.livestream.title}`;
+    }
+  } else if (transaction.type == TRANSACTION_TYPE.SUBSCRIPTION) {
+    if (transaction.planId && transaction.plan) {
+      return `Plan: ${transaction.plan.name}`;
+    }
+  }
+  return transaction.orderId;
 };
 
 export const secondsToHHMMSS = (seconds: number) => {

@@ -27,6 +27,7 @@ import {
   APP_TYPE,
   ASSET_TYPE,
   DATETIME_FORMAT,
+  DATE_FORMAT,
   DEFAULT_AVATAR_IMAGE,
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
@@ -151,7 +152,10 @@ export default function Post() {
         <div className="relative w-full lg:w-2/3 min-h-screen flex justify-center items-start bg-background pt-16">
           <div className="w-full flex flex-col justify-start items-start p-3">
             <p className="w-full text-center text-2xl lg:text-4xl text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-5">
-              {post.title}
+              {post.title}&nbsp;&nbsp;
+              <span className="text-secondary text-xl lg:text-2xl">
+                {moment(post.releaseDate).format(DATE_FORMAT)}
+              </span>
             </p>
 
             <div

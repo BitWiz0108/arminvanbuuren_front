@@ -20,6 +20,7 @@ export interface IPost {
   numberOfFavorites: number;
   replies: Array<IReply>;
   files: Array<IPostAsset>;
+  releaseDate: string;
 }
 
 export const DEFAULT_POST = {
@@ -31,5 +32,6 @@ export const DEFAULT_POST = {
   isFavorite: false,
   numberOfFavorites: 0,
   replies: [],
-  files: []
+  files: [],
+  releaseDate: "",
 } as IPost;

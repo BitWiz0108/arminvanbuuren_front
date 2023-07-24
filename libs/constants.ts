@@ -50,7 +50,7 @@ export const PAGE_LIMIT = 1000;
 export const ASSET_TTL = 3600;
 
 export const DATETIME_FORMAT = "MMM DD YYYY hh:mm:ss A";
-export const DATE_FORMAT = "MMM DD YYYY";
+export const DATE_FORMAT = "MMM DD, YYYY";
 export const US_DATETIME_FORMAT = "MMM dd, yyyy";
 
 export const DEFAULT_AVATAR_IMAGE = "/images/fanclub/fan.svg";

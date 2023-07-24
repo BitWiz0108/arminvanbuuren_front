@@ -12,6 +12,7 @@ import {
 
 import { IPlan } from "@/interfaces/IPlan";
 import { ICurrency } from "@/interfaces/ICurrency";
+import { ITransaction } from "@/interfaces/ITransaction";
 
 const useTransaction = () => {
   const { accessToken, user } = useAuthValues();
@@ -133,7 +134,43 @@ const useTransaction = () => {
     }
   };
 
-  return { isLoading, transact, fetchPlans, fetchCurrencies, fetchPaymentData };
+  const fetchTransactions = async (page: number, limit: number = 10) => {
+    setIsLoading(true);
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/finance/transactions?page=${page}&limit=${limit}&userId=${user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      const transactions = data.transactions as Array<ITransaction>;
+
+      const pages = Number(data.pages);
+
+      setIsLoading(false);
+      return {
+        pages,
+        transactions,
+      };
+    } else {
+      setIsLoading(false);
+    }
+    return { pages: 0, transactions: [] };
+  };
+
+  return {
+    isLoading,
+    transact,
+    fetchPlans,
+    fetchCurrencies,
+    fetchPaymentData,
+    fetchTransactions,
+  };
 };
 
 export default useTransaction;

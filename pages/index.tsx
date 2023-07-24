@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
 
 import Google from "@/components/Icons/Google";
 import Profile from "@/components/Icons/Profile";
@@ -47,7 +47,7 @@ export default function Signin() {
   const [rememberPassword, setRememberPassword] = useState<boolean>(false);
   const [vidoeUrl, setVideoUrl] = useState<string>("");
   const [siginInDescription, setSignInDescription] = useState<string>("");
-  const [captchaResponse, setCaptchaResponse] = useState<string | null>("");
+  // const [captchaResponse, setCaptchaResponse] = useState<string | null>("");
 
   const onSignin = () => {
     if (isLoading) return;

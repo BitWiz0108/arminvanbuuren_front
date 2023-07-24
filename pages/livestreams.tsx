@@ -8,6 +8,9 @@ import { isMobile as isMobileDevice } from "react-device-detect";
 
 import Layout from "@/components/Layout";
 import Play from "@/components/Icons/Play";
+import HeartFill from "@/components/Icons/HeartFill";
+import Heart from "@/components/Icons/Heart";
+import Share from "@/components/Icons/Share";
 import ButtonCircle from "@/components/ButtonCircle/index";
 import AudioControl from "@/components/AudioControl";
 import VideoControl from "@/components/VideoControl";
@@ -37,12 +40,15 @@ import {
   DATE_FORMAT,
   LOADING_GIF,
   PAGE_LIMIT,
+  SITE_BASE_URL,
   SYSTEM_TYPE,
   VIEW_MODE,
 } from "@/libs/constants";
+import { getUrlFormattedTitle } from "@/libs/utils";
 
 import { IStream } from "@/interfaces/IStream";
 import { DEFAULT_CATEGORY, ICategory } from "@/interfaces/ICategory";
+import { DEFAULT_SHAREDATA } from "@/interfaces/IShareData";
 
 export default function LiveStreams() {
   const videoRef = useRef(null);
@@ -65,6 +71,8 @@ export default function LiveStreams() {
     setIsViewExclusiveModalVisible,
     setIsLivestreamCommentVisible,
     setIsMetaVisible,
+    setIsShareModalVisible,
+    setShareData,
     audioPlayer,
   } = useShareValues();
   const { isSignedIn, isMembership, isAdmin } = useAuthValues();
@@ -73,6 +81,7 @@ export default function LiveStreams() {
     fetchLivestreams,
     fetchAllCategories,
     fetchCategoryLivestreams,
+    toggleLivestreamFavorite,
   } = useLivestream();
 
   const [categoryId, setCategoryId] = useState<number | null>(
@@ -198,6 +207,37 @@ export default function LiveStreams() {
       }, 100);
       setViewMode(VIEW_MODE.VIDEO);
     }
+  };
+
+  const onHeart = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    toggleLivestreamFavorite(
+      livestreams[videoPlayer.playingIndex].id,
+      !livestreams[videoPlayer.playingIndex].isFavorite
+    ).then((value) => {
+      if (value) {
+        const tlivestreams = livestreams.slice();
+        tlivestreams[videoPlayer.playingIndex].isFavorite =
+          !tlivestreams[videoPlayer.playingIndex].isFavorite;
+        setLivestreams(tlivestreams);
+      }
+    });
+  };
+
+  const onShare = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setShareData({
+      ...DEFAULT_SHAREDATA,
+      url: `${SITE_BASE_URL}${getUrlFormattedTitle(
+        videoPlayer.getPlayingTrack(),
+        "livestream"
+      )}`,
+      title: videoPlayer.getPlayingTrack().title,
+      subject: videoPlayer.getPlayingTrack().title,
+      quote: videoPlayer.getPlayingTrack().title,
+      about: videoPlayer.getPlayingTrack().description,
+      body: videoPlayer.getPlayingTrack().description,
+      summary: videoPlayer.getPlayingTrack().title,
+    });
+    setIsShareModalVisible(true);
   };
 
   // const onWheel = (
@@ -378,6 +418,27 @@ export default function LiveStreams() {
                   DATE_FORMAT
                 )}
               </p>
+            )}
+
+            {videoPlayer.getPlayingTrack() && (
+              <div className="flex justify-center items-center space-x-4 mb-5">
+                <div
+                  className="cursor-pointer text-primary hover:text-activePrimary transition-all duration-300"
+                  onClick={onHeart}
+                >
+                  {livestreams[videoPlayer.playingIndex]?.isFavorite ? (
+                    <HeartFill width={22} height={22} />
+                  ) : (
+                    <Heart width={22} height={22} />
+                  )}
+                </div>
+                <Share
+                  width={20}
+                  height={20}
+                  className="text-primary hover:text-activePrimary transition-all duration-300 cursor-pointer"
+                  onClick={onShare}
+                />
+              </div>
             )}
 
             <ButtonCircle

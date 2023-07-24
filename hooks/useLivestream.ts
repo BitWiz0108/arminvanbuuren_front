@@ -373,6 +373,33 @@ const useLivestream = () => {
     return [];
   };
 
+  const toggleLivestreamFavorite = async (
+    livestreamId: number | null,
+    isFavorite: boolean
+  ) => {
+    setIsLoading(true);
+
+    const response = await fetch(
+      `${API_BASE_URL}/${API_VERSION}/live-stream/favorite`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ userId: user.id, livestreamId, isFavorite }),
+      }
+    );
+
+    if (response.ok) {
+      setIsLoading(false);
+      return true;
+    } else {
+      setIsLoading(false);
+    }
+    return false;
+  };
+
   const fetchComments = async (
     livestreamId: number | null,
     page: number,
@@ -492,6 +519,7 @@ const useLivestream = () => {
     fetchAllCategories,
     fetchCategoryLivestreams,
     fetchLivestreamByTitle,
+    toggleLivestreamFavorite,
     fetchComments,
     writeComment,
     editComment,

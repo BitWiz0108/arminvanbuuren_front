@@ -22,6 +22,7 @@ import useFanclub from "@/hooks/useFanclub";
 
 import {
   DATETIME_FORMAT,
+  DATE_FORMAT,
   DEFAULT_AVATAR_IMAGE,
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
@@ -133,7 +134,10 @@ const PostModal = ({
             </div>
 
             <p className="w-full text-center font-sans text-[16px] text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-3">
-              {post.title}
+              {post.title}&nbsp;&nbsp;
+              <span className="text-secondary text-xs lg:text-sm">
+                {moment(post.releaseDate).format(DATE_FORMAT)}
+              </span>
             </p>
 
             <div className="w-full flex justify-center items-center mb-2">

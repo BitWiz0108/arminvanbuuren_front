@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import Carousel from "react-multi-carousel";
+import moment from "moment";
 
 import Heart from "@/components/Icons/Heart";
 import HeartFill from "@/components/Icons/HeartFill";
@@ -13,6 +14,7 @@ import { useShareValues } from "@/contexts/contextShareData";
 
 import { bigNumberFormat, getUrlFormattedTitle } from "@/libs/utils";
 import {
+  DATE_FORMAT,
   FILE_TYPE,
   IMAGE_BLUR_DATA_URL,
   PLACEHOLDER_IMAGE,
@@ -98,7 +100,10 @@ const Post = ({
         )}
         onClick={() => comment()}
       >
-        {post.title}
+        {post.title}&nbsp;&nbsp;
+        <span className="text-secondary text-sm lg:text-base">
+          {moment(post.releaseDate).format(DATE_FORMAT)}
+        </span>
       </p>
       <div className={twMerge("relative w-full", isSeenMore ? "pb-5" : "pb-0")}>
         <div
