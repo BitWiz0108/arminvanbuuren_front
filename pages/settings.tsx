@@ -79,6 +79,7 @@ export default function Settings() {
   const [isSubscribed, setIsSubScribed] = useState<boolean>(true);
   const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] =
     useState<boolean>(false);
+  const [resetPassword, setResetPassword] = useState<boolean>(true);
 
   const updateUserProfile = () => {
     if (!username || !email) {
@@ -146,6 +147,11 @@ export default function Settings() {
           setZipcode(data.zipcode ?? "");
         }
       });
+
+      if (!user.password) {
+        setResetPassword(false);
+        setIsChangePasswordModalVisible(true);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -409,6 +415,7 @@ export default function Settings() {
         <ChangePasswordModal
           visible={isChangePasswordModalVisible}
           setVisible={setIsChangePasswordModalVisible}
+          resetPassword={resetPassword}
         />
       )}
 

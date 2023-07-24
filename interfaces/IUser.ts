@@ -4,6 +4,7 @@ export interface IUser {
   id: number | null;
   email: string;
   username: string;
+  password: string;
   firstName: string;
   lastName: string;
   avatarImage: string;
@@ -11,6 +12,9 @@ export interface IUser {
   planStartDate: string | null;
   planEndDate: string | null;
   status: boolean | null;
+  googleId: string;
+  appleId: string;
+  facebookId: string;
   roleId: number | null;
   role: {
     id: number | null;
@@ -21,6 +25,8 @@ export interface IUser {
 export const DEFAULT_USER = {
   id: null,
   email: "",
+  username: "",
+  password: "",
   firstName: "",
   lastName: "",
   avatarImage: DEFAULT_AVATAR_IMAGE,
@@ -28,6 +34,9 @@ export const DEFAULT_USER = {
   planStartDate: "",
   planEndDate: "",
   status: false,
+  googleId: "",
+  appleId: "",
+  facebookId: "",
   roleId: null,
   role: {
     id: null,

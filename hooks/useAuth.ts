@@ -83,7 +83,8 @@ const useAuth = () => {
       const data = await response.json();
       const user = data.user as IUser;
 
-      if (user.status) {
+      if (user.status || user.googleId || user.appleId || user.facebookId) {
+        // OAuth users are already verified
         setUser(user);
         setIsSignedIn(true);
 
@@ -371,7 +372,8 @@ const useAuth = () => {
   const oAuthSignIn = async (
     provider: OAUTH_PROVIDER,
     accessToken: string,
-    refreshToken: string
+    refreshToken: string,
+    appleData: any
   ) => {
     setIsLoading(true);
 
@@ -384,6 +386,7 @@ const useAuth = () => {
         provider,
         accessToken,
         refreshToken,
+        appleData,
       }),
     });
 
@@ -393,35 +396,29 @@ const useAuth = () => {
 
       setIsLoading(false);
 
-      if (user.status) {
-        setUser(user);
+      setUser(user);
 
-        window.localStorage.setItem(TAG_ACCESS_TOKEN, data.accessToken);
-        setAcessToken(data.accessToken);
+      window.localStorage.setItem(TAG_ACCESS_TOKEN, data.accessToken);
+      setAcessToken(data.accessToken);
 
-        setIsSignedIn(true);
+      setIsSignedIn(true);
 
-        // Check membership
-        if (user.planId && user.planStartDate && user.planEndDate) {
-          if (
-            moment(servertime).isAfter(moment(user.planStartDate)) &&
-            moment(servertime).isBefore(moment(user.planEndDate))
-          ) {
-            setIsMembership(true);
-          } else {
-            setIsMembership(false);
-          }
+      // Check membership
+      if (user.planId && user.planStartDate && user.planEndDate) {
+        if (
+          moment(servertime).isAfter(moment(user.planStartDate)) &&
+          moment(servertime).isBefore(moment(user.planEndDate))
+        ) {
+          setIsMembership(true);
         } else {
           setIsMembership(false);
         }
-
-        toast.success("Successfully signed in!");
-        return true;
       } else {
-        signOut();
-        toast.warn("Your account is deactivated. Please verify your account.");
-        return false;
+        setIsMembership(false);
       }
+
+      toast.success("Successfully signed in!");
+      return true;
     } else {
       if (response.status == 500) {
         toast.error("Error occured on signing in.");
@@ -440,7 +437,7 @@ const useAuth = () => {
   };
 
   const isAdmin = () => {
-    return user.role.name == ROLE.ADMIN;
+    return user.role?.name == ROLE.ADMIN;
   };
 
   return {

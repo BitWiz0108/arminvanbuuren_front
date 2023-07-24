@@ -1,4 +1,19 @@
-import { APP_TYPE, SYSTEM_TYPE } from "@/libs/constants";
+import { initializeApp, getApps } from "firebase/app";
+
+import { APP_TYPE, FIREBASE_CONFIG, SYSTEM_TYPE } from "@/libs/constants";
+
+export const initializeFirebase = () => {
+  try {
+    let apps = getApps();
+    if (!apps.length) {
+      initializeApp(FIREBASE_CONFIG);
+    }
+    return apps;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+};
 
 export const validateEmail = (email: string) => {
   return String(email)

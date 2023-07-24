@@ -44,7 +44,8 @@ export const AuthContext = createContext({
   oAuthSignIn: async (
     provider: OAUTH_PROVIDER,
     accessToken: string,
-    refreshToken: string
+    refreshToken: string,
+    appleData: any
   ) => {
     return false;
   },

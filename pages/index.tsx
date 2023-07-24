@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import Google from "@/components/Icons/Google";
@@ -24,11 +25,16 @@ import useHomepage from "@/hooks/useHomepage";
 
 import {
   DEFAULT_LOGO_IMAGE,
+  OAUTH_PROVIDER,
   TAG_PASSWORD,
   TAG_USERNAME,
 } from "@/libs/constants";
+import { initializeFirebase } from "@/libs/utils";
+
+initializeFirebase();
 
 export default function Signin() {
+  const provider = new GoogleAuthProvider();
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isLoading, isSignedIn, signIn, oAuthSignIn } = useAuthValues();
@@ -77,7 +83,34 @@ export default function Signin() {
     });
   };
 
-  const onGoogleSignin = () => {};
+  const onGoogleSignin = () => {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (credential) {
+          const accessToken = credential.idToken!;
+          const refreshToken = credential.idToken!;
+
+          oAuthSignIn(
+            OAUTH_PROVIDER.GOOGLE,
+            accessToken,
+            refreshToken,
+            {}
+          ).then((result) => {
+            if (result) {
+              router.push("/home");
+            }
+          });
+        } else {
+          toast.error("Something went wrong! Please try again.");
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error("Something went wrong! Please try again.");
+      });
+  };
 
   useEffect(() => {
     if (isSignedIn) {
@@ -208,14 +241,13 @@ export default function Signin() {
               <ButtonOutline label="LOGIN" onClick={() => onSignin()} />
             </div>
 
-            {/* TODO: Google & Apple OAuth */}
-            {/* <div className="mb-5">
+            <div className="mb-5">
               <ButtonOutline
                 label="Sign in with Google"
                 onClick={() => onGoogleSignin()}
                 icon={<Google width={20} height={20} />}
               />
-            </div> */}
+            </div>
 
             <div className="w-full flex flex-row justify-center items-center space-x-3 mb-5">
               <Link href="/signup">

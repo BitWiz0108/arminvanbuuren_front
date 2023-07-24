@@ -9,24 +9,31 @@ import ButtonSettings from "@/components/ButtonSettings";
 import Loading from "@/components/Loading";
 
 import { useSizeValues } from "@/contexts/contextSize";
+import { useAuthValues } from "@/contexts/contextAuth";
 
 import useProfile from "@/hooks/useProfile";
 
 type Props = {
   visible: boolean;
   setVisible: Function;
+  resetPassword?: boolean;
 };
 
-const ChangePasswordModal = ({ visible, setVisible }: Props) => {
+const ChangePasswordModal = ({
+  visible,
+  setVisible,
+  resetPassword = true,
+}: Props) => {
   const { isMobile } = useSizeValues();
   const { isLoading, changePassword } = useProfile();
+  const { checkAuth, accessToken } = useAuthValues();
 
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const onChangePassword = async () => {
-    if (!oldPassword) {
+    if (!oldPassword && resetPassword) {
       toast.warn("Please enter current password.");
       return;
     }
@@ -35,9 +42,10 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
       return;
     }
     if (
-      !confirmPassword ||
-      newPassword != confirmPassword ||
-      newPassword == oldPassword
+      (!confirmPassword ||
+        newPassword != confirmPassword ||
+        newPassword == oldPassword) &&
+      resetPassword
     ) {
       toast.warn("Please confirm new password.");
       return;
@@ -46,6 +54,7 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
     changePassword(oldPassword, newPassword).then((value) => {
       if (value) {
         setVisible(false);
+        checkAuth(accessToken);
       }
     });
   };
@@ -65,24 +74,28 @@ const ChangePasswordModal = ({ visible, setVisible }: Props) => {
         >
           <div className="relative w-full md:w-[540px] max-h-full px-5 md:px-10 pt-20 pb-5 md:pb-10 bg-background rounded-lg overflow-x-hidden overflow-y-auto pr-5">
             <h1 className="absolute top-5 left-1/2 -translate-x-1/2 text-2xl text-center text-primary font-semibold">
-              Change Password
+              {resetPassword ? "Change" : "Set"} Password
             </h1>
 
-            <div className="absolute top-5 right-5 text-primary cursor-pointer">
-              <X width={24} height={24} onClick={() => setVisible(false)} />
-            </div>
+            {resetPassword && (
+              <div className="absolute top-5 right-5 text-primary cursor-pointer">
+                <X width={24} height={24} onClick={() => setVisible(false)} />
+              </div>
+            )}
 
             <div className="w-full h-fit flex flex-col justify-start items-center">
               <div className="w-full flex flex-row justify-center items-center space-x-2">
                 <div className="w-full flex flex-col justify-start items-start space-y-5">
-                  <TextInput
-                    sname="Current Password"
-                    label=""
-                    placeholder="Current Password"
-                    type="password"
-                    value={oldPassword}
-                    setValue={setOldPassword}
-                  />
+                  {resetPassword && (
+                    <TextInput
+                      sname="Current Password"
+                      label=""
+                      placeholder="Current Password"
+                      type="password"
+                      value={oldPassword}
+                      setValue={setOldPassword}
+                    />
+                  )}
                   <TextInput
                     sname="New Password"
                     label=""
