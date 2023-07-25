@@ -101,9 +101,11 @@ const Post = ({
         onClick={() => comment()}
       >
         {post.title}&nbsp;&nbsp;
-        <span className="text-secondary text-sm lg:text-base">
-          {moment(post.releaseDate).format(DATE_FORMAT)}
-        </span>
+        {post.releaseDate && (
+          <span className="text-secondary text-xs lg:text-sm">
+            {moment(post.releaseDate).format(DATE_FORMAT)}
+          </span>
+        )}
       </p>
       <div className={twMerge("relative w-full", isSeenMore ? "pb-5" : "pb-0")}>
         <div

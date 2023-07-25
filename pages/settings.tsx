@@ -21,6 +21,7 @@ import SubscriptionModal from "@/components/SubscriptionModal";
 import DonationModal from "@/components/DonationModal";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import PaginationButtons from "@/components/PaginationButtons";
+import Loading from "@/components/Loading";
 
 import { useAuthValues } from "@/contexts/contextAuth";
 import { useShareValues } from "@/contexts/contextShareData";
@@ -72,7 +73,7 @@ export default function Settings() {
     isSubscriptionModalVisible,
     setIsSubscriptionModalVisible,
   } = useShareValues();
-  const { fetchTransactions } = useTransaction();
+  const { isLoading, fetchTransactions } = useTransaction();
   const { isMobile } = useSizeValues();
 
   const [username, setUsername] = useState<string>("");
@@ -544,6 +545,12 @@ export default function Settings() {
             )}
           </div>
         </div>
+
+        {isLoading && (
+          <div className="loading">
+            <Loading width={64} height={64} />
+          </div>
+        )}
       </div>
 
       <DonationModal

@@ -153,9 +153,11 @@ export default function Post() {
           <div className="w-full flex flex-col justify-start items-start p-3">
             <p className="w-full text-center text-2xl lg:text-4xl text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-5">
               {post.title}&nbsp;&nbsp;
-              <span className="text-secondary text-xl lg:text-2xl">
-                {moment(post.releaseDate).format(DATE_FORMAT)}
-              </span>
+              {post.releaseDate && (
+                <span className="text-secondary text-xl lg:text-2xl">
+                  {moment(post.releaseDate).format(DATE_FORMAT)}
+                </span>
+              )}
             </p>
 
             <div

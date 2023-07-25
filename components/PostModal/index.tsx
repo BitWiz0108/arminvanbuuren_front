@@ -135,9 +135,11 @@ const PostModal = ({
 
             <p className="w-full text-center font-sans text-[16px] text-primary font-medium select-none hover:text-blueSecondary transition-all duration-300 mb-3">
               {post.title}&nbsp;&nbsp;
-              <span className="text-secondary text-xs lg:text-sm">
-                {moment(post.releaseDate).format(DATE_FORMAT)}
-              </span>
+              {post.releaseDate && (
+                <span className="text-secondary text-xs lg:text-sm">
+                  {moment(post.releaseDate).format(DATE_FORMAT)}
+                </span>
+              )}
             </p>
 
             <div className="w-full flex justify-center items-center mb-2">
