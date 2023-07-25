@@ -170,13 +170,13 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                             toast.success("Successfully created playlist!");
                           } else {
                             toast.error(
-                              "Something went wrong! Please try again."
+                              "We encountered an issue while processing your request."
                             );
                           }
                         })
                         .catch(() => {
                           toast.error(
-                            "Something went wrong! Please try again."
+                            "We encountered an issue while processing your request."
                           );
                         });
                     }}
@@ -195,13 +195,13 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                             toast.success("Successfully deleted playlist!");
                           } else {
                             toast.error(
-                              "Something went wrong! Please try again."
+                              "We encountered an issue while processing your request."
                             );
                           }
                         })
                         .catch(() => {
                           toast.error(
-                            "Something went wrong! Please try again."
+                            "We encountered an issue while processing your request."
                           );
                         });
                     }}
@@ -222,7 +222,9 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                           return;
                         }
                       } else {
-                        toast.error("Something went wrong! Please try again.");
+                        toast.error(
+                          "We encountered an issue while processing your request."
+                        );
                         return;
                       }
 
@@ -239,13 +241,13 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                             toast.success("Successfully added music!");
                           } else {
                             toast.error(
-                              "Something went wrong! Please try again."
+                              "We encountered an issue while processing your request."
                             );
                           }
                         })
                         .catch(() => {
                           toast.error(
-                            "Something went wrong! Please try again."
+                            "We encountered an issue while processing your request."
                           );
                         });
                     }}
@@ -269,13 +271,13 @@ const AudioControl = ({ audioPlayer, onListView }: Props) => {
                             toast.success("Successfully deleted music!");
                           } else {
                             toast.error(
-                              "Something went wrong! Please try again."
+                              "We encountered an issue while processing your request."
                             );
                           }
                         })
                         .catch(() => {
                           toast.error(
-                            "Something went wrong! Please try again."
+                            "We encountered an issue while processing your request."
                           );
                         });
                     }}

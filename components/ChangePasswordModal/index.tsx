@@ -41,12 +41,11 @@ const ChangePasswordModal = ({
       toast.warn("Please enter new password.");
       return;
     }
-    if (
-      (!confirmPassword ||
-        newPassword != confirmPassword ||
-        newPassword == oldPassword) &&
-      resetPassword
-    ) {
+    if (newPassword == oldPassword && resetPassword) {
+      toast.warn("Please enter the new password different from old one.");
+      return;
+    }
+    if (!confirmPassword || newPassword != confirmPassword) {
       toast.warn("Please confirm new password.");
       return;
     }

@@ -58,7 +58,9 @@ const useAbout = () => {
     } else {
       const data = await response.json();
       toast.error(
-        data.message ? data.message : "Error occured on sending email."
+        data.message
+          ? data.message
+          : "We encountered an issue while processing your request."
       );
     }
 

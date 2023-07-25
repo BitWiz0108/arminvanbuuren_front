@@ -191,10 +191,14 @@ const usePrayerRequest = () => {
       return post;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on creating post.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
-        toast.error(data.message);
+        toast.error(
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
+        );
       }
     }
 
@@ -236,10 +240,14 @@ const usePrayerRequest = () => {
       return post;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on updating prayer request.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
-        toast.error(data.message);
+        toast.error(
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
+        );
       }
     }
     setIsLoading(false);

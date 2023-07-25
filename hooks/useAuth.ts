@@ -135,11 +135,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on signing up.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on signing up."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -198,11 +200,13 @@ const useAuth = () => {
       }
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on signing in.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on signing in."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -245,11 +249,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on forgetting password.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on forgetting password."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -282,11 +288,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on resetting password.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on resetting password."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -318,11 +326,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on verifying email.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on verifying email."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -354,13 +364,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on resending verification link.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
           data.message
             ? data.message
-            : "Error occured on resending verification link."
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -369,7 +379,7 @@ const useAuth = () => {
     return false;
   };
 
-  const oAuthSignIn = async (
+  const oauthSignin = async (
     provider: OAUTH_PROVIDER,
     accessToken: string,
     refreshToken: string,
@@ -421,11 +431,13 @@ const useAuth = () => {
       return true;
     } else {
       if (response.status == 500) {
-        toast.error("Error occured on signing in.");
+        toast.error("We encountered an issue while processing your request.");
       } else {
         const data = await response.json();
         toast.error(
-          data.message ? data.message : "Error occured on signing in."
+          data.message
+            ? data.message
+            : "We encountered an issue while processing your request."
         );
       }
 
@@ -454,7 +466,7 @@ const useAuth = () => {
     resetPassword,
     verifyEmail,
     resendVerificationLink,
-    oAuthSignIn,
+    oauthSignin,
     isMembership,
     isAdmin,
   };

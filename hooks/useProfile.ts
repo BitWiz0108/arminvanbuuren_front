@@ -115,7 +115,9 @@ const useProfile = () => {
     } else {
       const data = await response.json();
       toast.error(
-        data.message ? data.message : "Error occured on changing password."
+        data.message
+          ? data.message
+          : "We encountered an issue while processing your request."
       );
       setIsLoading(false);
     }

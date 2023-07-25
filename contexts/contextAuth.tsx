@@ -41,7 +41,7 @@ export const AuthContext = createContext({
   resendVerificationLink: async (email: string) => {
     return false;
   },
-  oAuthSignIn: async (
+  oauthSignin: async (
     provider: OAUTH_PROVIDER,
     accessToken: string,
     refreshToken: string,
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     resetPassword,
     verifyEmail,
     resendVerificationLink,
-    oAuthSignIn,
+    oauthSignin,
     isMembership,
     isAdmin,
   } = useAuth();
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         resetPassword,
         verifyEmail,
         resendVerificationLink,
-        oAuthSignIn,
+        oauthSignin,
         isMembership,
         isAdmin,
       }}

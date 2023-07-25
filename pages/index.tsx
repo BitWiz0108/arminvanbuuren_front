@@ -37,7 +37,7 @@ export default function Signin() {
   const provider = new GoogleAuthProvider();
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
-  const { isLoading, isSignedIn, signIn, oAuthSignIn } = useAuthValues();
+  const { isLoading, isSignedIn, signIn, oauthSignin } = useAuthValues();
   const { artist, audioPlayer } = useShareValues();
   const { isMobile } = useSizeValues();
   const { fetchPageContent } = useHomepage();
@@ -92,7 +92,7 @@ export default function Signin() {
           const accessToken = credential.idToken!;
           const refreshToken = credential.idToken!;
 
-          oAuthSignIn(
+          oauthSignin(
             OAUTH_PROVIDER.GOOGLE,
             accessToken,
             refreshToken,
@@ -102,13 +102,11 @@ export default function Signin() {
               router.push("/home");
             }
           });
-        } else {
-          toast.error("Something went wrong! Please try again.");
         }
       })
       .catch((e) => {
         console.log(e);
-        toast.error("Something went wrong! Please try again.");
+        toast.error("We encountered an issue while processing your request.");
       });
   };
 
