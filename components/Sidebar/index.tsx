@@ -176,15 +176,15 @@ const Sidebar = ({ visible, setVisible }: Props) => {
               )
             }
           />
-          {SYSTEM_TYPE != APP_TYPE.TYPICAL && (
-            <ButtonSidebar
-              active={router.pathname == "/prayer-requests"}
-              collapsed={isSidebarCollapsed}
-              icon={<HeartBalloon width={22} height={22} />}
-              label="Prayer Requests"
-              onClick={() => goToLink("/prayer-requests")}
-            />
-          )}
+          {/*{SYSTEM_TYPE != APP_TYPE.TYPICAL && (*/}
+          {/*  <ButtonSidebar*/}
+          {/*    active={router.pathname == "/prayer-requests"}*/}
+          {/*    collapsed={isSidebarCollapsed}*/}
+          {/*    icon={<HeartBalloon width={22} height={22} />}*/}
+          {/*    label="Prayer Requests"*/}
+          {/*    onClick={() => goToLink("/prayer-requests")}*/}
+          {/*  />*/}
+          {/*)}*/}
           <ButtonSidebar
             active={router.pathname == "/settings"}
             collapsed={isSidebarCollapsed}
