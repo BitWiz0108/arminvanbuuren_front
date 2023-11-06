@@ -11,7 +11,7 @@ const nextConfig = {
       name: "Armin Van Buuren",
       url:
         process.env.NODE_ENV === "development"
-          ? "https://arminvanbuuren.netlify.app"
+          ? "https://arminvanbuurenapp.netlify.app"
           : "https://arminvanbuuren.io",
       title: "Armin Van Buuren Music",
       description:
@@ -21,7 +21,7 @@ const nextConfig = {
   },
   images: {
     domains: [
-      "arminvanbuuren.netlify.app",
+      "arminvanbuurenapp.netlify.app",
       "arminvanbuuren.io",
       "www.arminvanbuuren.io",
     ],
